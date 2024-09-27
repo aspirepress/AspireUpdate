@@ -2,9 +2,9 @@
 
 class AspirePress_Updater
 {
-    private AspirePress_RewriteUrls $rewriter;
+    private $rewriter;
 
-    private AspirePress_HeaderManager $headerManager;
+    private $headerManager;
 
     public function __construct(AspirePress_RewriteUrls $rewriter, AspirePress_HeaderManager $headerManager)
     {
@@ -24,7 +24,7 @@ class AspirePress_Updater
         AspirePress_Debug::logString($rewrittenUrl, 'REWRITTEN URL');
 
         AspirePress_Debug::logString('Adding Headers', 'INFO');
-        $argument['headers'] = $this->headerManager->addHeaders($arguments['headers']);
+        $arguments['headers'] = $this->headerManager->addHeaders($arguments['headers']);
 
         AspirePress_Debug::logString('Making Rewritten Request');
         AspirePress_Debug::logRequest($rewrittenUrl, $arguments);

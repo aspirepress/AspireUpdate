@@ -46,23 +46,18 @@ if (defined('AP_UPDATER_DEBUG_LOG_PATH') && AP_UPDATER_DEBUG_LOG_PATH) {
     AspirePress_Debug::setLogPath(AP_UPDATER_DEBUG_LOG_PATH);
 }
 
-$hostRewrites = [];
-$pathRewrites = [];
+$rewriteRuleDefs = [];
 
-if (defined('AP_UPDATER_HOST_REWRITES') && is_array(AP_UPDATER_HOST_REWRITES)) {
-    $hostRewrites = AP_UPDATER_HOST_REWRITES;
+if (defined('AP_UPDATER_REWRITE_WPORG_API') && defined('AP_UPDATER_API_URL')) {
+    $rewriteRuleDefs[] = new AspirePress_ApiWordpressOrgRewriteRule(AP_UPDATER_API_URL);
 }
 
-if (defined ('AP_UPDATER_PATH_REWRITES') && is_array(AP_UPDATER_PATH_REWRITES)) {
-    $pathRewrites = AP_UPDATER_PATH_REWRITES;
+if (defined('AP_UPDATER_REWRITE_WPORG_DL') && defined('AP_UPDATER_DL_URL')) {
+    $rewriteRuleDefs[] = new AspirePress_DownloadsWordpressOrgRewriteRule(AP_UPDATER_DL_URL);
 }
-
 
 $aspirePressUpdater = new AspirePress_Updater(
-    new AspirePress_RewriteUrls(
-        new AspirePress_HostRewriterBasic($hostRewrites),
-        new AspirePress_PathRewriterBasic($pathRewrites)
-    ),
+    new AspirePress_RewriteUrls($rewriteRuleDefs),
     new AspirePress_HeaderManager(WP_SITEURL, AP_UPDATER_API_KEY)
 );
 

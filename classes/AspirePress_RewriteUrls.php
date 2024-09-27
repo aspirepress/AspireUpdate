@@ -3,23 +3,25 @@
 class AspirePress_RewriteUrls
 {
 
-    private AspirePress_HostRewriterInterface $hostRewriter;
+    private $rewriteDefs = [];
 
-    private AspirePress_PathRewriterInterface $pathRewriter;
-    public function __construct(AspirePress_HostRewriterInterface $hostRewriter, AspirePress_PathRewriterInterface $pathRewriter) {
-        $this->hostRewriter = $hostRewriter;
-        $this->pathRewriter = $pathRewriter;
+    public function __construct(array $rewriteDefs = []) {
+        $this->rewriteDefs = $rewriteDefs;
     }
 
     public function rewrite($url)
     {
-        $rewrittenUrl = $this->hostRewriter->rewrite($url);
+        AspirePress_Debug::logString('Attempting to rewrite URL: ' . $url);
+        /** @var AspirePress_RewriteRuleInterface $rewriteDef */
+        foreach ($this->rewriteDefs as $rewriteDef) {
+            if ($rewriteDef->canRewrite($url)) {
+                AspirePress_Debug::logString('Rewriting URL with ' . get_class($rewriteDef));
+                return $rewriteDef->rewrite($url);
+            }
 
-        if ($url === $rewrittenUrl) {
-            AspirePress_Debug::logString('The URL was not rewritten; not rewriting the paths...', 'INFO');
-            return $url;
+            AspirePress_Debug::logString('Unable to rewrite URL with ' . get_class($rewriteDef));
         }
 
-        return $this->pathRewriter->rewrite($rewrittenUrl);
+        return $url;
     }
 }

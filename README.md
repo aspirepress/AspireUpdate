@@ -43,31 +43,22 @@ define('AP_UPDATER_HOST_REWRITES', [
 There are other options for defining the plugin's functionality, as well. They are:
 
 * **AP_UPDATER_API_KEY** - Provides an API key for repositories that may require authentication.
-* **AP_UPDATER_PATH_REWRITES** - Allows rewriting of specific URL paths hy hostname. See next section for syntax.
+* **AP_UPDATER_REWRITE_WPORG_API** - Uses the built-in WordPress API rewrite rules. Must be configured with `AP_UPDATER_API_URL`.
+* **AP_UPDATER_REWRITE_WPORG_DL** - Uses the built-in WordPress download rewrite rules. Must be configured with `AP_UPDATER_DL_URL`.
+* **AP_UPDATER_API_URL** - The URL to use for the third-party plugin API. Must be configured with `AP_UPDATER_REWRITE_WPORG_API`.
+* **AP_UPDATER_DL_URL** - The URL to use for the third-party plugin download API. Must be configured with `AP_UPDATER_REWRITE_WPORG_DL`.
 * **AP_UPDATER_DEBUG** - Enables debug mode for the plugin.
-* **AP_UPDATER_DEBUG_TYPES** - Defines the types of messages you want output as an array. Currently supports `request`, `response` and `string`
+* **AP_UPDATER_DEBUG_TYPES** - Defines the types of messages you want output as an array. Presently supports `request`, `response` and `string`
 * **AP_UPDATER_DEBUG_TYPES_EXCLUDE** - Defines any types you DON'T WANT displayed. This runs AFTER the `AP_UPDATER_DEBUG_TYPES` does, so it will remove anything you previously added if both are defined.
 * **AP_UPDATER_DEBUG_LOG_PATH** - Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.
 
-## Properly configuring rewrites by host
+## Authentication
 
-The `AP_UPDATER_PATH_REWRITES` constant allows you to rewrite specific URL paths on a per-host basis. The syntax for this
-is:
+Authentication is provided by way of a randomly generated token combined with the `WP_SITEURL` constant. This token is
+then Base64-encoded with the separate parts of the credentials separated by a colon. It's added to the `Authorization`
+header.
 
-```php
-<?php
-
-define('AP_UPDATER_PATH_REWRITES', [
-    'api.wordpress.org' => [
-        '/path/to/rewrite' => '/new/path',
-    ],
-]);
-```
-
-Note that the ORIGINAL host is used, NOT the replacement host. 
-
-You may define multiple hosts to rewrite, and you may also define multiple paths for each host to be rewritten. If no
-match is found, the plugin will not rewrite the URL path.
+If no API key is supplied, the API key is omitted.
 
 ## Debugging
 

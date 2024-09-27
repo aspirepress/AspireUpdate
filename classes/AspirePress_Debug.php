@@ -14,15 +14,15 @@ class AspirePress_Debug
         'status'
     ];
 
-    private static array $desiredTypes = [
+    private static $desiredTypes = [
         'request',
         'response',
         'string'
     ];
 
-    private static bool $enabled = false;
+    private static $enabled = false;
 
-    private static string $logPath = WP_CONTENT_DIR;
+    private static $logPath = WP_CONTENT_DIR;
 
     public static function logRequest(string $url, array $arguments, array $desiredKeys = self::DESIRED_REQUEST_KEYS)
     {
@@ -58,7 +58,16 @@ class AspirePress_Debug
             return;
         }
 
-        self::logData(strtoupper($type), ['message' => $message]);
+        self::logData(strtoupper($type), $message);
+    }
+
+    public static function logNonScalar($message, string $type = 'INFO')
+    {
+        if (!self::$enabled || !in_array('string', self::$desiredTypes)) {
+            return;
+        }
+
+        self::logData(strtoupper($type), $message);
     }
 
     private static function logData(string $type, $data)
@@ -66,8 +75,7 @@ class AspirePress_Debug
         if (!self::$enabled) {
             return;
         }
-
-        if (is_array($data)) {
+        if (!is_string($data)) {
             $logMessage = sprintf('[%s] %s', $type, print_r($data, true));
         } else {
             $logMessage = sprintf('[%s] %s', $type, $data);

@@ -13,7 +13,9 @@ class AspirePress_HeaderManager
 
     public function addHeaders(array $headers)
     {
-        $headers['Authorization'] = base64_encode($this->siteUrl . ':' . $this->apiKey);
+        if ($this->siteUrl && $this->apiKey) {
+            $headers['Authorization'] = base64_encode($this->siteUrl . ':' . $this->apiKey);
+        }
 
         return $headers;
     }
