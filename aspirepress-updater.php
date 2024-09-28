@@ -56,6 +56,10 @@ if (defined('AP_UPDATER_REWRITE_WPORG_DL') && defined('AP_UPDATER_DL_URL')) {
     $rewriteRuleDefs[] = new AspirePress_DownloadsWordpressOrgRewriteRule(AP_UPDATER_DL_URL);
 }
 
+if (! defined('AP_UPDATER_DEBUG_SSL')) {
+    define('AP_UPDATER_DEBUG_SSL', false);
+}
+
 $aspirePressUpdater = new AspirePress_Updater(
     new AspirePress_RewriteUrls($rewriteRuleDefs),
     new AspirePress_HeaderManager(WP_SITEURL, AP_UPDATER_API_KEY)
@@ -67,6 +71,10 @@ add_filter('pre_http_request', function (...$args) use ($aspirePressUpdater) {
 
     if (!$url) {
         return false;
+    }
+
+    if (AP_UPDATER_DEBUG_SSL) {
+        $arguments['sslverify'] = false;
     }
 
     return $aspirePressUpdater->callApi($url, $arguments);
