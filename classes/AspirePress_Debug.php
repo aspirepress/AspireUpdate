@@ -38,7 +38,7 @@ class AspirePress_Debug
         self::logData('REQUEST', $loggedData);
     }
 
-    public static function logResponse(string $url, array $response, array $desiredKeys = self::DESIRED_RESPONSE_KEYS)
+    public static function logResponse(string $url, $response, array $desiredKeys = self::DESIRED_RESPONSE_KEYS)
     {
         if (!self::$enabled || !in_array('response', self::$desiredTypes)) {
             return;
@@ -46,7 +46,7 @@ class AspirePress_Debug
 
         $loggedData = [
             'url' => $url,
-            'response' => self::filterKeys($response, $desiredKeys)
+            'response' => (is_array($response)) ? self::filterKeys($response, $desiredKeys): $response->get_error_message(),
         ];
 
         self::logData('RESPONSE', $loggedData);

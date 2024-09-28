@@ -80,13 +80,13 @@ add_filter('pre_http_request', function (...$args) use ($aspirePressUpdater) {
     return $aspirePressUpdater->callApi($url, $arguments);
 }, 100, 3);
 
-add_filter('http_response', function (...$args) use ($aspirePressUpdater) {
+add_filter('http_api_debug', function (...$args) use ($aspirePressUpdater) {
     $response = $args[0];
-    $url = $args[2];
+    $url = $args[4];
 
     if (empty($response) || empty($url)) {
         return $response;
     }
     $aspirePressUpdater->examineResponse($url, $response);
     return $response;
-}, 10, 3);
+}, 10, 5);
