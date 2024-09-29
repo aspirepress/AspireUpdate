@@ -52,6 +52,7 @@ There are other options for defining the plugin's functionality, as well. They a
 * **AP_UPDATER_DEBUG_TYPES_EXCLUDE** - Defines any types you DON'T WANT displayed. This runs AFTER the `AP_UPDATER_DEBUG_TYPES` does, so it will remove anything you previously added if both are defined.
 * **AP_UPDATER_DEBUG_LOG_PATH** - Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.
 * **AP_UPDATER_DEBUG_SSL** - Disables the verification of SSL to allow local testing.
+* **AP_UPDATER_EXAMINE_RESPONSES** - Examines the response and logs it as a debug value when set to true.
 ## Authentication
 
 Authentication is provided by way of a randomly generated token combined with the `WP_SITEURL` constant. This token is

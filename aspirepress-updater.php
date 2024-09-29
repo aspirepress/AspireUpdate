@@ -60,6 +60,10 @@ if (! defined('AP_UPDATER_DEBUG_SSL')) {
     define('AP_UPDATER_DEBUG_SSL', false);
 }
 
+if (! defined('AP_UPDATER_EXAMINE_RESPONSES')) {
+    define('AP_UPDATER_EXAMINE_RESPONSES', false);
+}
+
 $aspirePressUpdater = new AspirePress_Updater(
     new AspirePress_RewriteUrls($rewriteRuleDefs),
     new AspirePress_HeaderManager(WP_SITEURL, AP_UPDATER_API_KEY)
@@ -80,13 +84,15 @@ add_filter('pre_http_request', function (...$args) use ($aspirePressUpdater) {
     return $aspirePressUpdater->callApi($url, $arguments);
 }, 100, 3);
 
-add_filter('http_api_debug', function (...$args) use ($aspirePressUpdater) {
-    $response = $args[0];
-    $url = $args[4];
+if (AP_UPDATER_EXAMINE_RESPONSES) {
+    add_filter('http_api_debug', function (...$args) use ($aspirePressUpdater) {
+        $response = $args[0];
+        $url = $args[4];
 
-    if (empty($response) || empty($url)) {
+        if (empty($response) || empty($url)) {
+            return $response;
+        }
+        $aspirePressUpdater->examineResponse($url, $response);
         return $response;
-    }
-    $aspirePressUpdater->examineResponse($url, $response);
-    return $response;
-}, 10, 5);
+    }, 10, 5);
+}
