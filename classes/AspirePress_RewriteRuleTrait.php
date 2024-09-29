@@ -16,6 +16,7 @@ trait AspirePress_RewriteRuleTrait
             $urlParts = $this->rewriteHost($urlParts);
             $urlParts = $this->rewritePath($urlParts);
             $url = AspirePress_Utils::buildUrl($urlParts);
+            AspirePress_Debug::logString('Rewrote URL: ' . $url, AspirePress_Debug::INFO);
         }
 
         return $url;
@@ -33,9 +34,6 @@ trait AspirePress_RewriteRuleTrait
             return false;
         }
 
-        AspirePress_Debug::logString('Can rewrite URL: ' . $url);
-        AspirePress_Debug::logNonScalar($this->excludedPathRewriteRules);
-        AspirePress_Debug::logNonScalar($path);
         return true;
     }
 

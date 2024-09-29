@@ -46,6 +46,10 @@ if (defined('AP_UPDATER_DEBUG_LOG_PATH') && AP_UPDATER_DEBUG_LOG_PATH) {
     AspirePress_Debug::setLogPath(AP_UPDATER_DEBUG_LOG_PATH);
 }
 
+if (defined('AP_UPDATER_DEBUG_LEVEL') && is_int(AP_UPDATER_DEBUG_LEVEL)) {
+    AspirePress_Debug::setDebugLevel(AP_UPDATER_DEBUG_LEVEL);
+}
+
 $rewriteRuleDefs = [];
 
 if (defined('AP_UPDATER_REWRITE_WPORG_API') && AP_UPDATER_REWRITE_WPORG_API && defined('AP_UPDATER_API_URL')) {

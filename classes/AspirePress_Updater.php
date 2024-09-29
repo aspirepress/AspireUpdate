@@ -13,7 +13,7 @@ class AspirePress_Updater
     }
     public function callApi($url, array $arguments = [])
     {
-        AspirePress_Debug::logString($url, 'ORIGINAL URL');
+        AspirePress_Debug::logString('[ORIGINAL URL] '. $url);
         $rewrittenUrl = $this->rewriter->rewrite($url);
 
 
@@ -21,9 +21,9 @@ class AspirePress_Updater
             return false;
         }
 
-        AspirePress_Debug::logString($rewrittenUrl, 'REWRITTEN URL');
+        AspirePress_Debug::logString('[REWRITTEN URL] ' . $rewrittenUrl);
 
-        AspirePress_Debug::logString('Adding Headers', 'INFO');
+        AspirePress_Debug::logString('Adding Headers');
         $arguments['headers'] = $this->headerManager->addHeaders($arguments['headers']);
 
         AspirePress_Debug::logString('Making Rewritten Request');
