@@ -24,7 +24,6 @@ trait AspirePress_RewriteRuleTrait
     public function canRewrite($url, ?array $urlParts = null): bool
     {
         $parts = $urlParts ?? parse_url($url);
-        AspirePress_Debug::logNonScalar($parts);
         $host = $parts['host'] ?? '';
         $path = $parts['path'] ?? '';
         if (empty($host) ||

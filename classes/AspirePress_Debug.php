@@ -11,7 +11,7 @@ class AspirePress_Debug
     private const DESIRED_RESPONSE_KEYS = [
         'body',
         'headers',
-        'status'
+        'response'
     ];
 
     private static $desiredTypes = [
@@ -46,7 +46,7 @@ class AspirePress_Debug
 
         $loggedData = [
             'url' => $url,
-            'response' => (is_array($response)) ? self::filterKeys($response, $desiredKeys): $response->get_error_message(),
+            'wp_response' => (is_array($response)) ? self::filterKeys($response, $desiredKeys): $response->get_error_message(),
         ];
 
         self::logData('RESPONSE', $loggedData);

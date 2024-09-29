@@ -48,11 +48,11 @@ if (defined('AP_UPDATER_DEBUG_LOG_PATH') && AP_UPDATER_DEBUG_LOG_PATH) {
 
 $rewriteRuleDefs = [];
 
-if (defined('AP_UPDATER_REWRITE_WPORG_API') && defined('AP_UPDATER_API_URL')) {
+if (defined('AP_UPDATER_REWRITE_WPORG_API') && AP_UPDATER_REWRITE_WPORG_API && defined('AP_UPDATER_API_URL')) {
     $rewriteRuleDefs[] = new AspirePress_ApiWordpressOrgRewriteRule(AP_UPDATER_API_URL);
 }
 
-if (defined('AP_UPDATER_REWRITE_WPORG_DL') && defined('AP_UPDATER_DL_URL')) {
+if (defined('AP_UPDATER_REWRITE_WPORG_DL') && AP_UPDATER_REWRITE_WPORG_DL && defined('AP_UPDATER_DL_URL')) {
     $rewriteRuleDefs[] = new AspirePress_DownloadsWordpressOrgRewriteRule(AP_UPDATER_DL_URL);
 }
 
