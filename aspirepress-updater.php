@@ -64,7 +64,9 @@ if (! defined('AP_UPDATER_EXAMINE_RESPONSES')) {
     define('AP_UPDATER_EXAMINE_RESPONSES', false);
 }
 
-if ($apiKey = get_option('wp_api_key')) {
+$apiKey = get_option('ap_api_key');
+
+if ($apiKey) {
 
     $aspirePressUpdater = new AspirePress_Updater(
         new AspirePress_RewriteUrls($rewriteRuleDefs),
