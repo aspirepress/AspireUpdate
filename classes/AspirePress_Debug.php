@@ -35,7 +35,7 @@ class AspirePress_Debug
 
     private static $enabled = false;
 
-    private static $logPath = WP_CONTENT_DIR;
+    private static $logPath = ABSPATH;
 
     private static $debugLevel = self::NONE;
 
