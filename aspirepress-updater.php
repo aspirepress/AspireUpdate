@@ -64,6 +64,8 @@ if (! defined('AP_UPDATER_EXAMINE_RESPONSES')) {
     define('AP_UPDATER_EXAMINE_RESPONSES', false);
 }
 
+new AspirePress_AdminSettings();
+
 $apiKey = get_option('ap_api_key');
 
 if ($apiKey) {
