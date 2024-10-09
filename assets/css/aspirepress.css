@@ -10,3 +10,17 @@
 .glow-reveal {
     animation: glow 0.5s ease-in-out;
 }
+
+.aspirepress-settings-field-hosts-wrapper .aspirepress-settings-field-hosts-row {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.aspirepress-settings-field-hosts-wrapper .aspirepress-settings-field-hosts-row .aspirepress-settings-field-hosts-left,
+.aspirepress-settings-field-hosts-wrapper .aspirepress-settings-field-hosts-row .aspirepress-settings-field-hosts-right {
+    flex: 0 1 auto;
+    margin: 0 0 10px;
+    box-sizing: border-box;
+}

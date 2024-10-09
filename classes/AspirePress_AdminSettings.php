@@ -10,11 +10,118 @@ class AspirePress_AdminSettings {
 
 	private $option_group = 'aspirepress_settings';
 	private $option_name  = 'aspirepress_settings';
+	private $options      = null;
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+	}
+
+	public function get_setting( $setting_name, $default = false ) {
+		if ( null == $this->options ) {
+			$options             = get_option( $this->option_name, false );
+			$config_file_options = $this->get_settings_from_config_file();
+			if ( is_array( $options ) ) {
+				/**
+				 * If User Options are saved do some processing to make it match the structure of the data from the config file.
+				 */
+				if ( isset( $options['api_host'] ) && is_array( $options['api_host'] ) ) {
+					$api_hosts = array();
+					foreach ( $options['api_host'] as $api_host ) {
+						if (
+							isset( $api_host['search'] ) &&
+							( '' != $api_host['search'] ) &&
+							isset( $api_host['replace'] ) &&
+							( '' != $api_host['replace'] )
+						) {
+							$api_hosts[ $api_host['search'] ] = $api_host['replace'];
+						}
+					}
+					$options['api_host'] = $api_hosts;
+				}
+
+				if ( isset( $options['enable_debug_type'] ) && is_array( $options['enable_debug_type'] ) ) {
+					$debug_types = array();
+					foreach ( $options['enable_debug_type'] as $debug_type_name => $debug_type_enabled ) {
+						if ( $debug_type_enabled ) {
+							$debug_types[] = $debug_type_name;
+						}
+					}
+					$options['enable_debug_type'] = $debug_types;
+				}
+
+				if ( isset( $options['exclude_debug_type'] ) && is_array( $options['exclude_debug_type'] ) ) {
+					$exclude_debug_types = array();
+					foreach ( $options['exclude_debug_type'] as $exclude_debug_type_name => $exclude_debug_type_enabled ) {
+						if ( $exclude_debug_type_enabled ) {
+							$exclude_debug_types[] = $exclude_debug_type_name;
+						}
+					}
+					$options['exclude_debug_type'] = $exclude_debug_types;
+				}
+				$this->options = wp_parse_args( $config_file_options, $options );
+			}
+		}
+		return ( isset( $this->options[ $setting_name ] ) ? $this->options[ $setting_name ] : $default );
+	}
+
+	private function get_settings_from_config_file() {
+		$options = array();
+
+		if ( defined( 'AP_UPDATER_ENABLE' ) && AP_UPDATER_ENABLE ) {
+			$options['enable'] = AP_UPDATER_ENABLE;
+		}
+
+		if ( defined( 'AP_UPDATER_API_KEY' ) ) {
+			$options['api_key'] = AP_UPDATER_API_KEY;
+		}
+
+		if ( defined( 'AP_UPDATER_HOST_REWRITES' ) && is_array( AP_UPDATER_HOST_REWRITES ) ) {
+			$options['api_host'] = AP_UPDATER_HOST_REWRITES;
+		}
+
+		if ( defined( 'AP_UPDATER_REWRITE_WPORG_API' ) && AP_UPDATER_REWRITE_WPORG_API ) {
+			$options['rewrite_wporg_api'] = AP_UPDATER_REWRITE_WPORG_API;
+		}
+
+		if ( defined( 'AP_UPDATER_API_URL' ) ) {
+			$options['api_url'] = AP_UPDATER_API_URL;
+		}
+
+		if ( defined( 'AP_UPDATER_REWRITE_WPORG_DL' ) && AP_UPDATER_REWRITE_WPORG_DL ) {
+			$options['rewrite_wporg_dl'] = AP_UPDATER_REWRITE_WPORG_DL;
+		}
+
+		if ( defined( 'AP_UPDATER_DL_URL' ) ) {
+			$options['api_download_url'] = AP_UPDATER_DL_URL;
+		}
+
+		if ( defined( 'AP_UPDATER_DEBUG' ) && AP_UPDATER_DEBUG ) {
+			$options['enable_debug'] = AP_UPDATER_DEBUG;
+		}
+
+		if ( defined( 'AP_UPDATER_DEBUG_TYPES' ) ) {
+			$options['enable_debug_type'] = AP_UPDATER_DEBUG_TYPES;
+		}
+
+		if ( defined( 'AP_UPDATER_DEBUG_TYPES_EXCLUDE' ) ) {
+			$options['exclude_debug_type'] = AP_UPDATER_DEBUG_TYPES_EXCLUDE;
+		}
+
+		if ( defined( 'AP_UPDATER_DEBUG_LOG_PATH' ) ) {
+			$options['debug_log_path'] = AP_UPDATER_DEBUG_LOG_PATH;
+		}
+
+		if ( defined( 'AP_UPDATER_DEBUG_SSL' ) && AP_UPDATER_DEBUG_SSL ) {
+			$options['disable_ssl_verification'] = AP_UPDATER_DEBUG_SSL;
+		}
+
+		if ( defined( 'AP_UPDATER_EXAMINE_RESPONSES' ) && AP_UPDATER_EXAMINE_RESPONSES ) {
+			$options['examine_responses'] = AP_UPDATER_EXAMINE_RESPONSES;
+		}
+
+		return $options;
 	}
 
 	public function register_admin_menu() {
@@ -38,7 +145,7 @@ class AspirePress_AdminSettings {
 	public function the_settings_page() {
 		?>
 		<div class="wrap">
-			<h1><?php _e( 'AspirePress Settings', 'aspirepress' ); ?></h1>
+			<h1><?php esc_html_e( 'AspirePress Settings', 'aspirepress' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( $this->option_group );
@@ -99,8 +206,8 @@ class AspirePress_AdminSettings {
 			'aspirepress_settings_section',
 			array(
 				'id'          => 'api_host',
-				'type'        => 'text',
-				'description' => __( 'The Domain for your new API Host.', 'aspirepress' ),
+				'type'        => 'hosts',
+				'description' => __( 'The Domain rewrites for your new API Host.', 'aspirepress' ),
 			)
 		);
 
@@ -158,138 +265,96 @@ class AspirePress_AdminSettings {
 
 		add_settings_section(
 			'aspirepress_debug_settings_section',
-			'API Debug Configuration',
+			__( 'API Debug Configuration', 'aspirepress' ),
 			null,
 			'aspirepress-settings'
 		);
 
 		add_settings_field(
 			'enable_debug',
-			'Enable Debug Mode',
+			__( 'Enable Debug Mode', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
 				'id'          => 'enable_debug',
 				'type'        => 'checkbox',
-				'description' => 'Enables debug mode for the plugin.',
+				'description' => __( 'Enables debug mode for the plugin.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
-			'enable_debug_type_request',
-			'Enable Debug Type - Request',
+			'enable_debug_type',
+			__( 'Enable Debug Type', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
-				'id'          => 'enable_debug_type_request',
-				'type'        => 'checkbox',
-				'description' => 'Outputs the request URL and headers.',
+				'id'          => 'enable_debug_type',
+				'type'        => 'checkbox-group',
+				'options'     => array(
+					'request'  => __( 'Request', 'aspirepress' ),
+					'response' => __( 'Response', 'aspirepress' ),
+					'string'   => __( 'String', 'aspirepress' ),
+				),
+				'description' => __( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
-			'enable_debug_type_response',
-			'Enable Debug Type - Response',
+			'exclude_debug_type',
+			__( 'Exclude Debug Type', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
-				'id'          => 'enable_debug_type_response',
-				'type'        => 'checkbox',
-				'description' => 'Outputs the response headers and body.',
-			)
-		);
-
-		add_settings_field(
-			'enable_debug_type_string',
-			'Enable Debug Type - String',
-			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
-			array(
-				'id'          => 'enable_debug_type_string',
-				'type'        => 'checkbox',
-				'description' => 'Outputs the string that is being rewritten.',
-			)
-		);
-
-		add_settings_field(
-			'exclude_debug_type_request',
-			'Exclude Debug Type - Request',
-			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
-			array(
-				'id'          => 'exclude_debug_type_request',
-				'type'        => 'checkbox',
-				'description' => 'Defines requests you DON\'T WANT displayed. This runs AFTER the Enable Debug Types does, so it will remove anything you previously added if both are defined.',
-			)
-		);
-
-		add_settings_field(
-			'exclude_debug_type_response',
-			'Exclude Debug Type - Response',
-			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
-			array(
-				'id'          => 'exclude_debug_type_response',
-				'type'        => 'checkbox',
-				'description' => 'Defines responses you DON\'T WANT displayed. This runs AFTER the Enable Debug Types does, so it will remove anything you previously added if both are defined.',
-			)
-		);
-
-		add_settings_field(
-			'exclude_debug_type_string',
-			'Exclude Debug Type - String',
-			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
-			array(
-				'id'          => 'exclude_debug_type_string',
-				'type'        => 'checkbox',
-				'description' => 'Defines strings you DON\'T WANT displayed. This runs AFTER the Enable Debug Types does, so it will remove anything you previously added if both are defined.',
+				'id'          => 'exclude_debug_type',
+				'type'        => 'checkbox-group',
+				'options'     => array(
+					'request'  => __( 'Request', 'aspirepress' ),
+					'response' => __( 'Response', 'aspirepress' ),
+					'string'   => __( 'String', 'aspirepress' ),
+				),
+				'description' => __( 'Defines requests / responses / strings you DON\'T WANT displayed. This runs AFTER the Enable Debug Types does, so it will remove anything you previously added if both are defined.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'debug_log_path',
-			'Debug Log Path',
+			__( 'Debug Log Path', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
 				'id'          => 'debug_log_path',
 				'type'        => 'text',
-				'description' => 'Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.',
+				'description' => __( 'Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'disable_ssl_verification',
-			'Disable SSL Verification',
+			__( 'Disable SSL Verification', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
 				'id'          => 'disable_ssl_verification',
 				'type'        => 'checkbox',
-				'description' => 'Disables the verification of SSL to allow local testing.',
+				'description' => __( 'Disables the verification of SSL to allow local testing.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'examine_responses',
-			'Examine Responses',
+			__( 'Examine Responses', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
 			array(
 				'id'          => 'examine_responses',
 				'type'        => 'checkbox',
-				'description' => 'Examines the response and logs it as a debug value when set to true.',
+				'description' => __( 'Examines the response and logs it as a debug value when set to true.', 'aspirepress' ),
 			)
 		);
 	}
@@ -297,34 +362,65 @@ class AspirePress_AdminSettings {
 	public function add_settings_field_callback( $args = array() ) {
 		$options = get_option( $this->option_name );
 
-		$defaults    = array(
+		$defaults      = array(
 			'id'          => '',
 			'type'        => 'text',
 			'description' => '',
+			'options'     => array(),
 		);
-		$args        = wp_parse_args( $args, $defaults );
-		$id          = $args['id'];
-		$type        = $args['type'];
-		$description = $args['description'];
+		$args          = wp_parse_args( $args, $defaults );
+		$id            = $args['id'];
+		$type          = $args['type'];
+		$description   = $args['description'];
+		$group_options = $args['options'];
 
 		echo '<div class="aspirepress-settings-field-wrapper aspirepress-settings-field-wrapper-' . esc_attr( $id ) . '">';
 		switch ( $type ) {
 			case 'text':
 				?>
-					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name . "[$id]" ); ?>" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text">
+					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text">
 					<?php
 				break;
 
 			case 'textarea':
 				?>
-					<textarea id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name . "[$id]" ); ?>" rows="5" cols="50"><?php echo isset( $options[ $id ] ) ? esc_textarea( $options[ $id ] ) : ''; ?></textarea>
+					<textarea id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" rows="5" cols="50"><?php echo isset( $options[ $id ] ) ? esc_textarea( $options[ $id ] ) : ''; ?></textarea>
 					<?php
 				break;
 
 			case 'checkbox':
 				?>
-					<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name . "[$id]" ); ?>" value="1" <?php checked( 1, isset( $options[ $id ] ) ? $options[ $id ] : 0 ); ?>>
+					<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ] ) ? $options[ $id ] : 0 ); ?>>
 					<?php
+				break;
+
+			case 'checkbox-group':
+				foreach ( $group_options as $key => $label ) {
+					?>
+					<p>
+						<label>
+							<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ][ $key ] ) ? $options[ $id ][ $key ] : 0 ); ?>> <?php echo esc_html( $label ); ?>
+						</label>
+					</p>
+					<?php
+				}
+				break;
+
+			case 'hosts':
+				echo '<div class="aspirepress-settings-field-hosts-wrapper">';
+				for ( $i = 0; $i < 10; $i++ ) {
+					?>
+						<div class="aspirepress-settings-field-hosts-row">
+							<div class="aspirepress-settings-field-hosts-left">
+								<input type="text" placeholder="Search" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-search" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][search]" value="<?php echo isset( $options[ $id ][ $i ]['search'] ) ? esc_attr( $options[ $id ][ $i ]['search'] ) : ''; ?>" class="regular-text">
+							</div>
+							<div class="aspirepress-settings-field-hosts-right">
+								<input type="text" placeholder="Replace" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-replace" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][replace]" value="<?php echo isset( $options[ $id ][ $i ]['replace'] ) ? esc_attr( $options[ $id ][ $i ]['replace'] ) : ''; ?>" class="regular-text">
+							</div>
+						</div>
+						<?php
+				}
+				echo '</div>';
 				break;
 		}
 		echo '<p class="description">' . esc_html( $description ) . '</p>';
@@ -334,24 +430,39 @@ class AspirePress_AdminSettings {
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
-		$sanitized_input['enable']            = isset( $input['enable'] ) ? 1 : 0;
-		$sanitized_input['api_key']           = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : '';
-		$sanitized_input['api_host']          = isset( $input['api_host'] ) ? sanitize_text_field( $input['api_host'] ) : '';
-		$sanitized_input['rewrite_wporg_api'] = isset( $input['rewrite_wporg_api'] ) ? 1 : 0;
+		$sanitized_input['enable']   = ( isset( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
+		$sanitized_input['api_key']  = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : '';
+		$sanitized_input['api_host'] = isset( $input['api_host'] ) ? sanitize_text_field( $input['api_host'] ) : '';
+		if ( isset( $input['api_host'] ) && is_array( $input['api_host'] ) ) {
+			$sanitized_input['api_host'] = array();
+			foreach ( $input['api_host'] as $api_host ) {
+				$sanitized_input['api_host'][] = array(
+					'search'  => isset( $api_host['search'] ) ? sanitize_text_field( $api_host['search'] ) : '',
+					'replace' => isset( $api_host['replace'] ) ? sanitize_text_field( $api_host['replace'] ) : '',
+				);
+			}
+		} else {
+			$sanitized_input['api_host'] = array();
+		}
+		$sanitized_input['rewrite_wporg_api'] = ( isset( $input['rewrite_wporg_api'] ) && $input['rewrite_wporg_dl'] ) ? 1 : 0;
 		$sanitized_input['api_url']           = isset( $input['api_url'] ) ? sanitize_text_field( $input['api_url'] ) : '';
-		$sanitized_input['rewrite_wporg_dl']  = isset( $input['rewrite_wporg_dl'] ) ? 1 : 0;
+		$sanitized_input['rewrite_wporg_dl']  = ( isset( $input['rewrite_wporg_dl'] ) && $input['rewrite_wporg_dl'] ) ? 1 : 0;
 		$sanitized_input['api_download_url']  = isset( $input['api_download_url'] ) ? sanitize_text_field( $input['api_download_url'] ) : '';
 
-		$sanitized_input['enable_debug']                = isset( $input['enable_debug'] ) ? 1 : 0;
-		$sanitized_input['enable_debug_type_request']   = isset( $input['enable_debug_type_request'] ) ? 1 : 0;
-		$sanitized_input['enable_debug_type_response']  = isset( $input['enable_debug_type_response'] ) ? 1 : 0;
-		$sanitized_input['enable_debug_type_string']    = isset( $input['enable_debug_type_string'] ) ? 1 : 0;
-		$sanitized_input['exclude_debug_type_request']  = isset( $input['exclude_debug_type_request'] ) ? 1 : 0;
-		$sanitized_input['exclude_debug_type_response'] = isset( $input['exclude_debug_type_response'] ) ? 1 : 0;
-		$sanitized_input['exclude_debug_type_string']   = isset( $input['exclude_debug_type_string'] ) ? 1 : 0;
-		$sanitized_input['debug_log_path']              = isset( $input['debug_log_path'] ) ? sanitize_text_field( $input['debug_log_path'] ) : '';
-		$sanitized_input['disable_ssl_verification']    = isset( $input['disable_ssl_verification'] ) ? 1 : 0;
-		$sanitized_input['examine_responses']           = isset( $input['examine_responses'] ) ? 1 : 0;
+		$sanitized_input['enable_debug'] = isset( $input['enable_debug'] ) ? 1 : 0;
+		if ( isset( $input['enable_debug_type'] ) && is_array( $input['enable_debug_type'] ) ) {
+			$sanitized_input['enable_debug_type'] = array_map( 'sanitize_text_field', $input['enable_debug_type'] );
+		} else {
+			$sanitized_input['enable_debug_type'] = array();
+		}
+		if ( isset( $input['exclude_debug_type'] ) && is_array( $input['exclude_debug_type'] ) ) {
+			$sanitized_input['exclude_debug_type'] = array_map( 'sanitize_text_field', $input['exclude_debug_type'] );
+		} else {
+			$sanitized_input['exclude_debug_type'] = array();
+		}
+		$sanitized_input['debug_log_path']           = isset( $input['debug_log_path'] ) ? sanitize_text_field( $input['debug_log_path'] ) : '';
+		$sanitized_input['disable_ssl_verification'] = ( isset( $input['disable_ssl_verification'] ) && $input['disable_ssl_verification'] ) ? 1 : 0;
+		$sanitized_input['examine_responses']        = ( isset( $input['examine_responses'] ) && $input['examine_responses'] ) ? 1 : 0;
 		return $sanitized_input;
 	}
 }
