@@ -430,7 +430,7 @@ class AspirePress_AdminSettings {
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
-		$sanitized_input['enable']   = isset( $input['enable'] ) ? 1 : 0;
+		$sanitized_input['enable']   = ( isset( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
 		$sanitized_input['api_key']  = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : '';
 		$sanitized_input['api_host'] = isset( $input['api_host'] ) ? sanitize_text_field( $input['api_host'] ) : '';
 		if ( isset( $input['api_host'] ) && is_array( $input['api_host'] ) ) {
@@ -444,9 +444,9 @@ class AspirePress_AdminSettings {
 		} else {
 			$sanitized_input['api_host'] = array();
 		}
-		$sanitized_input['rewrite_wporg_api'] = isset( $input['rewrite_wporg_api'] ) ? 1 : 0;
+		$sanitized_input['rewrite_wporg_api'] = ( isset( $input['rewrite_wporg_api'] ) && $input['rewrite_wporg_dl'] ) ? 1 : 0;
 		$sanitized_input['api_url']           = isset( $input['api_url'] ) ? sanitize_text_field( $input['api_url'] ) : '';
-		$sanitized_input['rewrite_wporg_dl']  = isset( $input['rewrite_wporg_dl'] ) ? 1 : 0;
+		$sanitized_input['rewrite_wporg_dl']  = ( isset( $input['rewrite_wporg_dl'] ) && $input['rewrite_wporg_dl'] ) ? 1 : 0;
 		$sanitized_input['api_download_url']  = isset( $input['api_download_url'] ) ? sanitize_text_field( $input['api_download_url'] ) : '';
 
 		$sanitized_input['enable_debug'] = isset( $input['enable_debug'] ) ? 1 : 0;
@@ -461,8 +461,8 @@ class AspirePress_AdminSettings {
 			$sanitized_input['exclude_debug_type'] = array();
 		}
 		$sanitized_input['debug_log_path']           = isset( $input['debug_log_path'] ) ? sanitize_text_field( $input['debug_log_path'] ) : '';
-		$sanitized_input['disable_ssl_verification'] = isset( $input['disable_ssl_verification'] ) ? 1 : 0;
-		$sanitized_input['examine_responses']        = isset( $input['examine_responses'] ) ? 1 : 0;
+		$sanitized_input['disable_ssl_verification'] = ( isset( $input['disable_ssl_verification'] ) && $input['disable_ssl_verification'] ) ? 1 : 0;
+		$sanitized_input['examine_responses']        = ( isset( $input['examine_responses'] ) && $input['examine_responses'] ) ? 1 : 0;
 		return $sanitized_input;
 	}
 }
