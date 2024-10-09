@@ -144,7 +144,10 @@ class AspirePress_Debug
             return true;
         }
 
-        throw new \InvalidArgumentException('Unable to write debug log!');
+        /**
+         * A wrong debug log path will lock the user out of Wordpress admin providing him no way to fix the issue.
+         */
+        //throw new \InvalidArgumentException('Unable to write debug log!');
     }
 
     public static function enableDebug()
