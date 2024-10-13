@@ -2,6 +2,7 @@
     0% {
         background-color: rgba(255, 223, 0, 0.1);
     }
+
     100% {
         background-color: none;
     }
@@ -23,4 +24,8 @@
     flex: 0 1 auto;
     margin: 0 0 10px;
     box-sizing: border-box;
+}
+
+.normal-mode .advanced-setting {
+    display: none !important;
 }

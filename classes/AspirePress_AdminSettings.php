@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit;
 }
 
 /**
@@ -14,13 +14,64 @@ class AspirePress_AdminSettings {
 
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'reset_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'admin_notices', array( $this, 'reset_admin_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 	}
 
-	public function get_setting( $setting_name, $default = false ) {
-		if ( null == $this->options ) {
-			$options             = get_option( $this->option_name, false );
+	public function reset_settings() {
+		if (
+			isset( $_GET['reset'] ) &&
+			( 'reset' === $_GET['reset'] ) &&
+			isset( $_GET['reset-nonce'] ) &&
+			wp_verify_nonce( sanitize_key( $_GET['reset-nonce'] ), 'aspirepress-reset-nonce' )
+		) {
+			delete_option( $this->option_name );
+			update_option( 'aspirepress-reset', 'true' );
+
+			wp_safe_redirect(
+				add_query_arg(
+					array(
+						'reset-success'       => 'success',
+						'reset-success-nonce' => wp_create_nonce( 'aspirepress-reset-success-nonce' ),
+					),
+					admin_url( 'options-general.php?page=aspirepress-settings' )
+				)
+			);
+			exit;
+		}
+	}
+
+	function reset_admin_notice() {
+		if (
+			( 'true' === get_option( 'aspirepress-reset' ) ) &&
+			isset( $_GET['reset-success'] ) &&
+			( 'success' === $_GET['reset-success'] ) &&
+			isset( $_GET['reset-success-nonce'] ) &&
+			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspirepress-reset-success-nonce' )
+		) {
+			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
+			delete_option( 'aspirepress-reset' );
+		}
+	}
+
+	public function get_setting( $setting_name, $default_value = false ) {
+		if ( null === $this->options ) {
+			$options = get_option( $this->option_name, false );
+			/**
+			 * If the options are not set load defaults.
+			 */
+			if ( false === $options ) {
+				$options             = array();
+				$options['api_host'] = array(
+					array(
+						'search'  => 'api.wordpress.org',
+						'replace' => 'api.aspirepress.org',
+					),
+				);
+				update_option( $this->option_name, $options );
+			}
 			$config_file_options = $this->get_settings_from_config_file();
 			if ( is_array( $options ) ) {
 				/**
@@ -63,7 +114,7 @@ class AspirePress_AdminSettings {
 				$this->options = wp_parse_args( $config_file_options, $options );
 			}
 		}
-		return ( isset( $this->options[ $setting_name ] ) ? $this->options[ $setting_name ] : $default );
+		return ( isset( $this->options[ $setting_name ] ) ? $this->options[ $setting_name ] : $default_value );
 	}
 
 	private function get_settings_from_config_file() {
@@ -143,6 +194,13 @@ class AspirePress_AdminSettings {
 	}
 
 	public function the_settings_page() {
+		$reset_url = add_query_arg(
+			array(
+				'reset'       => 'reset',
+				'reset-nonce' => wp_create_nonce( 'aspirepress-reset-nonce' ),
+			),
+			admin_url( 'options-general.php?page=aspirepress-settings' )
+		);
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AspirePress Settings', 'aspirepress' ); ?></h1>
@@ -150,14 +208,20 @@ class AspirePress_AdminSettings {
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspirepress-settings' );
-				submit_button();
 				?>
+				<p class="submit">
+					<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" >Reset</a>
+				</p>
 			</form>
 		</div>
 		<?php
 	}
 
 	public function register_settings() {
+		$nonce   = wp_create_nonce( 'aspirepress-settings' );
+		$ui_mode = ( ( isset( $_GET['advanced'] ) && ( 'true' === $_GET['advanced'] ) && wp_verify_nonce( $nonce, 'aspirepress-settings' ) ) ? 'advanced-mode' : 'normal-mode' );
+
 		register_setting(
 			$this->option_group,
 			$this->option_name,
@@ -170,7 +234,12 @@ class AspirePress_AdminSettings {
 			'aspirepress_settings_section',
 			__( 'API Configuration', 'aspirepress' ),
 			null,
-			'aspirepress-settings'
+			'aspirepress-settings',
+			array(
+				'before_section' => '<div class="%s">',
+				'after_section'  => '</div>',
+				'section_class'  => $ui_mode,
+			)
 		);
 
 		add_settings_field(
@@ -207,6 +276,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'api_host',
 				'type'        => 'hosts',
+				'class'       => 'advanced-setting',
 				'description' => __( 'The Domain rewrites for your new API Host.', 'aspirepress' ),
 			)
 		);
@@ -220,6 +290,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'rewrite_wporg_api',
 				'type'        => 'checkbox',
+				'class'       => 'advanced-setting',
 				'description' => __( 'Overrides the built-in WordPress API rewrite rules. Must be configured with "API URL".', 'aspirepress' ),
 			)
 		);
@@ -233,6 +304,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'api_url',
 				'type'        => 'text',
+				'class'       => 'advanced-setting',
 				'description' => __( 'The URL to use for the third-party plugin API.', 'aspirepress' ),
 			)
 		);
@@ -246,6 +318,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'rewrite_wporg_dl',
 				'type'        => 'checkbox',
+				'class'       => 'advanced-setting',
 				'description' => __( 'Overrides the built-in WordPress download rewrite rules. Must be configured with "API Download URL".', 'aspirepress' ),
 			)
 		);
@@ -259,6 +332,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'api_download_url',
 				'type'        => 'text',
+				'class'       => 'advanced-setting',
 				'description' => __( 'The URL to use for the third-party plugin download API.', 'aspirepress' ),
 			)
 		);
@@ -267,7 +341,12 @@ class AspirePress_AdminSettings {
 			'aspirepress_debug_settings_section',
 			__( 'API Debug Configuration', 'aspirepress' ),
 			null,
-			'aspirepress-settings'
+			'aspirepress-settings',
+			array(
+				'before_section' => '<div class="%s">',
+				'after_section'  => '</div>',
+				'section_class'  => $ui_mode,
+			)
 		);
 
 		add_settings_field(
@@ -292,6 +371,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'enable_debug_type',
 				'type'        => 'checkbox-group',
+				'class'       => 'advanced-setting',
 				'options'     => array(
 					'request'  => __( 'Request', 'aspirepress' ),
 					'response' => __( 'Response', 'aspirepress' ),
@@ -310,6 +390,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'exclude_debug_type',
 				'type'        => 'checkbox-group',
+				'class'       => 'advanced-setting',
 				'options'     => array(
 					'request'  => __( 'Request', 'aspirepress' ),
 					'response' => __( 'Response', 'aspirepress' ),
@@ -328,6 +409,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'debug_log_path',
 				'type'        => 'text',
+				'class'       => 'advanced-setting',
 				'description' => __( 'Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.', 'aspirepress' ),
 			)
 		);
@@ -341,6 +423,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'disable_ssl_verification',
 				'type'        => 'checkbox',
+				'class'       => 'advanced-setting',
 				'description' => __( 'Disables the verification of SSL to allow local testing.', 'aspirepress' ),
 			)
 		);
@@ -354,6 +437,7 @@ class AspirePress_AdminSettings {
 			array(
 				'id'          => 'examine_responses',
 				'type'        => 'checkbox',
+				'class'       => 'advanced-setting',
 				'description' => __( 'Examines the response and logs it as a debug value when set to true.', 'aspirepress' ),
 			)
 		);
