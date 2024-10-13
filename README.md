@@ -30,7 +30,9 @@ To install this plugin, follow these steps:
 
 ## Configuration
 
-The plugin requires the following configuration options:
+The plugin settings screen shows the core plugin settings. To enable an advanced mode for the plugin settings, add "&advanced=true" query parameter to the plugin settings page URL. 
+
+The plugin uses the following configuration options. If these are set in the plugin settings UI they override settings configured with code. 
 
 ```php
 <?php
@@ -54,6 +56,8 @@ There are other options for defining the plugin's functionality, as well. They a
 * **AP_UPDATER_DEBUG_SSL** - Disables the verification of SSL to allow local testing.
 * **AP_UPDATER_EXAMINE_RESPONSES** - Examines the response and logs it as a debug value when set to true.
 * **AP_UPDATER_DEBUG_LEVEL** - Sets information level of debug from 1 to 4.
+
+
 ## Authentication
 
 Authentication is provided by way of a randomly generated token combined with the `WP_SITEURL` constant. This token is
@@ -62,7 +66,6 @@ header.
 
 If no API key is supplied, the API key is omitted.
 
-The plugin settings screen shows the core plugin settings. To enable an advanced mode for the plugin settings, add "&advanced=true" query parameter to the plugin settings page URL. 
 ## Debugging
 
 The plugin supports debugging. To enable debugging, define the `AP_UPDATER_DEBUG` constant in your `wp-config.php` file.
