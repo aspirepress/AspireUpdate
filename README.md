@@ -62,6 +62,7 @@ header.
 
 If no API key is supplied, the API key is omitted.
 
+The plugin settings screen shows the core plugin settings. To enable an advanced mode for the plugin settings, add "&advanced=true" query parameter to the plugin settings page URL. 
 ## Debugging
 
 The plugin supports debugging. To enable debugging, define the `AP_UPDATER_DEBUG` constant in your `wp-config.php` file.
