@@ -82,9 +82,9 @@ class AspirePress_AdminSettings {
 					foreach ( $options['api_host'] as $api_host ) {
 						if (
 							isset( $api_host['search'] ) &&
-							( '' != $api_host['search'] ) &&
+							( '' !== $api_host['search'] ) &&
 							isset( $api_host['replace'] ) &&
-							( '' != $api_host['replace'] )
+							( '' !== $api_host['replace'] )
 						) {
 							$api_hosts[ $api_host['search'] ] = $api_host['replace'];
 						}

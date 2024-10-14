@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 spl_autoload_register( 'aspirePressAutoloader' );
 
-function aspirePressAutoloader( $class ) {
-	if ( file_exists( __DIR__ . '/classes/' . $class . '.php' ) ) {
-		require_once __DIR__ . '/classes/' . $class . '.php';
+function aspirePressAutoloader( $class_name ) {
+	if ( file_exists( __DIR__ . '/classes/' . $class_name . '.php' ) ) {
+		require_once __DIR__ . '/classes/' . $class_name . '.php';
 	}
 
 	return false;

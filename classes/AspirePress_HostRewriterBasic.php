@@ -1,23 +1,21 @@
 <?php
 
-class AspirePress_HostRewriterBasic implements AspirePress_HostRewriterInterface
-{
-    private array $rewriteUrls = [];
+class AspirePress_HostRewriterBasic implements AspirePress_HostRewriterInterface {
 
-    public function __construct(array $rewriteUrls)
-    {
-        $this->rewriteUrls = $rewriteUrls;
-    }
+	private array $rewrite_urls = array();
 
-    public function rewrite($url): string
-    {
-        $urlParts = parse_url($url);
-        AspirePress_Debug::logString('Rewriting host: ' . $urlParts['host']);
+	public function __construct( array $rewrite_urls ) {
+		$this->rewrite_urls = $rewrite_urls;
+	}
 
-        if (isset($this->rewriteUrls[$urlParts['host']])) {
-            $urlParts['host'] = $this->rewriteUrls[$urlParts['host']];
-        }
+	public function rewrite( $url ): string {
+		$url_parts = wp_parse_url( $url );
+		AspirePress_Debug::logString( 'Rewriting host: ' . $url_parts['host'] );
 
-        return AspirePress_Utils::buildUrl($urlParts);
-    }
+		if ( isset( $this->rewrite_urls[ $url_parts['host'] ] ) ) {
+			$url_parts['host'] = $this->rewrite_urls[ $url_parts['host'] ];
+		}
+
+		return AspirePress_Utils::buildUrl( $url_parts );
+	}
 }
