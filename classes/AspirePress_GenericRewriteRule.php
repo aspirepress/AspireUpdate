@@ -1,23 +1,23 @@
 <?php
 
-class AspirePress_GenericRewriteRule implements AspirePress_RewriteRuleInterface
-{
-    use AspirePress_RewriteRuleTrait;
+class AspirePress_GenericRewriteRule implements AspirePress_RewriteRuleInterface {
 
-    public function __construct(
-        string $originHost,
-        string $destinationHost,
-        array $pathRewriteRules = [],
-        array $urlRewriteExclusions = []
-    ) {
-        $this->setHostRewriteRule($originHost, $destinationHost);
+	use AspirePress_RewriteRuleTrait;
 
-        foreach ($pathRewriteRules as $origin => $dest) {
-            $this->setPathRewriteRule($origin, $dest);
-        }
+	public function __construct(
+		string $origin_host,
+		string $destination_host,
+		array $path_rewrite_rules = array(),
+		array $url_rewrite_exclusions = array()
+	) {
+		$this->setHostRewriteRule( $origin_host, $destination_host );
 
-        foreach ($urlRewriteExclusions as $exclusion) {
-            $this->setExcludedPathRewriteRule($exclusion);
-        }
-    }
+		foreach ( $path_rewrite_rules as $origin => $dest ) {
+			$this->setPathRewriteRule( $origin, $dest );
+		}
+
+		foreach ( $url_rewrite_exclusions as $exclusion ) {
+			$this->setExcludedPathRewriteRule( $exclusion );
+		}
+	}
 }

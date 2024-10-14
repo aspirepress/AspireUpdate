@@ -1,88 +1,81 @@
 <?php
 
-trait AspirePress_RewriteRuleTrait
-{
-    protected $hostRewriteRules = [];
+trait AspirePress_RewriteRuleTrait {
 
-    protected $pathRewriteRules = [];
+	protected $host_rewrite_rules = array();
 
-    protected $excludedPathRewriteRules = [];
+	protected $path_rewrite_rules = array();
 
-    public function rewrite(string $url): string
-    {
-        $urlParts = parse_url($url);
+	protected $excludedpath_rewrite_rules = array();
 
-        if ($this->canRewrite($url, $urlParts)) {
-            $urlParts = $this->rewriteHost($urlParts);
-            $urlParts = $this->rewritePath($urlParts);
-            $url = AspirePress_Utils::buildUrl($urlParts);
-            AspirePress_Debug::logString('Rewrote URL: ' . $url, AspirePress_Debug::INFO);
-        }
+	public function rewrite( string $url ): string {
+		$url_parts = parse_url( $url );
 
-        return $url;
-    }
+		if ( $this->canRewrite( $url, $url_parts ) ) {
+			$url_parts = $this->rewriteHost( $url_parts );
+			$url_parts = $this->rewritePath( $url_parts );
+			$url      = AspirePress_Utils::buildUrl( $url_parts );
+			AspirePress_Debug::logString( 'Rewrote URL: ' . $url, AspirePress_Debug::INFO );
+		}
 
-    public function canRewrite($url, ?array $urlParts = null): bool
-    {
-        $parts = $urlParts ?? parse_url($url);
-        $host = $parts['host'] ?? '';
-        $path = $parts['path'] ?? '';
-        if (empty($host) ||
-            !isset($this->hostRewriteRules[$host]) ||
-            in_array($path, $this->excludedPathRewriteRules)
-        ) {
-            return false;
-        }
+		return $url;
+	}
 
-        return true;
-    }
+	public function canRewrite( $url, ?array $url_parts = null ): bool {
+		$parts = $url_parts ?? wp_parse_url( $url );
+		$host  = $parts['host'] ?? '';
+		$path  = $parts['path'] ?? '';
+		if ( empty( $host ) ||
+			! isset( $this->host_rewrite_rules[ $host ] ) ||
+			in_array( $path, $this->excludedpath_rewrite_rules )
+		) {
+			return false;
+		}
 
-    public function setHostRewriteRule(string $originHost, string $targetHost): void
-    {
-        $this->hostRewriteRules[$originHost] = $targetHost;
-    }
+		return true;
+	}
 
-    public function setPathRewriteRule(string $originPath, string $targetPath): void
-    {
-        if (empty($originPath)) {
-            return;
-        }
+	public function setHostRewriteRule( string $origin_host, string $target_host ): void {
+		$this->host_rewrite_rules[ $origin_host ] = $target_host;
+	}
 
-        $this->pathRewriteRules[$originPath] = $targetPath;
-    }
+	public function setPathRewriteRule( string $origin_path, string $target_path ): void {
+		if ( empty( $origin_path ) ) {
+			return;
+		}
 
-    public function setExcludedPathRewriteRule(string $path): void
-    {
-        if (empty($path)) {
-            return;
-        }
+		$this->path_rewrite_rules[ $origin_path ] = $target_path;
+	}
 
-        if (isset($this->pathRewriteRules[$path])) {
-            unset($this->pathRewriteRules[$path]);
-        }
+	public function setExcludedPathRewriteRule( string $path ): void {
+		if ( empty( $path ) ) {
+			return;
+		}
 
-        $this->excludedPathRewriteRules[] = $path;
-    }
+		if ( isset( $this->path_rewrite_rules[ $path ] ) ) {
+			unset( $this->path_rewrite_rules[ $path ] );
+		}
 
-    private function rewriteHost(array $parts): array
-    {
-        if (isset($this->hostRewriteRules[$parts['host']])) {
-            $parts['host'] = $this->hostRewriteRules[$parts['host']];
-        }
+		$this->excludedpath_rewrite_rules[] = $path;
+	}
 
-        return $parts;
-    }
+	private function rewriteHost( array $parts ): array {
+		if ( isset( $this->host_rewrite_rules[ $parts['host'] ] ) ) {
+			$parts['host'] = $this->host_rewrite_rules[ $parts['host'] ];
+		}
 
-    private function rewritePath(array $parts): array
-    {
-        if (in_array($parts['path'], $this->excludedPathRewriteRules)) {
-            return $parts;
-        }
+		return $parts;
+	}
 
-        if (isset($this->pathRewriteRules[$parts['path']])) {
-            $parts['path'] = $this->pathRewriteRules[$parts['path']];
-        }
+	private function rewritePath( array $parts ): array {
+		if ( in_array( $parts['path'], $this->excludedpath_rewrite_rules, true ) ) {
+			return $parts;
+		}
 
-        return $parts;
-    }
+		if ( isset( $this->path_rewrite_rules[ $parts['path'] ] ) ) {
+			$parts['path'] = $this->path_rewrite_rules[ $parts['path'] ];
+		}
+
+		return $parts;
+	}
 }

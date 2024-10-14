@@ -1,22 +1,20 @@
 <?php
 
-class AspirePress_HeaderManager
-{
-    private string $siteUrl;
+class AspirePress_HeaderManager {
 
-    private string $apiKey;
-    public function __construct(string $siteUrl, string $apiKey)
-    {
-        $this->siteUrl = $siteUrl;
-        $this->apiKey = $apiKey;
-    }
+	private string $site_url;
 
-    public function addHeaders(array $headers)
-    {
-        if ($this->siteUrl && $this->apiKey) {
-            $headers['Authorization'] = base64_encode($this->siteUrl . ':' . $this->apiKey);
-        }
+	private string $api_key;
+	public function __construct( string $site_url, string $api_key ) {
+		$this->site_url = $site_url;
+		$this->api_key  = $api_key;
+	}
 
-        return $headers;
-    }
+	public function addHeaders( array $headers ) {
+		if ( $this->site_url && $this->api_key ) {
+			$headers['Authorization'] = base64_encode( $this->site_url . ':' . $this->api_key );// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		}
+
+		return $headers;
+	}
 }

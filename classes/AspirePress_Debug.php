@@ -1,210 +1,200 @@
 <?php
 
-class AspirePress_Debug
-{
-    const ERROR = 1;
-    CONST WARNING = 2;
-    CONST INFO = 3;
-    CONST DEBUG = 4;
-    const NONE = 5;
+class AspirePress_Debug {
 
-    private static $statusTranslate = [
-        self::ERROR => 'ERROR',
-        self::WARNING => 'WARNING',
-        self::INFO => 'INFO',
-        self::DEBUG => 'DEBUG',
-    ];
+	const ERROR   = 1;
+	const WARNING = 2;
+	const INFO    = 3;
+	const DEBUG   = 4;
+	const NONE    = 5;
 
-    private const DESIRED_REQUEST_KEYS = [
-        'body',
-        'method',
-        'headers'
-    ];
+	private static $status_translate = array(
+		self::ERROR   => 'ERROR',
+		self::WARNING => 'WARNING',
+		self::INFO    => 'INFO',
+		self::DEBUG   => 'DEBUG',
+	);
 
-    private const DESIRED_RESPONSE_KEYS = [
-        'body',
-        'headers',
-        'status'
-    ];
+	private const DESIRED_REQUEST_KEYS = array(
+		'body',
+		'method',
+		'headers',
+	);
 
-    private static $desiredTypes = [
-        'request',
-        'response',
-        'string'
-    ];
+	private const DESIRED_RESPONSE_KEYS = array(
+		'body',
+		'headers',
+		'status',
+	);
 
-    private static $enabled = false;
+	private static $desired_types = array(
+		'request',
+		'response',
+		'string',
+	);
 
-    private static $logPath = ABSPATH;
+	private static $enabled = false;
 
-    private static $debugLevel = self::NONE;
+	private static $log_path = ABSPATH;
 
-    public static function logRequest(string $url, array $arguments, array $desiredKeys = self::DESIRED_REQUEST_KEYS)
-    {
-        if (!self::$enabled || !in_array('request', self::$desiredTypes)) {
-            return;
-        }
+	private static $debug_level = self::NONE;
 
-        $loggedData = [
-            'url' => $url,
-            'arguments' => self::filterKeys($arguments, $desiredKeys)
-        ];
+	public static function logRequest( string $url, array $arguments, array $desired_keys = self::DESIRED_REQUEST_KEYS ) {
+		if ( ! self::$enabled || ! in_array( 'request', self::$desired_types, true ) ) {
+			return;
+		}
 
-        self::logData('REQUEST', $loggedData);
-    }
+		$logged_data = array(
+			'url'       => $url,
+			'arguments' => self::filterKeys( $arguments, $desired_keys ),
+		);
 
-    public static function logResponse(string $url, $response, array $desiredKeys = self::DESIRED_RESPONSE_KEYS)
-    {
-        if (!self::$enabled || !in_array('response', self::$desiredTypes)) {
-            return;
-        }
+		self::logData( 'REQUEST', $logged_data );
+	}
 
-        $loggedData = [
-            'url' => $url,
-        ];
+	public static function logResponse( string $url, $response, array $desired_keys = self::DESIRED_RESPONSE_KEYS ) {
+		if ( ! self::$enabled || ! in_array( 'response', self::$desired_types, true ) ) {
+			return;
+		}
 
-        if ($response instanceof WP_Error) {
-            $loggedData['wp_response'] = $response->get_error_message();
-        }
+		$logged_data = array(
+			'url' => $url,
+		);
 
-        if (is_array($response)) {
-            $loggedData['wp_response'] = self::filterResponse($response['http_response']);
-        }
+		if ( $response instanceof WP_Error ) {
+			$logged_data['wp_response'] = $response->get_error_message();
+		}
 
-        self::logData('RESPONSE', $loggedData);
-    }
+		if ( is_array( $response ) ) {
+			$logged_data['wp_response'] = self::filterResponse( $response['http_response'] );
+		}
 
-    public static function logString(string $message, string $type = self::DEBUG)
-    {
-        if (!self::$enabled || !in_array('string', self::$desiredTypes) || self::$debugLevel > $type) {
-            return;
-        }
+		self::logData( 'RESPONSE', $logged_data );
+	}
 
-        self::logData(self::$statusTranslate[$type], $message);
-    }
+	public static function logString( string $message, string $type = self::DEBUG ) {
+		if ( ! self::$enabled || ! in_array( 'string', self::$desired_types, true ) || self::$debug_level > $type ) {
+			return;
+		}
 
-    public static function logNonScalar($message, string $type = self::DEBUG)
-    {
-        if (!self::$enabled || !in_array('string', self::$desiredTypes) || self::$debugLevel > $type) {
-            return;
-        }
+		self::logData( self::$status_translate[ $type ], $message );
+	}
 
-        self::logData(self::$statusTranslate[$type], $message);
-    }
+	public static function logNonScalar( $message, string $type = self::DEBUG ) {
+		if ( ! self::$enabled || ! in_array( 'string', self::$desired_types, true ) || self::$debug_level > $type ) {
+			return;
+		}
 
-    private static function logData(string $type, $data)
-    {
-        if (!self::$enabled) {
-            return;
-        }
+		self::logData( self::$status_translate[ $type ], $message );
+	}
 
-        $message = self::parseData($data);
+	private static function logData( string $type, $data ) {
+		if ( ! self::$enabled ) {
+			return;
+		}
 
-        $logMessage = sprintf('[%s] [%s] %s', $type, date('Y-m-d H:i:s'), $message);
+		$message = self::parseData( $data );
 
-        $logMessage .= str_repeat('=', 20);
+		$log_message = sprintf( '[%s] [%s] %s', $type, date( 'Y-m-d H:i:s' ), $message );
 
-        file_put_contents(self::$logPath . '/aspirepress-debug.log', $logMessage . PHP_EOL, FILE_APPEND);
-    }
+		$log_message .= str_repeat( '=', 20 );
 
-    private static function filterKeys(array $data, array $desiredKeys)
-    {
-        return array_filter($data, function ($key) use ($desiredKeys) {
-            return in_array($key, $desiredKeys);
-        }, ARRAY_FILTER_USE_KEY);
-    }
+		file_put_contents( self::$log_path . '/aspirepress-debug.log', $log_message . PHP_EOL, FILE_APPEND );
+	}
 
-    private static function filterResponse(WP_HTTP_Response $response)
-    {
-        $returnResponse = [];
-        if (in_array('headers', self::DESIRED_RESPONSE_KEYS)) {
-            $headers = $response->get_headers();
-            if (is_object($headers) && $headers instanceof Requests_Utility_CaseInsensitiveDictionary) {
-                $headers = $headers->getAll();
-            }
+	private static function filterKeys( array $data, array $desired_keys ) {
+		return array_filter(
+			$data,
+			function ( $key ) use ( $desired_keys ) {
+				return in_array( $key, $desired_keys, true );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+	}
 
-            $returnResponse['headers'] = $headers;
-        }
+	private static function filterResponse( WP_HTTP_Response $response ) {
+		$return_response = array();
+		if ( in_array( 'headers', self::DESIRED_RESPONSE_KEYS, true ) ) {
+			$headers = $response->get_headers();
+			if ( is_object( $headers ) && $headers instanceof Requests_Utility_CaseInsensitiveDictionary ) {
+				$headers = $headers->getAll();
+			}
 
-        if (in_array('body', self::DESIRED_RESPONSE_KEYS )) {
-            $returnResponse['body'] = $response->get_data();
-        }
+			$return_response['headers'] = $headers;
+		}
 
-        if (in_array('status', self::DESIRED_RESPONSE_KEYS )) {
-            $returnResponse['status'] = $response->get_status();
-        }
+		if ( in_array( 'body', self::DESIRED_RESPONSE_KEYS, true ) ) {
+			$return_response['body'] = $response->get_data();
+		}
 
-        return $returnResponse;
-    }
+		if ( in_array( 'status', self::DESIRED_RESPONSE_KEYS, true ) ) {
+			$return_response['status'] = $response->get_status();
+		}
 
-    public static function setLogPath(string $path)
-    {
-        if (is_writable($path)) {
-            self::$logPath = $path;
-            return true;
-        }
+		return $return_response;
+	}
 
-        /**
-         * A wrong debug log path will lock the user out of Wordpress admin providing him no way to fix the issue.
-         */
-        //throw new \InvalidArgumentException('Unable to write debug log!');
-    }
+	public static function setlog_path( string $path ) {
+		if ( is_writable( $path ) ) {
+			self::$log_path = $path;
+			return true;
+		}
 
-    public static function enableDebug()
-    {
-        return self::$enabled = true;
-    }
+		/**
+		 * A wrong debug log path will lock the user out of WordPress admin providing him no way to fix the issue.
+		 */
+		// throw new \InvalidArgumentException('Unable to write debug log!');
+	}
 
-    public static function disableDebug()
+	public static function enableDebug() {
+		return self::$enabled = true;
+	}
 
-    {
-        return self::$enabled = false;
-    }
+	public static function disableDebug() {
 
-    public static function registerDesiredType(string $type)
-    {
-        if (!in_array($type, self::$desiredTypes)) {
-            self::$desiredTypes[] = $type;
-        }
-    }
+		return self::$enabled = false;
+	}
 
-    public static function removeDesiredType(string $type)
-    {
-        if (($key = array_search($type, self::$desiredTypes)) !== false) {
-            unset(self::$desiredTypes[$key]);
-        }
-    }
+	public static function registerDesiredType( string $type ) {
+		if ( ! in_array( $type, self::$desired_types, true ) ) {
+			self::$desired_types[] = $type;
+		}
+	}
 
-    private static function parseData($data, $level = 1)
-    {
-        if (is_scalar($data)) {
-            if ($level === 1) {
-                return PHP_EOL . $data . PHP_EOL;
-            }
-            return $data;
-        }
+	public static function removeDesiredType( string $type ) {
+		if ( ( $key = array_search( $type, self::$desired_types ) ) !== false ) {
+			unset( self::$desired_types[ $key ] );
+		}
+	}
 
-        if (is_object($data)) {
-            return print_r($data, true);
-        }
+	private static function parseData( $data, $level = 1 ) {
+		if ( is_scalar( $data ) ) {
+			if ( 1 === $level ) {
+				return PHP_EOL . $data . PHP_EOL;
+			}
+			return $data;
+		}
 
-        if (is_array($data)) {
-            $response = PHP_EOL;
-            foreach ($data as $key => $value) {
-                $response .= str_repeat(' ', $level * 4) . '[' . $key . '] => ' . self::parseData($value, $level + 1) . PHP_EOL;
-            }
-        }
+		if ( is_object( $data ) ) {
+			return print_r( $data, true );
+		}
 
-        return $response;
-    }
+		if ( is_array( $data ) ) {
+			$response = PHP_EOL;
+			foreach ( $data as $key => $value ) {
+				$response .= str_repeat( ' ', $level * 4 ) . '[' . $key . '] => ' . self::parseData( $value, $level + 1 ) . PHP_EOL;
+			}
+		}
 
-    public static function setDebugLevel(int $level = self::DEBUG)
-    {
-        if ($level > 4) {
-            self::$debugLevel = self::ERROR;
-            return;
-        }
+		return $response;
+	}
 
-        self::$debugLevel = $level;
-    }
+	public static function setdebug_level( int $level = self::DEBUG ) {
+		if ( $level > 4 ) {
+			self::$debug_level = self::ERROR;
+			return;
+		}
+
+		self::$debug_level = $level;
+	}
 }
