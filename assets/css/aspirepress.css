@@ -29,3 +29,26 @@
 .normal-mode .advanced-setting {
     display: none !important;
 }
+
+#aspirepress-generate-api-key {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url(../images/icon-key.svg) no-repeat center center / 24px 24px;
+    background-color: #CBCBCB;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    clip-path: inset(0 0 0 0);
+    color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#aspirepress-generate-api-key:hover {
+    background-color: #E3E3E3;
+}
+
+.aspirepress-settings-field-wrapper  p.error {
+    color: #BC3B3B;
+    display: none;
+}

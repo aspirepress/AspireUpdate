@@ -8,10 +8,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class AspirePress_AdminSettings {
 
+	/**
+	 * The Name of the Option Group.
+	 *
+	 * @var string
+	 */
 	private $option_group = 'aspirepress_settings';
-	private $option_name  = 'aspirepress_settings';
-	private $options      = null;
 
+	/**
+	 * The Name of the Option.
+	 *
+	 * @var string
+	 */
+	private $option_name = 'aspirepress_settings';
+
+	/**
+	 * An Array containing the values of the Options.
+	 *
+	 * @var array
+	 */
+	private $options = null;
+
+	/**
+	 * The Constructor.
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'reset_settings' ) );
@@ -20,6 +40,11 @@ class AspirePress_AdminSettings {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 	}
 
+	/**
+	 * Handles the Reset Functionality and triggers a Notice to inform the same.
+	 *
+	 * @return void
+	 */
 	public function reset_settings() {
 		if (
 			isset( $_GET['reset'] ) &&
@@ -43,7 +68,12 @@ class AspirePress_AdminSettings {
 		}
 	}
 
-	function reset_admin_notice() {
+	/**
+	 * The Admin Notice to convey a Reset Operation has happened.
+	 *
+	 * @return void
+	 */
+	public function reset_admin_notice() {
 		if (
 			( 'true' === get_option( 'aspirepress-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
@@ -56,6 +86,14 @@ class AspirePress_AdminSettings {
 		}
 	}
 
+	/**
+	 * Get the value of a Setting by giving priority to hard coded values.
+	 *
+	 * @param string $setting_name The name of the settings field.
+	 * @param mixed  $default_value The Default value to return if the field is not defined.
+	 *
+	 * @return string The value of the settings field.
+	 */
 	public function get_setting( $setting_name, $default_value = false ) {
 		if ( null === $this->options ) {
 			$options = get_option( $this->option_name, false );
@@ -82,9 +120,9 @@ class AspirePress_AdminSettings {
 					foreach ( $options['api_host'] as $api_host ) {
 						if (
 							isset( $api_host['search'] ) &&
-							( '' != $api_host['search'] ) &&
+							( '' !== $api_host['search'] ) &&
 							isset( $api_host['replace'] ) &&
-							( '' != $api_host['replace'] )
+							( '' !== $api_host['replace'] )
 						) {
 							$api_hosts[ $api_host['search'] ] = $api_host['replace'];
 						}
@@ -117,6 +155,11 @@ class AspirePress_AdminSettings {
 		return ( isset( $this->options[ $setting_name ] ) ? $this->options[ $setting_name ] : $default_value );
 	}
 
+	/**
+	 * Get the values defined in the config file.
+	 *
+	 * @return array An array of values as defined in the Config File.
+	 */
 	private function get_settings_from_config_file() {
 		$options = array();
 
@@ -175,6 +218,11 @@ class AspirePress_AdminSettings {
 		return $options;
 	}
 
+	/**
+	 * Register the Admin Menu.
+	 *
+	 * @return void
+	 */
 	public function register_admin_menu() {
 		add_options_page(
 			'AspirePress',
@@ -185,14 +233,35 @@ class AspirePress_AdminSettings {
 		);
 	}
 
+	/**
+	 * Enqueue the Scripts and Styles.
+	 *
+	 * @param string $hook The page identifier.
+	 * @return void
+	 */
 	public function admin_enqueue_scripts( $hook ) {
 		if ( 'settings_page_aspirepress-settings' !== $hook ) {
 			return;
 		}
 		wp_enqueue_style( 'aspirepress_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspirepress.css', array(), '1.0' );
 		wp_enqueue_script( 'aspirepress_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspirepress.js', array( 'jquery' ), '1.0', true );
+		wp_localize_script(
+			'aspirepress_settings_js',
+			'aspirepress',
+			array(
+				'ajax_url'       => admin_url( 'admin-ajax.php' ),
+				'nonce'          => wp_create_nonce( 'aspirepress-ajax' ),
+				'domain'         => AspirePress_Utils::get_top_domain(),
+				'apikey_api_url' => 'api.aspirepress.org/repository/api/v1/apitoken',
+			)
+		);
 	}
 
+	/**
+	 * The Settings Page Markup.
+	 *
+	 * @return void
+	 */
 	public function the_settings_page() {
 		$reset_url = add_query_arg(
 			array(
@@ -218,6 +287,11 @@ class AspirePress_AdminSettings {
 		<?php
 	}
 
+	/**
+	 * Register all Settings.
+	 *
+	 * @return void
+	 */
 	public function register_settings() {
 		$nonce   = wp_create_nonce( 'aspirepress-settings' );
 		$ui_mode = ( ( isset( $_GET['advanced'] ) && ( 'true' === $_GET['advanced'] ) && wp_verify_nonce( $nonce, 'aspirepress-settings' ) ) ? 'advanced-mode' : 'normal-mode' );
@@ -262,7 +336,7 @@ class AspirePress_AdminSettings {
 			'aspirepress_settings_section',
 			array(
 				'id'          => 'api_key',
-				'type'        => 'text',
+				'type'        => 'api-key',
 				'description' => __( 'Provides an API key for repositories that may require authentication.', 'aspirepress' ),
 			)
 		);
@@ -443,6 +517,13 @@ class AspirePress_AdminSettings {
 		);
 	}
 
+	/**
+	 * The Fields API which any CMS should have in its core but something we dont.
+	 *
+	 * @param array $args The Field Parameters.
+	 *
+	 * @return void Echos the Field HTML.
+	 */
 	public function add_settings_field_callback( $args = array() ) {
 		$options = get_option( $this->option_name );
 
@@ -462,7 +543,7 @@ class AspirePress_AdminSettings {
 		switch ( $type ) {
 			case 'text':
 				?>
-					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text">
+					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text" />
 					<?php
 				break;
 
@@ -474,7 +555,7 @@ class AspirePress_AdminSettings {
 
 			case 'checkbox':
 				?>
-					<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ] ) ? $options[ $id ] : 0 ); ?>>
+					<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ] ) ? $options[ $id ] : 0 ); ?> />
 					<?php
 				break;
 
@@ -483,11 +564,19 @@ class AspirePress_AdminSettings {
 					?>
 					<p>
 						<label>
-							<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ][ $key ] ) ? $options[ $id ][ $key ] : 0 ); ?>> <?php echo esc_html( $label ); ?>
+							<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ][ $key ] ) ? $options[ $id ][ $key ] : 0 ); ?> /> <?php echo esc_html( $label ); ?>
 						</label>
 					</p>
 					<?php
 				}
+				break;
+
+			case 'api-key':
+				?>
+					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text" />
+					<input type="button" id="aspirepress-generate-api-key" value="Generate API Key" title="Generate API Key" />
+					<p class="error"></p>
+					<?php
 				break;
 
 			case 'hosts':
@@ -496,10 +585,10 @@ class AspirePress_AdminSettings {
 					?>
 						<div class="aspirepress-settings-field-hosts-row">
 							<div class="aspirepress-settings-field-hosts-left">
-								<input type="text" placeholder="Search" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-search" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][search]" value="<?php echo isset( $options[ $id ][ $i ]['search'] ) ? esc_attr( $options[ $id ][ $i ]['search'] ) : ''; ?>" class="regular-text">
+								<input type="text" placeholder="Search" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-search" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][search]" value="<?php echo isset( $options[ $id ][ $i ]['search'] ) ? esc_attr( $options[ $id ][ $i ]['search'] ) : ''; ?>" class="regular-text" />
 							</div>
 							<div class="aspirepress-settings-field-hosts-right">
-								<input type="text" placeholder="Replace" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-replace" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][replace]" value="<?php echo isset( $options[ $id ][ $i ]['replace'] ) ? esc_attr( $options[ $id ][ $i ]['replace'] ) : ''; ?>" class="regular-text">
+								<input type="text" placeholder="Replace" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>-replace" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>][replace]" value="<?php echo isset( $options[ $id ][ $i ]['replace'] ) ? esc_attr( $options[ $id ][ $i ]['replace'] ) : ''; ?>" class="regular-text" />
 							</div>
 						</div>
 						<?php
@@ -511,6 +600,12 @@ class AspirePress_AdminSettings {
 		echo '</div>';
 	}
 
+	/**
+	 * Sanitize the Inputs.
+	 *
+	 * @param array $input The Input values.
+	 * @return array The processed Input.
+	 */
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
