@@ -37,7 +37,9 @@
                 "AP_UPDATER_HOST_REWRITES": "api.aspirecloud.org",
                 "AP_UPDATER_API_KEY": "foo",
                 "AP_UPDATER_REWRITE_WPORG_API": "",
-                "AP_UPDATER_API_URL": "api.aspirecloud.org",
+                "AP_UPDATER_API_URL": [
+                    "api.aspirecloud.org"
+                ],
                 "AP_UPDATER_REWRITE_WPORG_DL": "",
                 "AP_UPDATER_DL_URL": "",
                 "AP_UPDATER_DEBUG": true,
