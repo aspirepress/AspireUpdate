@@ -40,7 +40,7 @@
                 "AP_UPDATER_API_URL": "api.aspirecloud.org",
                 "AP_UPDATER_REWRITE_WPORG_DL": "",
                 "AP_UPDATER_DL_URL": "",
-                "AP_UPDATER_DEBUG": "",
+                "AP_UPDATER_DEBUG": true,
                 "AP_UPDATER_DEBUG_TYPES": "",
                 "AP_UPDATER_DEBUG_TYPES_EXCLUDE": "",
                 "AP_UPDATER_DEBUG_LOG_PATH": "",
