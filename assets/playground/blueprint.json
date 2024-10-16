@@ -54,7 +54,7 @@
         },
         {
             "step": "runPHP",
-            "code": "<?php define('AP_UPDATER_HOST_REWRITES',['api.wordpress.org' => 'api.aspirecloud.org',]);>"
+            "code": "<?php define('AP_UPDATER_HOST_REWRITES',['api.wordpress.org' => 'api.aspirecloud.org']);>"
         },
         {
             "step": "writeFile",
