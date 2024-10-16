@@ -25,7 +25,7 @@
         "networking": true
     },
     "login": true,
-    "landingPage": "/wp-admin/",
+    "landingPage": "/wp-admin/admin.php?page=aspirepress-settings",
     "steps": [
         {
             "step": "defineWpConfigConsts",
