@@ -1,6 +1,50 @@
 jQuery(document).ready(function () {
     new FieldRules();
+    new ApiKey();
 });
+
+class ApiKey {
+    constructor() {
+        ApiKey.fetch_api_key.init();
+    }
+
+    static fetch_api_key = {
+        init() {
+            jQuery('#aspirepress-generate-api-key').click(function () {
+                ApiKey.fetch_api_key.hide_error();
+                ApiKey.fetch_api_key.get();
+            });
+            ApiKey.fetch_api_key.hide_error();
+        },
+        get() {
+            let parameters = {
+                "url": aspirepress.apikey_api_url,
+                "type": "POST",
+                "contentType": 'application/json',
+                "data": JSON.stringify({
+                    "domain": aspirepress.domain
+                })
+            };
+            jQuery.ajax(parameters)
+            .done(function (response) {
+                jQuery('#aspirepress-generate-api-key').parent().find('#aspirepress-settings-field-api_key').val(response.apikey);
+            })
+            .fail(function (response) {
+                if ((response.status === 400) || (response.status === 401)) {
+                    ApiKey.fetch_api_key.show_error(response.responseJSON?.error);
+                } else {
+                    ApiKey.fetch_api_key.show_error('Unexpected Error: ' + response.status);
+                }
+            });
+        },
+        show_error(message) {
+            jQuery('#aspirepress-generate-api-key').parent().find('.error').html(message).show();
+        },
+        hide_error() {
+            jQuery('#aspirepress-generate-api-key').parent().find('.error').html('').hide();
+        }
+    }
+}
 
 class FieldRules {
     constructor() {
