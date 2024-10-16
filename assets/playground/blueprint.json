@@ -30,10 +30,10 @@
         {
             "step": "defineWpConfigConsts",
             "consts": {
-                "WP_DISABLE_FATAL_ERROR_HANDLER": true,
-                "WP_DEBUG": true,
+                "WP_DISABLE_FATAL_ERROR_HANDLER": false,
+                "WP_DEBUG": false,
                 "WP_DEBUG_LOG": true,
-                "WP_DEBUG_DISPLAY": true,
+                "WP_DEBUG_DISPLAY": false,
                 "AP_UPDATER_HOST_REWRITES": "api.aspirecloud.org",
                 "AP_UPDATER_API_KEY": "foo",
                 "AP_UPDATER_REWRITE_WPORG_API": "",
