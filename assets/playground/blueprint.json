@@ -33,7 +33,20 @@
                 "WP_DISABLE_FATAL_ERROR_HANDLER": true,
                 "WP_DEBUG": true,
                 "WP_DEBUG_LOG": true,
-                "WP_DEBUG_DISPLAY": false
+                "WP_DEBUG_DISPLAY": false,
+                "AP_UPDATER_HOST_REWRITES": "api.aspirecloud.org",
+                "AP_UPDATER_API_KEY": "foo",
+                "AP_UPDATER_REWRITE_WPORG_API": ,
+                "AP_UPDATER_API_URL": "api.aspirecloud.org",
+                "AP_UPDATER_REWRITE_WPORG_DL": "",
+                "AP_UPDATER_DL_URL": "",
+                "AP_UPDATER_DEBUG": "",
+                "AP_UPDATER_DEBUG_TYPES": "",
+                "AP_UPDATER_DEBUG_TYPES_EXCLUDE": "",
+                "AP_UPDATER_DEBUG_LOG_PATH": "",
+                "AP_UPDATER_DEBUG_SSL": "",
+                "AP_UPDATER_EXAMINE_RESPONSES": "",
+                "AP_UPDATER_DEBUG_LEVEL": "4"
             }
         },
         {
