@@ -19,7 +19,8 @@
     "plugins": [
         "https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
         "error-log-viewer",
-        "plugin-check"
+        "plugin-check",
+        "must-use"
     ],
     "features": {
         "networking": true
@@ -54,7 +55,7 @@
         },
         {
             "step": "runPHP",
-            "code": "<?php define('AP_UPDATER_HOST_REWRITES',['api.wordpress.org' => 'api.aspirecloud.org']);>"
+            "code": "<?php define('AP_UPDATER_HOST_REWRITES',['api.wordpress.org' => 'api.aspirecloud.org']);?>"
         },
         {
             "step": "writeFile",
