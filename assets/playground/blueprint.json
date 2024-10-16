@@ -52,7 +52,7 @@
         {
             "step": "writeFile",
             "path": "/wordpress/wp-content/mu-plugins/bgnightly-notice.php",
-            "data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Testing Environment. See <a href=\"https://docs.aspirepress.org\"> for the testing steps.</a></p></div>'; });"
+            "data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Testing Environment. See <a href=\"https://docs.aspirepress.org\">AspirePress docs</a> for the testing steps.</a></p></div>'; });"
         }
     ]
 }
