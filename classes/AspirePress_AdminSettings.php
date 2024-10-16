@@ -105,7 +105,7 @@ class AspirePress_AdminSettings {
 				$options['api_host'] = array(
 					array(
 						'search'  => 'api.wordpress.org',
-						'replace' => 'api.aspirepress.org',
+						'replace' => 'api.aspirecloud.org',
 					),
 				);
 				update_option( $this->option_name, $options );
