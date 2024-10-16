@@ -19,8 +19,7 @@
     "plugins": [
         "https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
         "error-log-viewer",
-        "plugin-check",
-        "must-use"
+        "plugin-check"
     ],
     "features": {
         "networking": true
