@@ -74,10 +74,10 @@ add_action(
 					new AspirePress_HeaderManager( get_site_url(), $api_key )
 				);
 
-				if ( $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
+				$disableSsl = $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false );
 					add_filter(
 						'pre_http_request',
-						function ( ...$args ) use ( $aspirepress_updater ) {
+						function ( ...$args ) use ( $aspirepress_updater, $disableSsl ) {
 							$arguments = $args[1] ?? array();
 							$url       = $args[2] ?? null;
 
@@ -85,14 +85,14 @@ add_action(
 								return false;
 							}
 
-							$arguments['sslverify'] = false;
+							$arguments['sslverify'] = $disableSsl;
 
 							return $aspirepress_updater->callApi( $url, $arguments );
 						},
 						100,
 						3
 					);
-				}
+
 
 				if ( $aspirepress_admin_settings->get_setting( 'examine_responses', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
 					add_filter(

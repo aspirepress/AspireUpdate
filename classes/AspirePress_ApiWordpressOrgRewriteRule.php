@@ -7,6 +7,5 @@ class AspirePress_ApiWordpressOrgRewriteRule implements AspirePress_RewriteRuleI
     public function __construct(string $apiDestination)
     {
         $this->setHostRewriteRule('api.wordpress.org', $apiDestination);
-        $this->setExcludedPathRewriteRule('/plugins/info/1.2/');
     }
 }
