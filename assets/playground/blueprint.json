@@ -25,19 +25,19 @@
         "networking": true
     },
     "login": true,
-    "landingPage": "/wp-admin/admin.php?page=aspirepress-settings&advanced=true",
+    "landingPage": "/wp-admin/admin.php?page=aspirepress-settings",
     "steps": [
         {
             "step": "defineWpConfigConsts",
             "consts": {
                 "WP_DISABLE_FATAL_ERROR_HANDLER": false,
-                "WP_DEBUG": false,
-                "WP_DEBUG_LOG": true,
-                "WP_DEBUG_DISPLAY": true,
-                "AP_UPDATER_ENABLE": true,
-                "AP_UPDATER_API_KEY": "foo",
-                "AP_UPDATER_DEBUG": true,
-                "AP_UPDATER_DEBUG_LEVEL": "4"
+        "WP_DEBUG": false,
+        "WP_DEBUG_LOG": true,
+        "WP_DEBUG_DISPLAY": true,
+        "AP_UPDATER_ENABLE": true,
+        "AP_UPDATER_API_KEY": "foo",
+        "AP_UPDATER_DEBUG": true,
+        "AP_UPDATER_DEBUG_LEVEL": "4"
             }
         },
         {
@@ -51,10 +51,6 @@
                 "resource": "wordpress.org/themes",
                 "slug": "twentytwentyfour"
             }
-        },
-        {
-            "step": "runPHP",
-            "code": "<?php define('AP_UPDATER_HOST_REWRITES',['api.wordpress.org' => 'api.aspirecloud.org']);?>"
         },
         {
             "step": "writeFile",
