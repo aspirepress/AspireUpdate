@@ -14,4 +14,17 @@ abstract class AspirePress_Utils {
 		$fragment = isset( $url_parts['fragment'] ) ? '#' . $url_parts['fragment'] : '';
 		return "$scheme$user$pass$host$port$path$query$fragment";
 	}
+
+	/**
+	 * Get the top level domain name from the site URL.
+	 *
+	 * @return string the top level domain name.
+	 */
+	public static function get_top_domain() {
+		$site_url     = get_site_url();
+		$domain_name  = parse_url( $site_url, PHP_URL_HOST );
+		$domain_parts = explode( '.', $domain_name );
+		return implode( '.', array_slice( $domain_parts, -2 ) );
+	}
+
 }

@@ -87,25 +87,26 @@ add_action(
 					new AspirePress_HeaderManager( get_site_url(), $api_key )
 				);
 
-				if ( $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
-					add_filter(
-						'pre_http_request',
-						function ( ...$args ) use ( $aspirepress_updater ) {
-							$arguments = $args[1] ?? array();
-							$url       = $args[2] ?? null;
+				add_filter(
+					'pre_http_request',
+					function ( ...$args ) use ( $aspirepress_updater ) {
+						$arguments = $args[1] ?? array();
+						$url       = $args[2] ?? null;
 
-							if ( ! $url ) {
-								return false;
-							}
+						if ( ! $url ) {
+							return false;
+						}
 
+						$aspirepress_admin_settings = new AspirePress_AdminSettings();
+						if ( $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
 							$arguments['sslverify'] = false;
+						}
 
-							return $aspirepress_updater->callApi( $url, $arguments );
-						},
-						100,
-						3
-					);
-				}
+						return $aspirepress_updater->callApi( $url, $arguments );
+					},
+					100,
+					3
+				);
 
 				if ( $aspirepress_admin_settings->get_setting( 'examine_responses', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
 					add_filter(
@@ -132,3 +133,42 @@ add_action(
 if ( defined( 'AP_UPDATER_DEBUG_LEVEL' ) && is_int( AP_UPDATER_DEBUG_LEVEL ) ) {
 	AspirePress_Debug::setDebugLevel( AP_UPDATER_DEBUG_LEVEL );
 }
+
+/**
+ * Force a rewrite if the plugin is enabled.
+ */
+add_filter(
+	'pre_http_request',
+	function ( $response, $parsed_args, $url ) {
+		$aspirepress_admin_settings = new AspirePress_AdminSettings();
+		$api_key                    = $aspirepress_admin_settings->get_setting( 'api_key', '' );
+		if ( $aspirepress_admin_settings->get_setting( 'enable', false ) && ( '' !== $api_key ) ) {
+			$api_hosts = $aspirepress_admin_settings->get_setting( 'api_host', '' );
+			if ( isset( $api_hosts ) && is_array( $api_hosts ) ) {
+				foreach ( $api_hosts as $api_host_search => $api_host_replace ) {
+					if (
+					isset( $api_host_search ) &&
+					( '' !== $api_host_search ) &&
+					isset( $api_host_replace ) &&
+					( '' !== $api_host_replace )
+					) {
+						if ( strpos( $url, $api_host_search ) !== false ) {
+							if ( $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
+								AspirePress_Debug::enableDebug();
+							}
+							AspirePress_Debug::logString( 'Target API Found :' . $url, AspirePress_Debug::DEBUG );
+							$updated_url = str_replace( $api_host_search, $api_host_replace, $url );
+							AspirePress_Debug::logString( 'API Rerouted to :' . $updated_url, AspirePress_Debug::DEBUG );
+							$response = wp_remote_request( $updated_url, $parsed_args );
+							AspirePress_Debug::logResponse( $updated_url, $response );
+							return $response;
+						}
+					}
+				}
+			}
+		}
+		return $response;
+	},
+	10,
+	3
+);
