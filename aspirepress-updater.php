@@ -1,10 +1,23 @@
 <?php
 
 /**
- * Plugin Name: AspirePress Updater
- * Description: Update plguins and themes for WordPress
- * Version: 1.0
- * Author: AspirePress
+ * The WordPress/Classicpress Plugin Header
+ *
+ * @see               https://developer.wordpress.org/plugins/plugin-basics/header-requirements/
+ *
+ * Plugin Name:       AspirePress Updater
+ * Plugin URI:        https://site.tld/plugin-name-uri/
+ * Description:       Update plguins and themes for WordPress.
+ * Version:           1.0.0
+ * Author:            AspirePress
+ * Requires at least: 4.0
+ * Requires PHP:      8.0.0
+ * Tested up to:      6.7
+ * Author URI:        https://docs.aspirepress.org/aspireupdate/
+ * License:           GPL-3.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       aspirepress-updater
+ * Domain Path:       /resources/languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
