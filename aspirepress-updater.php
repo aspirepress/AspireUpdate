@@ -143,9 +143,9 @@ add_filter(
 							if ( $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
 								AspirePress_Debug::enableDebug();
 							}
-							AspirePress_Debug::logString( 'Target API Found :' . $url, 'string' );
+							AspirePress_Debug::logString( 'Target API Found :' . $url, AspirePress_Debug::DEBUG );
 							$updated_url = str_replace( $api_host_search, $api_host_replace, $url );
-							AspirePress_Debug::logString( 'API Rerouted to :' . $updated_url, 'string' );
+							AspirePress_Debug::logString( 'API Rerouted to :' . $updated_url, AspirePress_Debug::DEBUG );
 							$response = wp_remote_request( $updated_url, $parsed_args );
 							AspirePress_Debug::logResponse( $updated_url, $response );
 							return $response;
