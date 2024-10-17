@@ -1,14 +1,14 @@
 <?php
 
-interface AspirePress_RewriteRuleInterface
-{
-    public function rewrite(string $url): string;
+interface AspirePress_RewriteRuleInterface {
 
-    public function canRewrite($url): bool;
+	public function rewrite( string $url ): string;
 
-    public function setHostRewriteRule(string $originHost, string $targetHost): void;
+	public function canRewrite( $url ): bool;
 
-    public function setPathRewriteRule(string $originPath, string $targetPath): void;
+	public function setHostRewriteRule( string $origin_host, string $target_host ): void;
 
-    public function setExcludedPathRewriteRule(string $path): void;
+	public function setPathRewriteRule( string $origin_path, string $target_path ): void;
+
+	public function setExcludedPathRewriteRule( string $path ): void;
 }

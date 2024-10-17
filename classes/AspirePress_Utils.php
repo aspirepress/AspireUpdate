@@ -2,16 +2,16 @@
 
 abstract class AspirePress_Utils {
 
-	public static function buildUrl( $urlParts ) {
-		$scheme   = isset( $urlParts['scheme'] ) ? $urlParts['scheme'] . '://' : '';
-		$host     = isset( $urlParts['host'] ) ? $urlParts['host'] : '';
-		$port     = isset( $urlParts['port'] ) ? ':' . $urlParts['port'] : '';
-		$user     = isset( $urlParts['user'] ) ? $urlParts['user'] : '';
-		$pass     = isset( $urlParts['pass'] ) ? ':' . $urlParts['pass'] : '';
+	public static function buildUrl( $url_parts ) {
+		$scheme   = isset( $url_parts['scheme'] ) ? $url_parts['scheme'] . '://' : '';
+		$host     = isset( $url_parts['host'] ) ? $url_parts['host'] : '';
+		$port     = isset( $url_parts['port'] ) ? ':' . $url_parts['port'] : '';
+		$user     = isset( $url_parts['user'] ) ? $url_parts['user'] : '';
+		$pass     = isset( $url_parts['pass'] ) ? ':' . $url_parts['pass'] : '';
 		$pass     = ( $user || $pass ) ? "$pass@" : '';
-		$path     = isset( $urlParts['path'] ) ? $urlParts['path'] : '';
-		$query    = isset( $urlParts['query'] ) ? '?' . $urlParts['query'] : '';
-		$fragment = isset( $urlParts['fragment'] ) ? '#' . $urlParts['fragment'] : '';
+		$path     = isset( $url_parts['path'] ) ? $url_parts['path'] : '';
+		$query    = isset( $url_parts['query'] ) ? '?' . $url_parts['query'] : '';
+		$fragment = isset( $url_parts['fragment'] ) ? '#' . $url_parts['fragment'] : '';
 		return "$scheme$user$pass$host$port$path$query$fragment";
 	}
 
@@ -26,4 +26,5 @@ abstract class AspirePress_Utils {
 		$domain_parts = explode( '.', $domain_name );
 		return implode( '.', array_slice( $domain_parts, -2 ) );
 	}
+
 }

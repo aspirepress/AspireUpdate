@@ -1,12 +1,11 @@
 <?php
 
-class AspirePress_ApiWordpressOrgRewriteRule implements AspirePress_RewriteRuleInterface
-{
-    use AspirePress_RewriteRuleTrait;
+class AspirePress_ApiWordpressOrgRewriteRule implements AspirePress_RewriteRuleInterface {
 
-    public function __construct(string $apiDestination)
-    {
-        $this->setHostRewriteRule('api.wordpress.org', $apiDestination);
-        $this->setExcludedPathRewriteRule('/plugins/info/1.2/');
-    }
+	use AspirePress_RewriteRuleTrait;
+
+	public function __construct( string $api_destination ) {
+		$this->setHostRewriteRule( 'api.wordpress.org', $api_destination );
+		$this->setExcludedPathRewriteRule( '/plugins/info/1.2/' );
+	}
 }
