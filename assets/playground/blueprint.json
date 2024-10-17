@@ -5,7 +5,7 @@
         "wp": "latest"
     },
     "meta": {
-        "title": "WildApricot Press Demo",
+        "title": "AspirePress Update Demo",
         "description": "loads the latest plugin into a playground site",
         "author": "asirota",
         "categories": [
@@ -14,7 +14,7 @@
         ]
     },
     "siteOptions": {
-        "blogname": "WildApricot Press Demo Site"
+        "blogname": "AspirePress Update Demo Site"
     },
     "plugins": [
         "https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
