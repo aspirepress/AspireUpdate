@@ -74,26 +74,25 @@ add_action(
 					new AspirePress_HeaderManager( get_site_url(), $api_key )
 				);
 
-				add_filter(
-					'pre_http_request',
-					function ( ...$args ) use ( $aspirepress_updater ) {
-						$arguments = $args[1] ?? array();
-						$url       = $args[2] ?? null;
 
-						if ( ! $url ) {
-							return false;
-						}
+				$disableSsl = $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false );
+					add_filter(
+						'pre_http_request',
+						function ( ...$args ) use ( $aspirepress_updater, $disableSsl ) {
+							$arguments = $args[1] ?? array();
+							$url       = $args[2] ?? null;
 
-						$aspirepress_admin_settings = new AspirePress_AdminSettings();
-						if ( $aspirepress_admin_settings->get_setting( 'disable_ssl_verification', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
-							$arguments['sslverify'] = false;
-						}
+							if ( ! $url ) {
+								return false;
+							}
 
-						return $aspirepress_updater->callApi( $url, $arguments );
-					},
-					100,
-					3
-				);
+							$arguments['sslverify'] = $disableSsl;
+
+							return $aspirepress_updater->callApi( $url, $arguments );
+						},
+						100,
+						3
+					);
 
 				if ( $aspirepress_admin_settings->get_setting( 'examine_responses', false ) && $aspirepress_admin_settings->get_setting( 'enable_debug', false ) ) {
 					add_filter(
