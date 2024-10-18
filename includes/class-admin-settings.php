@@ -294,7 +294,7 @@ class Admin_Settings {
 
 		add_settings_section(
 			'aspirepress_settings_section',
-			__( 'API Configuration', 'aspirepress' ),
+			esc_html__( 'API Configuration', 'aspirepress' ),
 			null,
 			'aspirepress-settings',
 			array(
@@ -318,7 +318,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'api_key',
-			__( 'API Key', 'aspirepress' ),
+			esc_html__( 'API Key', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_settings_section',
@@ -326,13 +326,13 @@ class Admin_Settings {
 				'id'          => 'api_key',
 				'type'        => 'api-key',
 				'data'        => $options,
-				'description' => __( 'Provides an API key for repositories that may require authentication.', 'aspirepress' ),
+				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'api_host',
-			__( 'API Hosts', 'aspirepress' ),
+			esc_html__( 'API Hosts', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_settings_section',
@@ -340,13 +340,13 @@ class Admin_Settings {
 				'id'          => 'api_hosts',
 				'type'        => 'hosts',
 				'data'        => $options,
-				'description' => __( 'The Domain rewrites for your new API Hosts.', 'aspirepress' ),
+				'description' => esc_html__( 'The Domain rewrites for your new API Hosts.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_section(
 			'aspirepress_debug_settings_section',
-			__( 'API Debug Configuration', 'aspirepress' ),
+			esc_html__( 'API Debug Configuration', 'aspirepress' ),
 			null,
 			'aspirepress-settings',
 			array(
@@ -357,7 +357,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'enable_debug',
-			__( 'Enable Debug Mode', 'aspirepress' ),
+			esc_html__( 'Enable Debug Mode', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
@@ -365,13 +365,13 @@ class Admin_Settings {
 				'id'          => 'enable_debug',
 				'type'        => 'checkbox',
 				'data'        => $options,
-				'description' => __( 'Enables debug mode for the plugin.', 'aspirepress' ),
+				'description' => esc_html__( 'Enables debug mode for the plugin.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'enable_debug_type',
-			__( 'Enable Debug Type', 'aspirepress' ),
+			esc_html__( 'Enable Debug Type', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
@@ -380,17 +380,17 @@ class Admin_Settings {
 				'type'        => 'checkbox-group',
 				'data'        => $options,
 				'options'     => array(
-					'request'  => __( 'Request', 'aspirepress' ),
-					'response' => __( 'Response', 'aspirepress' ),
-					'string'   => __( 'String', 'aspirepress' ),
+					'request'  => esc_html__( 'Request', 'aspirepress' ),
+					'response' => esc_html__( 'Response', 'aspirepress' ),
+					'string'   => esc_html__( 'String', 'aspirepress' ),
 				),
-				'description' => __( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspirepress' ),
+				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspirepress' ),
 			)
 		);
 
 		add_settings_field(
 			'disable_ssl_verification',
-			__( 'Disable SSL Verification', 'aspirepress' ),
+			esc_html__( 'Disable SSL Verification', 'aspirepress' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspirepress-settings',
 			'aspirepress_debug_settings_section',
@@ -399,7 +399,7 @@ class Admin_Settings {
 				'type'        => 'checkbox',
 				'data'        => $options,
 				'class'       => 'advanced-setting',
-				'description' => __( 'Disables the verification of SSL to allow local testing.', 'aspirepress' ),
+				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'aspirepress' ),
 			)
 		);
 	}
