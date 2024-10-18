@@ -1,6 +1,6 @@
 <?php
 /**
- * Aspire Updater - Update plguins and themes for WordPress.
+ * Aspire Updater - Update plugins and themes for WordPress.
  *
  * @package     aspire-update
  * @author      AspirePress
@@ -9,7 +9,7 @@
  *
  * Plugin Name:       AspirePress Updater
  * Plugin URI:        https://aspirepress.org/
- * Description:       Update plguins and themes for WordPress.
+ * Description:       Update plugins and themes for WordPress.
  * Version:           0.5
  * Author:            AspirePress
  * Author URI:        https://docs.aspirepress.org/aspireupdate/
