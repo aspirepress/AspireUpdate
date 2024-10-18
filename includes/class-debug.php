@@ -60,7 +60,7 @@ class Debug {
 		$file_path = WP_CONTENT_DIR . '/' . self::$log_file;
 
 		$content = $wp_filesystem->get_contents( $file_path );
-		if ( $content === false ) {
+		if ( false === $content ) {
 			$wp_filesystem->put_contents(
 				$file_path,
 				$formatted_message,
