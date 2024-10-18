@@ -231,8 +231,8 @@ class Admin_Settings {
 		if ( 'settings_page_aspirepress-settings' !== $hook ) {
 			return;
 		}
-		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), '1.0' );
-		wp_enqueue_script( 'aspire_update_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspire-update.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), AP_VERSION );
+		wp_enqueue_script( 'aspire_update_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspire-update.js', array( 'jquery' ), AP_VERSION, true );
 		wp_localize_script(
 			'aspire_update_settings_js',
 			'aspirepress',

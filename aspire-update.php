@@ -10,7 +10,7 @@
  * Plugin Name:       AspirePress Updater
  * Plugin URI:        https://aspirepress.org/
  * Description:       Update plguins and themes for WordPress.
- * Version:           1.0.0
+ * Version:           0.5
  * Author:            AspirePress
  * Author URI:        https://docs.aspirepress.org/aspireupdate/
  * Requires at least: 4.0
@@ -24,6 +24,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
+}
+
+if ( ! defined( 'AP_VERSION' ) ) {
+	define( 'AP_VERSION', '0.5' );
 }
 
 require_once __DIR__ . '/includes/autoload.php';
