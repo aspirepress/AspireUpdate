@@ -21,6 +21,6 @@ class Utilities {
 		$site_url     = get_site_url();
 		$domain_name  = wp_parse_url( $site_url, PHP_URL_HOST );
 		$domain_parts = explode( '.', $domain_name );
-		return implode( '.', array_slice( $domain_parts, -2 ) );
+		return sanitize_text_field( implode( '.', array_slice( $domain_parts, -2 ) ) );
 	}
 }
