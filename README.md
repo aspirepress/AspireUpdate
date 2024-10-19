@@ -11,7 +11,7 @@ This improves the capacity of the plugin to adequately support newer or differen
 
 This plugin requires:
 
-* WordPress 5.0 or later
+* WordPress 4.0 or later
 * PHP 7.4 or later
 * The ability to upload files to your WordPress installation
 * The ability to modify your configuration in wp-config.php
