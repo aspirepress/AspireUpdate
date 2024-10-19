@@ -11,8 +11,8 @@ This improves the capacity of the plugin to adequately support newer or differen
 
 This plugin requires:
 
-* WordPress 6.0 or later
-* PHP 7.0 or later
+* WordPress 4.0 or later
+* PHP 7.4 or later
 * The ability to upload files to your WordPress installation
 * The ability to modify your configuration in wp-config.php
 
@@ -25,37 +25,26 @@ To install this plugin, follow these steps:
 3. Go to the plugins section and click on "Add New Plugin".
 4. Select "Upload Plugin" and upload the plugin's ZIP file.
 5. Activate the plugin.
-6. Configure the plugin by updating your `wp-config.php` file with the configuration options in the next section.
-7. Test.
+6. Configure the plugin if necessary with the user intergace.
+7. Test and enjoy!
 
 ## Configuration
 
-The plugin settings screen shows the core plugin settings. To enable an advanced mode for the plugin settings, add "&advanced=true" query parameter to the plugin settings page URL. 
-
 The plugin uses the following configuration options. If these are set in the plugin settings UI they override settings configured with code. 
-
-```php
-<?php
-
-define('AP_UPDATER_HOST_REWRITES', [
-    'api.wordpress.org' => 'your-repo.com',
-]);
-```
 
 There are other options for defining the plugin's functionality, as well. They are:
 
-* **AP_UPDATER_API_KEY** - Provides an API key for repositories that may require authentication.
-* **AP_UPDATER_REWRITE_WPORG_API** - Uses the built-in WordPress API rewrite rules. Must be configured with `AP_UPDATER_API_URL`.
-* **AP_UPDATER_REWRITE_WPORG_DL** - Uses the built-in WordPress download rewrite rules. Must be configured with `AP_UPDATER_DL_URL`.
-* **AP_UPDATER_API_URL** - The URL to use for the third-party plugin API. Must be configured with `AP_UPDATER_REWRITE_WPORG_API`.
-* **AP_UPDATER_DL_URL** - The URL to use for the third-party plugin download API. Must be configured with `AP_UPDATER_REWRITE_WPORG_DL`.
-* **AP_UPDATER_DEBUG** - Enables debug mode for the plugin.
-* **AP_UPDATER_DEBUG_TYPES** - Defines the types of messages you want output as an array. Presently supports `request`, `response` and `string`
-* **AP_UPDATER_DEBUG_TYPES_EXCLUDE** - Defines any types you DON'T WANT displayed. This runs AFTER the `AP_UPDATER_DEBUG_TYPES` does, so it will remove anything you previously added if both are defined.
-* **AP_UPDATER_DEBUG_LOG_PATH** - Defines where to write the log. The log file name is hard-coded, but the path is up to you. File must be writable.
-* **AP_UPDATER_DEBUG_SSL** - Disables the verification of SSL to allow local testing.
-* **AP_UPDATER_EXAMINE_RESPONSES** - Examines the response and logs it as a debug value when set to true.
-* **AP_UPDATER_DEBUG_LEVEL** - Sets information level of debug from 1 to 4.
+
+| Configuration Parameter |                                          Description |                        Default, if any |
+| :---------------------- | ---------------------------------------------------: | -------------------------------------: |
+| AP_ENABLE               | The API Key for AspireCloud (not currently enforced) |                                   none |
+| AP_API_KEY              |                                  Enable API rewrites |                                   true |
+| AP_HOSTS                |                                    an array of hosts |           array('api.aspirecloud.org') |
+| AP_DEBUG                |                                    Enable Debug Mode |                                  false |
+| AP_DEBUG_TYPES          |                              an array of debug modes | array('string', 'request', 'response') |
+| AP_DISABLE_SSL          |          Disabled SSL verification for local testing |                                   true |
+
+The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
 
 
 ## Authentication
@@ -64,19 +53,6 @@ Authentication is provided by way of a randomly generated token combined with th
 then Base64-encoded with the separate parts of the credentials separated by a colon. It's added to the `Authorization`
 header.
 
-If no API key is supplied, the API key is omitted.
-
-## Debugging
-
-The plugin supports debugging. To enable debugging, define the `AP_UPDATER_DEBUG` constant in your `wp-config.php` file.
-
-There are three output options, all enabled by default:
-
-* **request** - Outputs the request URL and headers.
-* **response** - Outputs the response headers and body.
-* **string** - Outputs the string that is being rewritten.
-
-These are turned on by default but you can remove ones you don't need by defining them in the `AP_UPDATER_DEBUG_TYPES_EXCLUDE` constant.
 
 ## License
 
