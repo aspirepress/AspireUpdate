@@ -1,13 +1,13 @@
 <?php
 /**
- * Aspire Updater - Update plugins and themes for WordPress.
+ * AspireUpdate - Update plugins and themes for WordPress.
  *
  * @package     aspire-update
  * @author      AspirePress
  * @copyright   AspirePress
  * @license     GPL-3.0-or-later
  *
- * Plugin Name:       AspirePress Updater
+ * Plugin Name:       AspireUpdate
  * Plugin URI:        https://aspirepress.org/
  * Description:       Update plugins and themes for WordPress.
  * Version:           0.5
