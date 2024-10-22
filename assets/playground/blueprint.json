@@ -1,0 +1,57 @@
+{
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "preferredVersions": {
+        "php": "latest",
+        "wp": "latest"
+    },
+    "meta": {
+        "title": "AspirePress Update Demo",
+        "description": "loads the latest plugin into a playground site",
+        "author": "asirota",
+        "categories": [
+            "demo",
+            "plugin"
+        ]
+    },
+    "siteOptions": {
+        "blogname": "AspirePress Update Demo Site"
+    },
+    "plugins": [
+        "https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
+        "error-log-viewer",
+        "plugin-check"
+    ],
+    "features": {
+        "networking": true
+    },
+    "login": true,
+    "landingPage": "/wp-admin/admin.php?page=aspirepress-settings",
+    "steps": [
+        {
+            "step": "defineWpConfigConsts",
+            "consts": {
+                "WP_DISABLE_FATAL_ERROR_HANDLER": false,
+                "WP_DEBUG": false,
+                "WP_DEBUG_LOG": true,
+                "WP_DEBUG_DISPLAY": true
+            }
+        },
+        {
+            "step": "writeFile",
+            "path": "/wordpress/wp-content/mu-plugins/rewrite.php",
+            "data": "<?php /* Use pretty permalinks */ add_action( 'after_setup_theme', function() { global $wp_rewrite; $wp_rewrite->set_permalink_structure('/%postname%/'); $wp_rewrite->flush_rules(); } );"
+        },
+        {
+            "step": "installTheme",
+            "themeData": {
+                "resource": "wordpress.org/themes",
+                "slug": "twentytwentyfour"
+            }
+        },
+        {
+            "step": "writeFile",
+            "path": "/wordpress/wp-content/mu-plugins/bgnightly-notice.php",
+            "data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Testing Environment. See <a href=\"https://docs.aspirepress.org\">AspirePress docs</a> for the testing steps.</a></p></div>'; });"
+        }
+    ]
+}

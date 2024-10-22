@@ -11,7 +11,7 @@ This improves the capacity of the plugin to adequately support newer or differen
 
 This plugin requires:
 
-* WordPress 5.0 or later
+* WordPress 4.0 or later
 * PHP 7.4 or later
 * The ability to upload files to your WordPress installation
 * The ability to modify your configuration in wp-config.php
@@ -30,17 +30,7 @@ To install this plugin, follow these steps:
 
 ## Configuration
 
-The plugin settings screen shows the core plugin settings. To enable an advanced settings mode, add the query paraameter "&advanced=true" to the plugin settings page URL. 
-
 The plugin uses the following configuration options. If these are set in the plugin settings UI they override settings configured with code. 
-
-```php
-<?php
-
-define('AP_UPDATER_HOST_REWRITES', [
-    'api.wordpress.org' => 'your-repo.com',
-]);
-```
 
 There are other options for defining the plugin's functionality, as well. They are:
 
