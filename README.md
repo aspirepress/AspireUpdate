@@ -44,9 +44,20 @@ The plugin uses the following configuration options:
 | AP_DISABLE_SSL          |                                  Disabled SSL verification for local testing |                                   true |
 | AP_REMOVE_UI            | Disables plugin settings, defaults to config parameters set in wp-config.php |                                  false |
 
-The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
-
 NOTE: The AspireUpdate user interface settings _will_ override any plugin options set in wp-config.php unless AP_REMOVE_UI configuration parameter is set to true.
+
+To configure any parameters that require an array you must use a short piece of code:
+
+```php
+// Works as of PHP 7
+define('AP_HOSTS', array(
+    'api.aspirecloud.org'
+));
+```
+
+## Debug Logging
+
+The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
 
 ## Authentication
 
