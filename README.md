@@ -42,9 +42,7 @@ The plugin can use the following configuration options in wp-config.php:
 | AP_DEBUG                |                                                            Enable Debug Mode |                                  false |
 | AP_DEBUG_TYPES          |                                                      an array of debug modes | array('string', 'request', 'response') |
 | AP_DISABLE_SSL          |                                  Disabled SSL verification for local testing |                                   true |
-| AP_REMOVE_UI            | Disables plugin settings, defaults to config parameters set in wp-config.php |                                  false |
-
-NOTE: The AspireUpdate user interface settings _will_ override any plugin options set in wp-config.php unless AP_REMOVE_UI configuration parameter is set to true.
+| AP_REMOVE_UI            | Disables plugin settings user interface, defaults to config parameters set in wp-config.php |                                  false |
 
 To set AP_DEBUG_TYPES use an array to define the constant:
 
@@ -54,6 +52,12 @@ define('AP_DEBUG_TYPES ', array(
     'string', 'request', 'response'
 ));
 ```
+
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. 
+
+
+NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
+
 
 ## Debug Logging
 
