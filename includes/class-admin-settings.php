@@ -178,8 +178,8 @@ class Admin_Settings {
 		}
 
 		if ( ! defined( 'AP_HOST' ) ) {
-			define( 'AP_HOST', array() );
-		} elseif ( is_array( AP_HOST ) ) {
+			define( 'AP_HOST', '' );
+		} else {
 			$options['api_host'] = AP_HOST;
 		}
 
@@ -348,7 +348,7 @@ class Admin_Settings {
 						'value'           => 'api.aspirecloud.org',
 						'label'           => 'AspireCloud',
 						'require-api-key' => 'true',
-						'api-key-url'     => 'api.aspireupdate.org/repository/api/v1/apitoken',
+						'api-key-url'     => 'api.aspirecloud.org/v1/apitoken',
 					),
 					array(
 						'value'           => 'other',
