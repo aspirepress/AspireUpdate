@@ -3,8 +3,8 @@
  * AspireUpdate - Update plugins and themes for WordPress.
  *
  * @package     aspire-update
- * @author      AspirePress
- * @copyright   AspirePress
+ * @author      AspireUpdate
+ * @copyright   AspireUpdate
  * @license     GPL-3.0-or-later
  *
  * Plugin Name:       AspireUpdate
@@ -18,7 +18,7 @@
  * Tested up to:      6.7
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
- * Text Domain:       aspirepress
+ * Text Domain:       aspireupdate
  * Domain Path:       /resources/languages
  */
 
@@ -32,4 +32,4 @@ if ( ! defined( 'AP_VERSION' ) ) {
 
 require_once __DIR__ . '/includes/autoload.php';
 
-new AspirePress\Controller();
+new AspireUpdate\Controller();

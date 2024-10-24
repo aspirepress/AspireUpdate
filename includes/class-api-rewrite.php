@@ -5,7 +5,7 @@
  * @package aspire-update
  */
 
-namespace AspirePress;
+namespace AspireUpdate;
 
 /**
  * The Class for Rewriting the Default API.

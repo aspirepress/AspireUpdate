@@ -5,7 +5,7 @@
  * @package aspire-update
  */
 
-namespace AspirePress;
+namespace AspireUpdate;
 
 /**
  * The Class for Admin Settings Page and functions to access Settings Values.

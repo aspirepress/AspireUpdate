@@ -12,11 +12,11 @@
     animation: glow 0.5s ease-in-out;
 }
 
-.aspirepress-settings-field-hosts-wrapper .aspirepress-settings-field-hosts-row {
+.aspireupdate-settings-field-hosts-wrapper .aspireupdate-settings-field-hosts-row {
     margin: 0 0 10px;
 }
 
-#aspirepress-generate-api-key {
+#aspireupdate-generate-api-key {
     display: inline-block;
     width: 30px;
     height: 30px;
@@ -30,11 +30,11 @@
     transition: background-color 0.3s ease;
 }
 
-#aspirepress-generate-api-key:hover {
+#aspireupdate-generate-api-key:hover {
     background-color: #E3E3E3;
 }
 
-.aspirepress-settings-field-wrapper  p.error {
+.aspireupdate-settings-field-wrapper  p.error {
     color: #BC3B3B;
     display: none;
 }

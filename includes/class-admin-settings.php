@@ -5,7 +5,7 @@
  * @package aspire-update
  */
 
-namespace AspirePress;
+namespace AspireUpdate;
 
 /**
  * The Class for Admin Settings Page and functions to access Settings Values.
@@ -24,14 +24,14 @@ class Admin_Settings {
 	 *
 	 * @var string
 	 */
-	private $option_group = 'aspirepress_settings';
+	private $option_group = 'aspireupdate_settings';
 
 	/**
 	 * The Name of the Option.
 	 *
 	 * @var string
 	 */
-	private $option_name = 'aspirepress_settings';
+	private $option_name = 'aspireupdate_settings';
 
 	/**
 	 * An Array containing the values of the Options.
@@ -69,8 +69,8 @@ class Admin_Settings {
 	 * @return array The default values.
 	 */
 	private function get_default_settings() {
-		$options              = array();
-		$options['api_hosts'] = array( 'api.aspirecloud.org' );
+		$options             = array();
+		$options['api_host'] = 'api.aspirecloud.org';
 		return $options;
 	}
 
@@ -84,19 +84,19 @@ class Admin_Settings {
 			isset( $_GET['reset'] ) &&
 			( 'reset' === $_GET['reset'] ) &&
 			isset( $_GET['reset-nonce'] ) &&
-			wp_verify_nonce( sanitize_key( $_GET['reset-nonce'] ), 'aspirepress-reset-nonce' )
+			wp_verify_nonce( sanitize_key( $_GET['reset-nonce'] ), 'aspireupdate-reset-nonce' )
 		) {
 			$options = $this->get_default_settings();
 			update_option( $this->option_name, $options );
-			update_option( 'aspirepress-reset', 'true' );
+			update_option( 'aspireupdate-reset', 'true' );
 
 			wp_safe_redirect(
 				add_query_arg(
 					array(
 						'reset-success'       => 'success',
-						'reset-success-nonce' => wp_create_nonce( 'aspirepress-reset-success-nonce' ),
+						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
 					),
-					admin_url( 'options-general.php?page=aspirepress-settings' )
+					admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
 			exit;
@@ -110,14 +110,14 @@ class Admin_Settings {
 	 */
 	public function reset_admin_notice() {
 		if (
-			( 'true' === get_option( 'aspirepress-reset' ) ) &&
+			( 'true' === get_option( 'aspireupdate-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
 			( 'success' === $_GET['reset-success'] ) &&
 			isset( $_GET['reset-success-nonce'] ) &&
-			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspirepress-reset-success-nonce' )
+			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
 			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
-			delete_option( 'aspirepress-reset' );
+			delete_option( 'aspireupdate-reset' );
 		}
 	}
 
@@ -144,6 +144,10 @@ class Admin_Settings {
 				/**
 				 * If User Options are saved do some processing to make it match the structure of the data from the config file.
 				 */
+				if ( isset( $options['api_host'] ) && ( 'other' === $options['api_host'] ) ) {
+					$options['api_host'] = $options['api_host_other'];
+				}
+
 				if ( isset( $options['enable_debug_type'] ) && is_array( $options['enable_debug_type'] ) ) {
 					$debug_types = array();
 					foreach ( $options['enable_debug_type'] as $debug_type_name => $debug_type_enabled ) {
@@ -156,7 +160,7 @@ class Admin_Settings {
 				$this->options = wp_parse_args( $config_file_options, $options );
 			}
 		}
-		return ( isset( $this->options[ $setting_name ] ) ? $this->options[ $setting_name ] : $default_value );
+		return $this->options[ $setting_name ] ?? $default_value;
 	}
 
 	/**
@@ -173,16 +177,16 @@ class Admin_Settings {
 			$options['enable'] = AP_ENABLE;
 		}
 
+		if ( ! defined( 'AP_HOST' ) ) {
+			define( 'AP_HOST', array() );
+		} elseif ( is_array( AP_HOST ) ) {
+			$options['api_host'] = AP_HOST;
+		}
+
 		if ( ! defined( 'AP_API_KEY' ) ) {
 			define( 'AP_API_KEY', '' );
 		} else {
 			$options['api_key'] = AP_API_KEY;
-		}
-
-		if ( ! defined( 'AP_HOSTS' ) ) {
-			define( 'AP_HOSTS', array() );
-		} elseif ( is_array( AP_HOSTS ) ) {
-			$options['api_hosts'] = AP_HOSTS;
 		}
 
 		if ( ! defined( 'AP_DEBUG' ) ) {
@@ -212,13 +216,19 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function register_admin_menu() {
-		add_options_page(
-			'AspirePress',
-			'AspirePress',
-			'manage_options',
-			'aspirepress-settings',
-			array( $this, 'the_settings_page' )
-		);
+		if ( ! defined( 'AP_REMOVE_UI' ) ) {
+			define( 'AP_REMOVE_UI', false );
+		}
+		if ( false === AP_REMOVE_UI ) {
+			add_submenu_page(
+				'index.php',
+				'AspireUpdate',
+				'AspireUpdate',
+				'manage_options',
+				'aspireupdate-settings',
+				array( $this, 'the_settings_page' )
+			);
+		}
 	}
 
 	/**
@@ -228,19 +238,18 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-		if ( 'settings_page_aspirepress-settings' !== $hook ) {
+		if ( 'dashboard_page_aspireupdate-settings' !== $hook ) {
 			return;
 		}
 		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), AP_VERSION );
 		wp_enqueue_script( 'aspire_update_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspire-update.js', array( 'jquery' ), AP_VERSION, true );
 		wp_localize_script(
 			'aspire_update_settings_js',
-			'aspirepress',
+			'aspireupdate',
 			array(
-				'ajax_url'       => admin_url( 'admin-ajax.php' ),
-				'nonce'          => wp_create_nonce( 'aspirepress-ajax' ),
-				'domain'         => Utilities::get_top_level_domain(),
-				'apikey_api_url' => 'api.aspirepress.org/repository/api/v1/apitoken',
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
+				'domain'   => Utilities::get_top_level_domain(),
 			)
 		);
 	}
@@ -254,17 +263,17 @@ class Admin_Settings {
 		$reset_url = add_query_arg(
 			array(
 				'reset'       => 'reset',
-				'reset-nonce' => wp_create_nonce( 'aspirepress-reset-nonce' ),
+				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
 			),
-			admin_url( 'options-general.php?page=aspirepress-settings' )
+			admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'AspirePress Settings', 'aspirepress' ); ?></h1>
+			<h1><?php esc_html_e( 'AspireUpdate Settings', 'aspireupdate' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( $this->option_group );
-				do_settings_sections( 'aspirepress-settings' );
+				do_settings_sections( 'aspireupdate-settings' );
 				?>
 				<p class="submit">
 					<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
@@ -281,8 +290,15 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function register_settings() {
-		$nonce   = wp_create_nonce( 'aspirepress-settings' );
-		$options = get_option( $this->option_name );
+		$nonce   = wp_create_nonce( 'aspireupdate-settings' );
+		$options = get_option( $this->option_name, false );
+		/**
+		 * If the options are not set load defaults.
+		 */
+		if ( false === $options ) {
+			$options = $this->get_default_settings();
+			update_option( $this->option_name, $options );
+		}
 
 		register_setting(
 			$this->option_group,
@@ -293,10 +309,10 @@ class Admin_Settings {
 		);
 
 		add_settings_section(
-			'aspirepress_settings_section',
-			esc_html__( 'API Configuration', 'aspirepress' ),
+			'aspireupdate_settings_section',
+			esc_html__( 'API Configuration', 'aspireupdate' ),
 			null,
-			'aspirepress-settings',
+			'aspireupdate-settings',
 			array(
 				'before_section' => '<div class="%s">',
 				'after_section'  => '</div>',
@@ -305,10 +321,10 @@ class Admin_Settings {
 
 		add_settings_field(
 			'enable',
-			'Enable AspirePress API Rewrites',
+			'Enable AspireUpdate API Rewrites',
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_settings_section',
 			array(
 				'id'   => 'enable',
 				'type' => 'checkbox',
@@ -317,38 +333,51 @@ class Admin_Settings {
 		);
 
 		add_settings_field(
-			'api_key',
-			esc_html__( 'API Key', 'aspirepress' ),
+			'api_host',
+			esc_html__( 'API Host', 'aspireupdate' ),
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_settings_section',
 			array(
-				'id'          => 'api_key',
-				'type'        => 'api-key',
+				'id'          => 'api_host',
+				'type'        => 'hosts',
 				'data'        => $options,
-				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'aspirepress' ),
+				'description' => esc_html__( 'Your new API Host.', 'aspireupdate' ),
+				'options'     => array(
+					array(
+						'value'           => 'api.aspirecloud.org',
+						'label'           => 'AspireCloud',
+						'require-api-key' => 'true',
+						'api-key-url'     => 'api.aspireupdate.org/repository/api/v1/apitoken',
+					),
+					array(
+						'value'           => 'other',
+						'label'           => 'Other',
+						'require-api-key' => 'false',
+					),
+				),
 			)
 		);
 
 		add_settings_field(
-			'api_host',
-			esc_html__( 'API Hosts', 'aspirepress' ),
+			'api_key',
+			esc_html__( 'API Key', 'aspireupdate' ),
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_settings_section',
 			array(
-				'id'          => 'api_hosts',
-				'type'        => 'hosts',
+				'id'          => 'api_key',
+				'type'        => 'api-key',
 				'data'        => $options,
-				'description' => esc_html__( 'The Domain rewrites for your new API Hosts.', 'aspirepress' ),
+				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'aspireupdate' ),
 			)
 		);
 
 		add_settings_section(
-			'aspirepress_debug_settings_section',
-			esc_html__( 'API Debug Configuration', 'aspirepress' ),
+			'aspireupdate_debug_settings_section',
+			esc_html__( 'API Debug Configuration', 'aspireupdate' ),
 			null,
-			'aspirepress-settings',
+			'aspireupdate-settings',
 			array(
 				'before_section' => '<div class="%s">',
 				'after_section'  => '</div>',
@@ -357,49 +386,49 @@ class Admin_Settings {
 
 		add_settings_field(
 			'enable_debug',
-			esc_html__( 'Enable Debug Mode', 'aspirepress' ),
+			esc_html__( 'Enable Debug Mode', 'aspireupdate' ),
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_debug_settings_section',
 			array(
 				'id'          => 'enable_debug',
 				'type'        => 'checkbox',
 				'data'        => $options,
-				'description' => esc_html__( 'Enables debug mode for the plugin.', 'aspirepress' ),
+				'description' => esc_html__( 'Enables debug mode for the plugin.', 'aspireupdate' ),
 			)
 		);
 
 		add_settings_field(
 			'enable_debug_type',
-			esc_html__( 'Enable Debug Type', 'aspirepress' ),
+			esc_html__( 'Enable Debug Type', 'aspireupdate' ),
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_debug_settings_section',
 			array(
 				'id'          => 'enable_debug_type',
 				'type'        => 'checkbox-group',
 				'data'        => $options,
 				'options'     => array(
-					'request'  => esc_html__( 'Request', 'aspirepress' ),
-					'response' => esc_html__( 'Response', 'aspirepress' ),
-					'string'   => esc_html__( 'String', 'aspirepress' ),
+					'request'  => esc_html__( 'Request', 'aspireupdate' ),
+					'response' => esc_html__( 'Response', 'aspireupdate' ),
+					'string'   => esc_html__( 'String', 'aspireupdate' ),
 				),
-				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspirepress' ),
+				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspireupdate' ),
 			)
 		);
 
 		add_settings_field(
 			'disable_ssl_verification',
-			esc_html__( 'Disable SSL Verification', 'aspirepress' ),
+			esc_html__( 'Disable SSL Verification', 'aspireupdate' ),
 			array( $this, 'add_settings_field_callback' ),
-			'aspirepress-settings',
-			'aspirepress_debug_settings_section',
+			'aspireupdate-settings',
+			'aspireupdate_debug_settings_section',
 			array(
 				'id'          => 'disable_ssl_verification',
 				'type'        => 'checkbox',
 				'data'        => $options,
 				'class'       => 'advanced-setting',
-				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'aspirepress' ),
+				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'aspireupdate' ),
 			)
 		);
 	}
@@ -427,23 +456,23 @@ class Admin_Settings {
 		$group_options = $args['options'];
 		$options       = $args['data'];
 
-		echo '<div class="aspirepress-settings-field-wrapper aspirepress-settings-field-wrapper-' . esc_attr( $id ) . '">';
+		echo '<div class="aspireupdate-settings-field-wrapper aspireupdate-settings-field-wrapper-' . esc_attr( $id ) . '">';
 		switch ( $type ) {
 			case 'text':
 				?>
-					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text" />
+					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo esc_attr( $options[ $id ] ?? '' ); ?>" class="regular-text" />
 					<?php
 				break;
 
 			case 'textarea':
 				?>
-					<textarea id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" rows="5" cols="50"><?php echo isset( $options[ $id ] ) ? esc_textarea( $options[ $id ] ) : ''; ?></textarea>
+					<textarea id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" rows="5" cols="50"><?php echo esc_textarea( $options[ $id ] ?? '' ); ?></textarea>
 					<?php
 				break;
 
 			case 'checkbox':
 				?>
-					<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ] ) ? $options[ $id ] : 0 ); ?> />
+					<input type="checkbox" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( 1, $options[ $id ] ?? 0 ); ?> />
 					<?php
 				break;
 
@@ -452,7 +481,7 @@ class Admin_Settings {
 					?>
 					<p>
 						<label>
-							<input type="checkbox" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( 1, isset( $options[ $id ][ $key ] ) ? $options[ $id ][ $key ] : 0 ); ?> /> <?php echo esc_html( $label ); ?>
+							<input type="checkbox" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( 1, $options[ $id ][ $key ] ?? 0 ); ?> /> <?php echo esc_html( $label ); ?>
 						</label>
 					</p>
 					<?php
@@ -461,22 +490,34 @@ class Admin_Settings {
 
 			case 'api-key':
 				?>
-					<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo isset( $options[ $id ] ) ? esc_attr( $options[ $id ] ) : ''; ?>" class="regular-text" />
-					<input type="button" id="aspirepress-generate-api-key" value="Generate API Key" title="Generate API Key" />
+					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo esc_attr( $options[ $id ] ?? '' ); ?>" class="regular-text" />
+					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="Generate API Key" />
 					<p class="error"></p>
 					<?php
 				break;
 
 			case 'hosts':
-				echo '<div class="aspirepress-settings-field-hosts-wrapper">';
-				for ( $i = 0; $i < 10; $i++ ) {
-					?>
-						<div class="aspirepress-settings-field-hosts-row">
-							<input type="text" id="aspirepress-settings-field-<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $i ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>][<?php echo esc_attr( $i ); ?>]" value="<?php echo isset( $options[ $id ][ $i ] ) ? esc_attr( $options[ $id ][ $i ] ) : ''; ?>" class="regular-text" />
-						</div>
+				?>
+				<select id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" class="regular-text">
+					<?php
+					foreach ( $group_options as $group_option ) {
+						?>
+							<option 
+								data-api-key-url="<?php echo esc_html( $group_option['api-key-url'] ?? '' ); ?>" 
+								data-require-api-key="<?php echo esc_html( $group_option['require-api-key'] ?? 'false' ); ?>" 
+								value="<?php echo esc_attr( $group_option['value'] ?? '' ); ?>" 
+								<?php selected( esc_attr( $group_option['value'] ?? '' ), esc_attr( $options[ $id ] ?? '' ) ); ?>
+							>
+								<?php echo esc_html( $group_option['label'] ?? '' ); ?>
+							</option>
 						<?php
-				}
-				echo '</div>';
+					}
+					?>
+				</select>
+				<p>
+					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]" value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>" class="regular-text" />
+				</p>
+				<?php
 				break;
 		}
 		echo '<p class="description">' . esc_html( $description ) . '</p>';
@@ -492,17 +533,10 @@ class Admin_Settings {
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
-		$sanitized_input['enable']    = ( isset( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
-		$sanitized_input['api_key']   = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : '';
-		$sanitized_input['api_hosts'] = isset( $input['api_hosts'] ) ? sanitize_text_field( $input['api_hosts'] ) : '';
-		if ( isset( $input['api_hosts'] ) && is_array( $input['api_hosts'] ) ) {
-			$sanitized_input['api_hosts'] = array();
-			foreach ( $input['api_hosts'] as $api_host ) {
-				$sanitized_input['api_hosts'][] = isset( $api_host ) ? sanitize_text_field( $api_host ) : '';
-			}
-		} else {
-			$sanitized_input['api_hosts'] = array();
-		}
+		$sanitized_input['enable']         = ( isset( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
+		$sanitized_input['api_key']        = sanitize_text_field( $input['api_key'] ?? '' );
+		$sanitized_input['api_host']       = sanitize_text_field( $input['api_host'] ?? '' );
+		$sanitized_input['api_host_other'] = sanitize_text_field( $input['api_host_other'] ?? '' );
 
 		$sanitized_input['enable_debug'] = isset( $input['enable_debug'] ) ? 1 : 0;
 		if ( isset( $input['enable_debug_type'] ) && is_array( $input['enable_debug_type'] ) ) {
