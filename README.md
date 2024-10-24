@@ -32,13 +32,13 @@ To install this plugin, follow these steps:
 
 The plugin menu appears under the Dashboard main menu item. Don't look for it in Settings or Tools, it won't be there :).
 
-The plugin uses the following configuration options:
+The plugin can use the following configuration options in wp-config.php:
 
 | Configuration Parameter |                                                                  Description |                        Default, if any |
 | :---------------------- | ---------------------------------------------------------------------------: | -------------------------------------: |
 | AP_ENABLE               |                         The API Key for AspireCloud (not currently enforced) |                                   none |
 | AP_API_KEY              |                                                          Enable API rewrites |                                   true |
-| AP_HOST                 |                                                            an array of hosts |           array('api.aspirecloud.org') |
+| AP_HOST                 |                                                              API domain name |                    api.aspirecloud.org |
 | AP_DEBUG                |                                                            Enable Debug Mode |                                  false |
 | AP_DEBUG_TYPES          |                                                      an array of debug modes | array('string', 'request', 'response') |
 | AP_DISABLE_SSL          |                                  Disabled SSL verification for local testing |                                   true |
@@ -46,12 +46,12 @@ The plugin uses the following configuration options:
 
 NOTE: The AspireUpdate user interface settings _will_ override any plugin options set in wp-config.php unless AP_REMOVE_UI configuration parameter is set to true.
 
-To configure any parameters that require an array you must use a short piece of code:
+To set AP_DEBUG_TYPES use an array to define the constant:
 
 ```php
 // Works as of PHP 7
-define('AP_HOSTS', array(
-    'api.aspirecloud.org'
+define('AP_DEBUG_TYPES ', array(
+    'string', 'request', 'response'
 ));
 ```
 
