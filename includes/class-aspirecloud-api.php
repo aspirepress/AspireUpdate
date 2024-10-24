@@ -5,7 +5,7 @@
  * @package aspire-update
  */
 
-namespace Aspirepress;
+namespace AspireUpdate;
 
 /**
  * The Class for Interacting with Aspire Cloud API.

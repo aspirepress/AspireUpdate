@@ -1,47 +1,137 @@
 jQuery(document).ready(function () {
     new FieldRules();
-    new ApiKey();
+    new ApiHost();
 });
 
-class ApiKey {
+class ApiHost {
     constructor() {
-        ApiKey.fetch_api_key.init();
+        ApiHost.host_selector.init();
+        ApiHost.api_key.init();
     }
 
-    static fetch_api_key = {
+    static host_selector = {
+        field: jQuery('#aspireupdate-settings-field-api_host'),
         init() {
-            jQuery('#aspirepress-generate-api-key').click(function () {
-                ApiKey.fetch_api_key.hide_error();
-                ApiKey.fetch_api_key.get();
-            });
-            ApiKey.fetch_api_key.hide_error();
+            ApiHost.host_selector.field.change(function () {
+                let selected_option = ApiHost.host_selector.field.find(":selected");
+                if ('other' === selected_option.val()) {
+                    ApiHost.other_hosts.show();
+                } else {
+                    ApiHost.other_hosts.hide();
+                }
+
+                if (ApiHost.host_selector.is_api_key_required()) {
+                    ApiHost.api_key.make_required();
+                } else {
+                    ApiHost.api_key.remove_required();
+                }
+
+                if(ApiHost.host_selector.has_api_key_url()) {
+                    ApiHost.api_key.show_action_button();
+                } else {
+                    ApiHost.api_key.hide_action_button();
+                }
+            }).change();
         },
-        get() {
+        is_api_key_required() {
+            let selected_option = ApiHost.host_selector.field.find(":selected");
+            let require_api_key = selected_option.attr('data-require-api-key');
+            if ('true' === require_api_key) {
+                return true;
+            }
+            return false;
+        },
+        has_api_key_url() {
+            let selected_option = ApiHost.host_selector.field.find(":selected");
+            let api_url = selected_option.attr('data-api-key-url');
+            if ('' !== api_url) {
+                return true;
+            }
+            return false;
+        },
+        get_api_key_url() {
+            let selected_option = ApiHost.host_selector.field.find(":selected");
+            let api_url = selected_option.attr('data-api-key-url');
+            if ('' !== api_url) {
+                return api_url;
+            }
+            return '';
+        },
+    }
+
+    static other_hosts = {
+        field: jQuery('#aspireupdate-settings-field-api_host_other'),
+        show() {
+            ApiHost.other_hosts.field.parent().show();
+            ApiHost.other_hosts.field.focus();
+            ApiHost.other_hosts.make_required();
+        },
+        hide() {
+            ApiHost.other_hosts.field.parent().hide();
+            ApiHost.other_hosts.remove_required();
+        },
+        make_required() {
+            ApiHost.other_hosts.field.prop('required', true);
+        },
+        remove_required() {
+            ApiHost.other_hosts.field.prop('required', false);
+        },
+    }
+
+    static api_key = {
+        field: jQuery('#aspireupdate-settings-field-api_key'),
+        action_button: jQuery('#aspireupdate-generate-api-key'),
+        init() {
+            ApiHost.api_key.action_button.click(function () {
+                ApiHost.api_key.hide_error();
+                ApiHost.api_key.get_api_key();
+            });
+            ApiHost.api_key.hide_error();
+        },
+        get_api_key() {
             let parameters = {
-                "url": aspirepress.apikey_api_url,
+                "url": ApiHost.host_selector.get_api_key_url(),
                 "type": "POST",
                 "contentType": 'application/json',
                 "data": JSON.stringify({
-                    "domain": aspirepress.domain
+                    "domain": aspireupdate.domain
                 })
             };
             jQuery.ajax(parameters)
-            .done(function (response) {
-                jQuery('#aspirepress-generate-api-key').parent().find('#aspirepress-settings-field-api_key').val(response.apikey);
-            })
-            .fail(function (response) {
-                if ((response.status === 400) || (response.status === 401)) {
-                    ApiKey.fetch_api_key.show_error(response.responseJSON?.error);
-                } else {
-                    ApiKey.fetch_api_key.show_error('Unexpected Error: ' + response.status);
-                }
-            });
+                .done(function (response) {
+                    ApiHost.api_key.field.val(response.apikey);
+                })
+                .fail(function (response) {
+                    if ((response.status === 400) || (response.status === 401)) {
+                        ApiHost.api_key.show_error(response.responseJSON?.error);
+                    } else {
+                        ApiHost.api_key.show_error('Unexpected Error: ' + response.status);
+                    }
+                });
+        },
+        show() {
+            ApiHost.api_key.field.parent().parent().parent().show();
+        },
+        hide() {
+            ApiHost.api_key.field.parent().parent().parent().hide();
+        },
+        show_action_button() {
+            ApiHost.api_key.action_button.show();
+        },
+        hide_action_button() {
+            ApiHost.api_key.action_button.hide();
+        },
+        make_required() {
+            ApiHost.api_key.field.prop('required', true);
+        },
+        remove_required() {
+            ApiHost.api_key.field.prop('required', false);
         },
         show_error(message) {
-            jQuery('#aspirepress-generate-api-key').parent().find('.error').html(message).show();
+            ApiHost.api_key.field.parent().find('.error').html(message).show();
         },
         hide_error() {
-            jQuery('#aspirepress-generate-api-key').parent().find('.error').html('').hide();
+            ApiHost.api_key.field.parent().find('.error').html('').hide();
         }
     }
 }
@@ -54,45 +144,13 @@ class FieldRules {
 
     static check_enabled_rewrites = {
         init() {
-            jQuery('#aspirepress-settings-field-enable').change(function () {
+            jQuery('#aspireupdate-settings-field-enable').change(function () {
                 if (jQuery(this).is(':checked')) {
+                    FieldRules.show_field('api_host');
                     FieldRules.show_field('api_key');
-                    FieldRules.make_required('api_key');
-                    FieldRules.show_field('api_hosts');
-                    FieldRules.check_enabled_rewrite_wporg_api.init();
-                    FieldRules.check_enabled_rewrite_wporg_downlods_api.init();
                 } else {
+                    FieldRules.hide_field('api_host');
                     FieldRules.hide_field('api_key');
-                    FieldRules.remove_required('api_key');
-                    FieldRules.hide_field('api_hosts');
-                }
-            }).change();
-        }
-    }
-
-    static check_enabled_rewrite_wporg_api = {
-        init() {
-            jQuery('#aspirepress-settings-field-rewrite_wporg_api').change(function () {
-                if (jQuery(this).is(':checked')) {
-                    FieldRules.show_field('api_url');
-                    FieldRules.make_required('api_url');
-                } else {
-                    FieldRules.hide_field('api_url');
-                    FieldRules.remove_required('api_url');
-                }
-            }).change();
-        }
-    }
-
-    static check_enabled_rewrite_wporg_downlods_api = {
-        init() {
-            jQuery('#aspirepress-settings-field-rewrite_wporg_dl').change(function () {
-                if (jQuery(this).is(':checked')) {
-                    FieldRules.show_field('api_download_url');
-                    FieldRules.make_required('api_download_url');
-                } else {
-                    FieldRules.hide_field('api_download_url');
-                    FieldRules.remove_required('api_download_url');
                 }
             }).change();
         }
@@ -100,7 +158,7 @@ class FieldRules {
 
     static check_enabled_debug_mode = {
         init() {
-            jQuery('#aspirepress-settings-field-enable_debug').change(function () {
+            jQuery('#aspireupdate-settings-field-enable_debug').change(function () {
                 if (jQuery(this).is(':checked')) {
                     FieldRules.show_field('enable_debug_type');
                     FieldRules.show_field('disable_ssl_verification');
@@ -113,11 +171,11 @@ class FieldRules {
     }
 
     static hide_field(id) {
-        jQuery('.aspirepress-settings-field-wrapper-' + id).parent().parent().hide();
+        jQuery('.aspireupdate-settings-field-wrapper-' + id).parent().parent().hide();
     }
 
     static show_field(id) {
-        let field_row = jQuery('.aspirepress-settings-field-wrapper-' + id).parent().parent();
+        let field_row = jQuery('.aspireupdate-settings-field-wrapper-' + id).parent().parent();
         field_row.show().addClass('glow-reveal');
         setTimeout(function () {
             field_row.removeClass('glow-reveal');
@@ -125,10 +183,10 @@ class FieldRules {
     }
 
     static remove_required(id) {
-        jQuery('#aspirepress-settings-field-' + id).prop('required', false);
+        jQuery('#aspireupdate-settings-field-' + id).prop('required', false);
     }
 
     static make_required(id) {
-        jQuery('#aspirepress-settings-field-' + id).prop('required', true);
+        jQuery('#aspireupdate-settings-field-' + id).prop('required', true);
     }
 }
