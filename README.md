@@ -30,6 +30,8 @@ To install this plugin, follow these steps:
 
 ## Configuration
 
+The plugin menu appears under the Dashboard main menu item. Don't look for it in Settings or Tools, it won't be there :).
+
 The plugin uses the following configuration options:
 
 | Configuration Parameter |                                                                  Description |                        Default, if any |
