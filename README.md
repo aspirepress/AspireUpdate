@@ -1,4 +1,4 @@
-# AspirePress Update Plugin
+# AspireUpdate
 
 This plugin allows a WordPress user to automatically rewrite certain URLs and URL paths to a new URL. This is
 helpful because it allows for the rewriting of `api.wordpress.org` to some other repository that contains the plugins
