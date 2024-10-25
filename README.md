@@ -58,8 +58,9 @@ NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ overr
 
 NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
 
+## WP Playgrounds Support
 
-
+The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds environment](https://github.com/aspirepress/AspireUpdate/blob/playground-ready/assets/playground/blueprint.json).
 
 ## Debug Logging
 
