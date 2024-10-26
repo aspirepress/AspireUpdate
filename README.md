@@ -1,6 +1,5 @@
 # AspireUpdate
 
-
 This plugin allows a WordPress user to automatically rewrite certain URLs and URL paths to a new URL. This is
 helpful because it allows for the rewriting of `api.wordpress.org` to some other repository that contains the plugins
 the user wants.
@@ -49,14 +48,14 @@ To set AP_DEBUG_TYPES use an array to define the constant:
 
 ```php
 // Works as of PHP 7
-define('AP_DEBUG_TYPES ', array(
+define('AP_DEBUG_TYPES', array(
     'string', 'request', 'response'
 ));
 ```
 
-NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. 
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface.
 
-NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
+NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed.
 
 ## WP Playgrounds Support
 
