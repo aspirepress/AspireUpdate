@@ -49,7 +49,7 @@ To set AP_DEBUG_TYPES use an array to define the constant:
 
 ```php
 // Works as of PHP 7
-define('AP_DEBUG_TYPES ', array(
+define('AP_DEBUG_TYPES', array(
     'string', 'request', 'response'
 ));
 ```
