@@ -53,7 +53,7 @@ define('AP_DEBUG_TYPES', array(
 ));
 ```
 
-NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface.
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. You must set DEFINE with the existing DEFINEs (right after the comment /_ Add any custom values between this line and the "stop editing" line. _/).
 
 NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed.
 
