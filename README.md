@@ -36,8 +36,8 @@ The plugin can use the following configuration options in wp-config.php:
 
 | Configuration Parameter |                                                                  Description |                        Default, if any |
 | :---------------------- | ---------------------------------------------------------------------------: | -------------------------------------: |
-| AP_ENABLE               |                         The API Key for AspireCloud (not currently enforced) |                                   none |
-| AP_API_KEY              |                                                          Enable API rewrites |                                   true |
+| AP_ENABLE               |                                                          Enable API rewrites |                                   true |
+| AP_API_KEY              |                         The API Key for AspireCloud (not currently enforced) |                                   none |
 | AP_HOST                 |                                                              API domain name |                    api.aspirecloud.org |
 | AP_DEBUG                |                                                            Enable Debug Mode |                                  false |
 | AP_DEBUG_TYPES          |                                                      an array of debug modes | array('string', 'request', 'response') |
