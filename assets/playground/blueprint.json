@@ -5,8 +5,8 @@
         "wp": "latest"
     },
     "meta": {
-        "title": "AspirePress Update Demo",
-        "description": "loads the latest plugin into a playground site",
+        "title": "AspirePress AspireUpdate Plugin Demo",
+        "description": "Load table AspireUpdate plugin into a WordPress Playground site",
         "author": "asirota",
         "categories": [
             "demo",
@@ -14,7 +14,7 @@
         ]
     },
     "siteOptions": {
-        "blogname": "AspirePress Update Demo Site"
+        "blogname": "AspireUpdate Demo Site"
     },
     "plugins": [
         "https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
@@ -25,14 +25,14 @@
         "networking": true
     },
     "login": true,
-    "landingPage": "/wp-admin/admin.php?page=aspirepress-settings",
+    "landingPage": "/wp-admin/admin.php?page=aspireupdate-settings",
     "steps": [
         {
             "step": "defineWpConfigConsts",
             "consts": {
                 "WP_DISABLE_FATAL_ERROR_HANDLER": false,
                 "WP_DEBUG": false,
-                "WP_DEBUG_LOG": true,
+                "WP_DEBUG_LOG": false,
                 "WP_DEBUG_DISPLAY": true
             }
         },
@@ -51,7 +51,7 @@
         {
             "step": "writeFile",
             "path": "/wordpress/wp-content/mu-plugins/bgnightly-notice.php",
-            "data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Testing Environment. See <a href=\"https://docs.aspirepress.org\">AspirePress docs</a> for the testing steps.</a></p></div>'; });"
+            "data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Demo. Visit <a href=\"https://docs.aspirepress.org\">AspirePress documentation</a> for more details.</p></div>'; });"
         }
     ]
 }

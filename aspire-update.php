@@ -13,8 +13,8 @@
  * Version:           0.5
  * Author:            AspirePress
  * Author URI:        https://docs.aspirepress.org/aspireupdate/
- * Requires at least: 4.0
- * Requires PHP:      8.0.0
+ * Requires at least: 5.3
+ * Requires PHP:      7.4
  * Tested up to:      6.7
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
