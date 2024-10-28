@@ -3,9 +3,11 @@ jQuery(document).ready(function () {
     new ApiHost();
 });
 
+
 class ApiHost {
     constructor() {
         ApiHost.host_selector.init();
+        ApiHost.other_hosts.init();
         ApiHost.api_key.init();
     }
 
@@ -26,7 +28,7 @@ class ApiHost {
                     ApiHost.api_key.remove_required();
                 }
 
-                if(ApiHost.host_selector.has_api_key_url()) {
+                if (ApiHost.host_selector.has_api_key_url()) {
                     ApiHost.api_key.show_action_button();
                 } else {
                     ApiHost.api_key.hide_action_button();
@@ -61,6 +63,14 @@ class ApiHost {
 
     static other_hosts = {
         field: jQuery('#aspireupdate-settings-field-api_host_other'),
+        init() {
+            ApiHost.other_hosts.field.on("blur", function () {
+                let value = ApiHost.other_hosts.field.val();
+                value = ApiHost.other_hosts.strip_protocol(value);
+                value = ApiHost.other_hosts.strip_dangerous_characters(value);
+                ApiHost.other_hosts.field.val(value);
+            });
+        },
         show() {
             ApiHost.other_hosts.field.parent().show();
             ApiHost.other_hosts.field.focus();
@@ -76,6 +86,14 @@ class ApiHost {
         remove_required() {
             ApiHost.other_hosts.field.prop('required', false);
         },
+        strip_protocol(value) {
+            const protocol_regex = /^(https?|ftp|sftp|smtp|ftps|file):\/\/|^www\./i;
+            return value.replace(protocol_regex, '');
+        },
+        strip_dangerous_characters(value) {
+            const dangerous_characters_regex = /[<>/"'&;]/g;
+            return value.replace(dangerous_characters_regex, '');
+        }
     }
 
     static api_key = {

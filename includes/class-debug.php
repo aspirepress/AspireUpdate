@@ -45,7 +45,19 @@ class Debug {
 		$wp_filesystem = self::init_filesystem();
 
 		if ( ! $wp_filesystem ) {
-			error_log( 'AspireUpdate - WP_Filesystem initialization failed.' );
+			if (
+				defined( 'WP_DEBUG' ) &&
+				( true === WP_DEBUG ) &&
+				defined( 'WP_DEBUG_LOG' ) &&
+				( true === WP_DEBUG_LOG )
+			) {
+				// phpcs:disable WordPress.PHP.DevelopmentFunctions
+				/**
+				 * Log error in file write fails only if debug is set to true.  This is a valid use case.
+				 */
+				error_log( 'AspireUpdate - WP_Filesystem initialization failed.' );
+				// phpcs:enable
+			}
 			return;
 		}
 
@@ -83,7 +95,12 @@ class Debug {
 	 */
 	private static function format_message( $message ) {
 		if ( is_array( $message ) || is_object( $message ) ) {
+			// phpcs:disable WordPress.PHP.DevelopmentFunctions
+			/**
+			 * Priting an array or object to log file.  This is a valid use case.
+			 */
 			return print_r( $message, true );
+			 // phpcs:enable
 		}
 		return (string) $message;
 	}
