@@ -53,9 +53,9 @@ define('AP_DEBUG_TYPES', array(
 ));
 ```
 
-NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. You must set DEFINE with the existing DEFINEs (right after the comment /_ Add any custom values between this line and the "stop editing" line. _/).
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. 
 
-NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed.
+NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
 
 ## WP Playgrounds Support
 
@@ -81,7 +81,6 @@ Contributions are welcome. Here's a short to-do list:
 
 - Add support for more complex rewrites. Right now we only support simple string matching, but it would be nice to support pattern matching, too.
 - Add support for more complex debugging. Right now we only support outputting strings, but it would be nice to support more complex debugging.
-- Add administrator panel support. We don't have support right now for configuring this plugin through the UI, which will limit its reach.
 - Add support for verifying that the repository can be reached, and if not, reverting back to the original repository.
 - Add support for multiple repositories, in a priority order. This would allow for multiple fallbacks.
 - Add support for additional header management. Right now the plugin is designed to add a simple Authentication header, which is not always needed. Other repositories might have different authentication requirements.
