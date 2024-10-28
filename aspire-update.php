@@ -18,8 +18,8 @@
  * Tested up to:      6.7
  * License:           GPL-3.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
- * Text Domain:       aspireupdate
- * Domain Path:       /resources/languages
+ * Text Domain:       AspireUpdate
+ * Domain Path:       /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
