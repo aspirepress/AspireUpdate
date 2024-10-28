@@ -65,10 +65,6 @@ The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds 
 
 The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
 
-## Debug Logging
-
-The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
-
 ## Authentication
 
 Authentication is provided by way of a randomly generated token combined with the `WP_SITEURL` constant. This token is
