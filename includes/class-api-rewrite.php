@@ -39,12 +39,13 @@ class API_Rewrite {
 	 * @param boolean $disable_ssl Disable SSL.
 	 */
 	public function __construct( $redirected_host, $disable_ssl ) {
-		if ( '' !== $redirected_host ) {
-			$this->redirected_host = $redirected_host;
-			$this->disable_ssl     = $disable_ssl;
-
-			add_filter( 'pre_http_request', array( $this, 'pre_http_request' ), 10, 3 );
+		if ( 'debug' === $redirected_host ) {
+			$this->redirected_host = $this->default_host;
+		} else {
+			$this->redirected_host = strtolower( $redirected_host );
 		}
+		$this->disable_ssl = $disable_ssl;
+		add_filter( 'pre_http_request', array( $this, 'pre_http_request' ), 10, 3 );
 	}
 
 	/**
@@ -66,15 +67,21 @@ class API_Rewrite {
 			if ( false !== strpos( $url, $this->default_host ) ) {
 				Debug::log_string( 'Default API Found: ' . $url );
 				Debug::log_request( $parsed_args );
-				$updated_url = str_replace( $this->default_host, $this->redirected_host, $url );
-				Debug::log_string( 'API Rerouted to: ' . $updated_url );
-				if ( true === $this->disable_ssl ) {
-					Debug::log_string( 'SSL Verification Disabled' );
-					$parsed_args['sslverify'] = false;
+
+				if ( $this->default_host !== $this->redirected_host ) {
+					if ( $this->disable_ssl ) {
+						Debug::log_string( 'SSL Verification Disabled' );
+						$parsed_args['sslverify'] = false;
+					}
+
+					$updated_url = str_replace( $this->default_host, $this->redirected_host, $url );
+					Debug::log_string( 'API Rerouted to: ' . $updated_url );
+
+					$response = wp_remote_request( $updated_url, $parsed_args );
+					Debug::log_response( $response );
+					return $response;
+
 				}
-				$response = wp_remote_request( $updated_url, $parsed_args );
-				Debug::log_response( $response );
-				return $response;
 			}
 		}
 		return $response;

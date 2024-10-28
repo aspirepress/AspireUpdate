@@ -269,8 +269,8 @@ class Admin_Settings {
 		);
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'AspireUpdate Settings', 'aspireupdate' ); ?></h1>
-			<form method="post" action="options.php">
+			<h1><?php esc_html_e( 'AspireUpdate Settings', 'AspireUpdate' ); ?></h1>
+			<form id="aspireupdate-settings-form" method="post" action="options.php">
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspireupdate-settings' );
@@ -310,7 +310,7 @@ class Admin_Settings {
 
 		add_settings_section(
 			'aspireupdate_settings_section',
-			esc_html__( 'API Configuration', 'aspireupdate' ),
+			esc_html__( 'API Configuration', 'AspireUpdate' ),
 			null,
 			'aspireupdate-settings',
 			array(
@@ -321,7 +321,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'enable',
-			'Enable AspireUpdate API Rewrites',
+			esc_html__( 'Enable AspireUpdate API Rewrites', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
@@ -334,7 +334,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'api_host',
-			esc_html__( 'API Host', 'aspireupdate' ),
+			esc_html__( 'API Host', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
@@ -342,11 +342,11 @@ class Admin_Settings {
 				'id'          => 'api_host',
 				'type'        => 'hosts',
 				'data'        => $options,
-				'description' => esc_html__( 'Your new API Host.', 'aspireupdate' ),
+				'description' => esc_html__( 'Your new API Host.', 'AspireUpdate' ),
 				'options'     => array(
 					array(
 						'value'           => 'api.aspirecloud.org',
-						'label'           => 'AspireCloud',
+						'label'           => 'AspireCloud (api.aspirecloud.org)',
 						'require-api-key' => 'true',
 						'api-key-url'     => 'api.aspirecloud.org/v1/apitoken',
 					),
@@ -361,7 +361,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'api_key',
-			esc_html__( 'API Key', 'aspireupdate' ),
+			esc_html__( 'API Key', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
@@ -369,13 +369,13 @@ class Admin_Settings {
 				'id'          => 'api_key',
 				'type'        => 'api-key',
 				'data'        => $options,
-				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'aspireupdate' ),
+				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'AspireUpdate' ),
 			)
 		);
 
 		add_settings_section(
 			'aspireupdate_debug_settings_section',
-			esc_html__( 'API Debug Configuration', 'aspireupdate' ),
+			esc_html__( 'API Debug Configuration', 'AspireUpdate' ),
 			null,
 			'aspireupdate-settings',
 			array(
@@ -386,7 +386,7 @@ class Admin_Settings {
 
 		add_settings_field(
 			'enable_debug',
-			esc_html__( 'Enable Debug Mode', 'aspireupdate' ),
+			esc_html__( 'Enable Debug Mode', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
@@ -394,13 +394,13 @@ class Admin_Settings {
 				'id'          => 'enable_debug',
 				'type'        => 'checkbox',
 				'data'        => $options,
-				'description' => esc_html__( 'Enables debug mode for the plugin.', 'aspireupdate' ),
+				'description' => esc_html__( 'Enables debug mode for the plugin.', 'AspireUpdate' ),
 			)
 		);
 
 		add_settings_field(
 			'enable_debug_type',
-			esc_html__( 'Enable Debug Type', 'aspireupdate' ),
+			esc_html__( 'Enable Debug Type', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
@@ -409,17 +409,17 @@ class Admin_Settings {
 				'type'        => 'checkbox-group',
 				'data'        => $options,
 				'options'     => array(
-					'request'  => esc_html__( 'Request', 'aspireupdate' ),
-					'response' => esc_html__( 'Response', 'aspireupdate' ),
-					'string'   => esc_html__( 'String', 'aspireupdate' ),
+					'request'  => esc_html__( 'Request', 'AspireUpdate' ),
+					'response' => esc_html__( 'Response', 'AspireUpdate' ),
+					'string'   => esc_html__( 'String', 'AspireUpdate' ),
 				),
-				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'aspireupdate' ),
+				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'AspireUpdate' ),
 			)
 		);
 
 		add_settings_field(
 			'disable_ssl_verification',
-			esc_html__( 'Disable SSL Verification', 'aspireupdate' ),
+			esc_html__( 'Disable SSL Verification', 'AspireUpdate' ),
 			array( $this, 'add_settings_field_callback' ),
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
@@ -428,7 +428,7 @@ class Admin_Settings {
 				'type'        => 'checkbox',
 				'data'        => $options,
 				'class'       => 'advanced-setting',
-				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'aspireupdate' ),
+				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'AspireUpdate' ),
 			)
 		);
 	}
@@ -515,7 +515,13 @@ class Admin_Settings {
 					?>
 				</select>
 				<p>
-					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]" value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>" class="regular-text" />
+					<input
+						type="text" 
+						id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other" 
+						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]" 
+						value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>" 
+						class="regular-text"
+					/>
 				</p>
 				<?php
 				break;

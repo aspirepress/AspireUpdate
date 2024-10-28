@@ -26,17 +26,20 @@ class Controller {
 	 */
 	private function api_rewrite() {
 		$admin_settings = Admin_Settings::get_instance();
-		$api_key        = $admin_settings->get_setting( 'api_key', '' );
-		if ( $admin_settings->get_setting( 'enable', false ) && ( '' !== $api_key ) ) {
+
+		if ( $admin_settings->get_setting( 'enable', false ) ) {
 			$api_host = $admin_settings->get_setting( 'api_host', '' );
-			if ( isset( $api_host ) && ( '' !== $api_host ) ) {
-				$debug_mode  = $admin_settings->get_setting( 'debug_mode', false );
-				$disable_ssl = $admin_settings->get_setting( 'disable_ssl_verification', false );
-				if ( $debug_mode && $disable_ssl ) {
-					new API_Rewrite( $api_host, true );
-				} else {
-					new API_Rewrite( $api_host, false );
-				}
+		} else {
+			$api_host = 'debug';
+		}
+
+		if ( isset( $api_host ) && ( '' !== $api_host ) ) {
+			$enable_debug = $admin_settings->get_setting( 'enable_debug', false );
+			$disable_ssl  = $admin_settings->get_setting( 'disable_ssl_verification', false );
+			if ( $enable_debug && $disable_ssl ) {
+				new API_Rewrite( $api_host, true );
+			} else {
+				new API_Rewrite( $api_host, false );
 			}
 		}
 	}
