@@ -67,6 +67,7 @@ class API_Rewrite {
 			if ( false !== strpos( $url, $this->default_host ) ) {
 				Debug::log_string( 'Default API Found: ' . $url );
 				Debug::log_request( $parsed_args );
+
 				if ( $this->default_host !== $this->redirected_host ) {
 					if ( $this->disable_ssl ) {
 						Debug::log_string( 'SSL Verification Disabled' );
@@ -86,6 +87,7 @@ class API_Rewrite {
 					Debug::log_response( $response );
 
 					return $response;
+
 				}
 			}
 		}
