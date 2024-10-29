@@ -76,8 +76,15 @@ class API_Rewrite {
 					$updated_url = str_replace( $this->default_host, $this->redirected_host, $url );
 					Debug::log_string( 'API Rerouted to: ' . $updated_url );
 
+					/**
+					 * Temporarily Unhook Filter to prevent recursion.
+					 */
+					remove_filter( 'pre_http_request', array( $this, 'pre_http_request' ) );
 					$response = wp_remote_request( $updated_url, $parsed_args );
+					add_filter( 'pre_http_request', array( $this, 'pre_http_request' ), 10, 3 );
+
 					Debug::log_response( $response );
+
 					return $response;
 				}
 			}
