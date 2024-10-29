@@ -1,6 +1,5 @@
 # AspireUpdate
 
-
 This plugin allows a WordPress user to automatically rewrite certain URLs and URL paths to a new URL. This is
 helpful because it allows for the rewriting of `api.wordpress.org` to some other repository that contains the plugins
 the user wants.
@@ -66,10 +65,6 @@ The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds 
 
 The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
 
-## Debug Logging
-
-The AspireUpdate log file is located under /wp-content and named "debug-aspire-update.log".
-
 ## Authentication
 
 Authentication is provided by way of a randomly generated token combined with the `WP_SITEURL` constant. This token is
@@ -86,7 +81,6 @@ Contributions are welcome. Here's a short to-do list:
 
 - Add support for more complex rewrites. Right now we only support simple string matching, but it would be nice to support pattern matching, too.
 - Add support for more complex debugging. Right now we only support outputting strings, but it would be nice to support more complex debugging.
-- Add administrator panel support. We don't have support right now for configuring this plugin through the UI, which will limit its reach.
 - Add support for verifying that the repository can be reached, and if not, reverting back to the original repository.
 - Add support for multiple repositories, in a priority order. This would allow for multiple fallbacks.
 - Add support for additional header management. Right now the plugin is designed to add a simple Authentication header, which is not always needed. Other repositories might have different authentication requirements.
