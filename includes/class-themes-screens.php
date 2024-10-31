@@ -34,6 +34,7 @@ class Themes_Screens {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+			add_action( 'load-theme-install.php', array( $this, 'redirect_to_theme_install' ) );
 		}
 	}
 
@@ -79,6 +80,25 @@ class Themes_Screens {
 				'aspire_update_themes_screens_css',
 				implode( ', ', $css_selectors ) . '{ display: none; }'
 			);
+		}
+	}
+
+	/**
+	 * Redirect unsupported filters to theme-install.php.
+	 *
+	 * @param string $hook The page identifier.
+	 * @return void
+	 */
+	public function redirect_to_theme_install() {
+		$browse = isset( $_GET['browse'] ) ? wp_unslash( $_GET['browse'] ) : '';
+		if ( ! in_array( $browse, $this->unsupported_filters, true ) ) {
+			return;
+		}
+
+		$admin_settings = Admin_Settings::get_instance();
+		if ( $admin_settings->get_setting( 'enable', false ) ) {
+			wp_safe_redirect( admin_url( 'theme-install.php' ) );
+			exit;
 		}
 	}
 }
