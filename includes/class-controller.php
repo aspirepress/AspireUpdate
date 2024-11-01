@@ -16,6 +16,7 @@ class Controller {
 	 */
 	public function __construct() {
 		Admin_Settings::get_instance();
+		Plugins_Screens::get_instance();
 		$this->api_rewrite();
 	}
 
