@@ -270,7 +270,7 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-		if ( 'dashboard_page_aspireupdate-settings' !== $hook ) {
+		if ( ! in_array( $hook, array( 'dashboard_page_aspireupdate-settings','index_page_aspireupdate-settings' ) ) ) {
 			return;
 		}
 		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), AP_VERSION );
