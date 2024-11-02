@@ -87,8 +87,8 @@ class Admin_Settings {
 			wp_verify_nonce( sanitize_key( $_GET['reset-nonce'] ), 'aspireupdate-reset-nonce' )
 		) {
 			$options = $this->get_default_settings();
-			update_option( $this->option_name, $options );
-			update_option( 'aspireupdate-reset', 'true' );
+			update_site_option( $this->option_name, $options );
+			update_site_option( 'aspireupdate-reset', 'true' );
 
 			wp_safe_redirect(
 				add_query_arg(
@@ -110,14 +110,14 @@ class Admin_Settings {
 	 */
 	public function reset_admin_notice() {
 		if (
-			( 'true' === get_option( 'aspireupdate-reset' ) ) &&
+			( 'true' === get_site_option( 'aspireupdate-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
 			( 'success' === $_GET['reset-success'] ) &&
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
 			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
-			delete_option( 'aspireupdate-reset' );
+			delete_site_option( 'aspireupdate-reset' );
 		}
 	}
 
@@ -131,13 +131,13 @@ class Admin_Settings {
 	 */
 	public function get_setting( $setting_name, $default_value = false ) {
 		if ( null === $this->options ) {
-			$options = get_option( $this->option_name, false );
+			$options = get_site_option( $this->option_name, false );
 			/**
 			 * If the options are not set load defaults.
 			 */
 			if ( false === $options ) {
 				$options = $this->get_default_settings();
-				update_option( $this->option_name, $options );
+				update_site_option( $this->option_name, $options );
 			}
 			$config_file_options = $this->get_settings_from_config_file();
 			if ( is_array( $options ) ) {
@@ -293,13 +293,13 @@ class Admin_Settings {
 	 */
 	public function register_settings() {
 		$nonce   = wp_create_nonce( 'aspireupdate-settings' );
-		$options = get_option( $this->option_name, false );
+		$options = get_site_option( $this->option_name, false );
 		/**
 		 * If the options are not set load defaults.
 		 */
 		if ( false === $options ) {
 			$options = $this->get_default_settings();
-			update_option( $this->option_name, $options );
+			update_site_option( $this->option_name, $options );
 		}
 
 		register_setting(
