@@ -96,7 +96,7 @@ class Admin_Settings {
 						'reset-success'       => 'success',
 						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
 					),
-					admin_url( 'index.php?page=aspireupdate-settings' )
+					network_admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
 			exit;
@@ -249,7 +249,7 @@ class Admin_Settings {
 			'aspire_update_settings_js',
 			'aspireupdate',
 			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'ajax_url' => network_admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
 				'domain'   => Utilities::get_top_level_domain(),
 			)
@@ -267,7 +267,7 @@ class Admin_Settings {
 				'reset'       => 'reset',
 				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
 			),
-			admin_url( 'index.php?page=aspireupdate-settings' )
+			network_admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>
 		<div class="wrap">
