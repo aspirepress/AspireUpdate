@@ -49,6 +49,9 @@ class Admin_Settings {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_notices', array( $this, 'reset_admin_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
+		add_action( 'admin_init', array( $this, 'update_settings' ) );
+		add_action( 'network_admin_edit_aspireupdate-settings', array( $this, 'update_settings' ) );
 	}
 
 	/**
@@ -211,6 +214,33 @@ class Admin_Settings {
 	}
 
 	/**
+	 * Update settings for single site or network activated.
+	 *
+	 * @link http://wordpress.stackexchange.com/questions/64968/settings-api-in-multisite-missing-update-message
+	 * @link http://benohead.com/wordpress-network-wide-plugin-settings/
+	 */
+	public function update_settings() {
+		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'aspireupdate-settings' ) ) {
+			if ( ( isset( $_POST['option_page'] )
+			&& 'aspireupdate_settings' === $_POST['option_page'] )
+			) {
+				update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
+			}
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['option_page'] ) ){
+			wp_safe_redirect(
+				add_query_arg(
+					array( '_wpnonce' => wp_create_nonce( 'aspireupdate-settings' ) ),
+					network_admin_url( 'index.php?page=aspireupdate-settings' )
+				)
+			);
+		exit;
+		}
+	}
+
+	/**
 	 * Register the Admin Menu.
 	 *
 	 * @return void
@@ -262,6 +292,7 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function the_settings_page() {
+		$action = is_multisite() ? 'index.php?page=aspireupdate-settings' : 'options.php';
 		$reset_url = add_query_arg(
 			array(
 				'reset'       => 'reset',
@@ -272,13 +303,15 @@ class Admin_Settings {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AspireUpdate Settings', 'AspireUpdate' ); ?></h1>
-			<form id="aspireupdate-settings-form" method="post" action="options.php">
+			<form id="aspireupdate-settings-form" method="post" action="<?php echo esc_attr( $action ); ?>">
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspireupdate-settings' );
 				?>
 				<p class="submit">
-					<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
+					<?php wp_nonce_field( 'aspireupdate-settings' ); ?>
+					<?php submit_button( esc_html__( 'Save Changes', 'aspireupdate-settings' ), 'primary', 'submit', false ); ?>
+
 					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" >Reset</a>
 				</p>
 			</form>
