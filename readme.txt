@@ -6,8 +6,8 @@ Requires at least: 5.3
 Tested up to: 6.7
 Stable tag: 0.5
 Requires PHP: 7.4
-License: GPL-3.0-or-later
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+License: GPLv2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin allows a WordPress user to automatically rewrite certain URLs and URL paths to a new URL.
 
