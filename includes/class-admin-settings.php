@@ -44,7 +44,7 @@ class Admin_Settings {
 	 * The Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
+		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', array( $this, 'register_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'reset_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_notices', array( $this, 'reset_admin_notice' ) );
@@ -216,6 +216,8 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function register_admin_menu() {
+		$capability = is_multisite() ? 'manage_network_options' : 'manage_options';
+
 		if ( ! defined( 'AP_REMOVE_UI' ) ) {
 			define( 'AP_REMOVE_UI', false );
 		}
@@ -224,7 +226,7 @@ class Admin_Settings {
 				'index.php',
 				'AspireUpdate',
 				'AspireUpdate',
-				'manage_options',
+				$capability,
 				'aspireupdate-settings',
 				array( $this, 'the_settings_page' )
 			);
@@ -502,10 +504,10 @@ class Admin_Settings {
 					<?php
 					foreach ( $group_options as $group_option ) {
 						?>
-							<option 
-								data-api-key-url="<?php echo esc_html( $group_option['api-key-url'] ?? '' ); ?>" 
-								data-require-api-key="<?php echo esc_html( $group_option['require-api-key'] ?? 'false' ); ?>" 
-								value="<?php echo esc_attr( $group_option['value'] ?? '' ); ?>" 
+							<option
+								data-api-key-url="<?php echo esc_html( $group_option['api-key-url'] ?? '' ); ?>"
+								data-require-api-key="<?php echo esc_html( $group_option['require-api-key'] ?? 'false' ); ?>"
+								value="<?php echo esc_attr( $group_option['value'] ?? '' ); ?>"
 								<?php selected( esc_attr( $group_option['value'] ?? '' ), esc_attr( $options[ $id ] ?? '' ) ); ?>
 							>
 								<?php echo esc_html( $group_option['label'] ?? '' ); ?>
@@ -516,10 +518,10 @@ class Admin_Settings {
 				</select>
 				<p>
 					<input
-						type="text" 
-						id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other" 
-						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]" 
-						value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>" 
+						type="text"
+						id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other"
+						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]"
+						value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>"
 						class="regular-text"
 					/>
 				</p>
