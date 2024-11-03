@@ -116,7 +116,7 @@ class Admin_Settings {
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
-			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ) . '</p></div>';
 			delete_option( 'aspireupdate-reset' );
 		}
 	}
@@ -276,8 +276,8 @@ class Admin_Settings {
 				do_settings_sections( 'aspireupdate-settings' );
 				?>
 				<p class="submit">
-					<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
-					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" >Reset</a>
+					<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Save Changes', 'AspireUpdate' ); ?>">
+					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" ><?php esc_html_e( 'Reset', 'AspireUpdate' ); ?></a>
 				</p>
 			</form>
 		</div>
@@ -352,7 +352,7 @@ class Admin_Settings {
 					),
 					array(
 						'value'           => 'other',
-						'label'           => 'Other',
+						'label'           => esc_html__( 'Other', 'AspireUpdate' ),
 						'require-api-key' => 'false',
 					),
 				),
@@ -491,7 +491,7 @@ class Admin_Settings {
 			case 'api-key':
 				?>
 					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo esc_attr( $options[ $id ] ?? '' ); ?>" class="regular-text" />
-					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="Generate API Key" />
+					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="<?php esc_attr_e( 'Generate API Key', 'AspireUpdate' ); ?>" />
 					<p class="error"></p>
 					<?php
 				break;
