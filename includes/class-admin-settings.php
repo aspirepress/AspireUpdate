@@ -569,18 +569,18 @@ class Admin_Settings {
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
-		$sanitized_input['enable']         = ( ! empty( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
+		$sanitized_input['enable']         = (int) ! empty( $input['enable'] ) ? 1 : 0;
 		$sanitized_input['api_key']        = sanitize_text_field( $input['api_key'] ?? '' );
 		$sanitized_input['api_host']       = sanitize_text_field( $input['api_host'] ?? '' );
 		$sanitized_input['api_host_other'] = sanitize_text_field( $input['api_host_other'] ?? '' );
 
-		$sanitized_input['enable_debug'] = ! empty( $input['enable_debug'] ) ? 1 : 0;
+		$sanitized_input['enable_debug'] = (int) ! empty( $input['enable_debug'] ) ? 1 : 0;
 		if ( isset( $input['enable_debug_type'] ) && is_array( $input['enable_debug_type'] ) ) {
 			$sanitized_input['enable_debug_type'] = array_map( 'sanitize_text_field', $input['enable_debug_type'] );
 		} else {
 			$sanitized_input['enable_debug_type'] = array();
 		}
-		$sanitized_input['disable_ssl_verification'] = ( ! empty( $input['disable_ssl_verification'] ) && $input['disable_ssl_verification'] ) ? 1 : 0;
+		$sanitized_input['disable_ssl_verification'] = (int) ! empty( $input['disable_ssl_verification'] ) ? 1 : 0;
 		return $sanitized_input;
 	}
 }
