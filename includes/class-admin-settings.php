@@ -220,23 +220,19 @@ class Admin_Settings {
 	 * @link http://benohead.com/wordpress-network-wide-plugin-settings/
 	 */
 	public function update_settings() {
-		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'aspireupdate-settings' ) ) {
-			if ( ( isset( $_POST['option_page'] )
-			&& 'aspireupdate_settings' === $_POST['option_page'] )
-			) {
-				update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
-			}
+		// Exit if improper privileges.
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'aspireupdate-settings' ) ) {
+			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['option_page'] ) ){
+		// Save settings and redirect.
+		if ( ( isset( $_POST['option_page'] ) && 'aspireupdate_settings' === $_POST['option_page'] ) ) {
+			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
+
 			wp_safe_redirect(
-				add_query_arg(
-					array( '_wpnonce' => wp_create_nonce( 'aspireupdate-settings' ) ),
-					network_admin_url( 'index.php?page=aspireupdate-settings' )
-				)
+				add_query_arg( array( network_admin_url( 'index.php?page=aspireupdate-settings' ) ) )
 			);
-		exit;
+			exit;
 		}
 	}
 
