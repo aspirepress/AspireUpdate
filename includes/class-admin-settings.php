@@ -298,7 +298,7 @@ class Admin_Settings {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AspireUpdate Settings', 'AspireUpdate' ); ?></h1>
-			<form id="aspireupdate-settings-form" method="post" action="<?php echo esc_attr( 'index.php?page=aspireupdate-settings' ); ?>">
+			<form id="aspireupdate-settings-form" method="post" action="index.php?page=aspireupdate-settings">
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspireupdate-settings' );
