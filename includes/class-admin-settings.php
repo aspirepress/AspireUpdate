@@ -242,8 +242,6 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function register_admin_menu() {
-		$capability = is_multisite() ? 'manage_network_options' : 'manage_options';
-
 		if ( ! defined( 'AP_REMOVE_UI' ) ) {
 			define( 'AP_REMOVE_UI', false );
 		}
@@ -252,7 +250,7 @@ class Admin_Settings {
 				'index.php',
 				'AspireUpdate',
 				'AspireUpdate',
-				$capability,
+				is_multisite() ? 'manage_network_options' : 'manage_options',
 				'aspireupdate-settings',
 				array( $this, 'the_settings_page' )
 			);
