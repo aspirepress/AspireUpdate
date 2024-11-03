@@ -288,7 +288,6 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function the_settings_page() {
-		$action = is_multisite() ? 'index.php?page=aspireupdate-settings' : 'options.php';
 		$reset_url = add_query_arg(
 			array(
 				'reset'       => 'reset',
@@ -299,7 +298,7 @@ class Admin_Settings {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AspireUpdate Settings', 'AspireUpdate' ); ?></h1>
-			<form id="aspireupdate-settings-form" method="post" action="<?php echo esc_attr( $action ); ?>">
+			<form id="aspireupdate-settings-form" method="post" action="<?php echo esc_attr( 'index.php?page=aspireupdate-settings' ); ?>">
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspireupdate-settings' );
