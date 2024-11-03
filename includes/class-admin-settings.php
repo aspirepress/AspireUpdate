@@ -218,6 +218,8 @@ class Admin_Settings {
 	 *
 	 * @link http://wordpress.stackexchange.com/questions/64968/settings-api-in-multisite-missing-update-message
 	 * @link http://benohead.com/wordpress-network-wide-plugin-settings/
+	 *
+	 * @return void
 	 */
 	public function update_settings() {
 		// Exit if improper privileges.
