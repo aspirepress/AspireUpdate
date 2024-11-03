@@ -14,4 +14,17 @@
 			<directory suffix="Test.php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="true" cacheDirectory="./tests/cache">
+		<include>
+			<file>./aspire-update.php</file>
+			<directory suffix=".php">./includes</directory>
+		</include>
+		<exclude>
+			<file>./includes/autoload.php</file>
+		</exclude>
+		<report>
+			<text outputFile="php://stdout" showOnlySummary="true"/>
+			<html outputDirectory="./tests/coverage"/>
+		</report>
+	</coverage>
 </phpunit>

@@ -5,3 +5,5 @@
 /phpunit.xml
 /vendor
 .cache/*
+/tests/cache
+/tests/coverage
