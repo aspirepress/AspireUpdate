@@ -20,6 +20,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       AspireUpdate
  * Domain Path:       /languages
+ * Network:           true
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
