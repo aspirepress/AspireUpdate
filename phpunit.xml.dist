@@ -1,0 +1,30 @@
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.2/phpunit.xsd"
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	convertDeprecationsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite name="default">
+			<directory suffix="Test.php">./tests/</directory>
+		</testsuite>
+	</testsuites>
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="true" cacheDirectory="./tests/cache">
+		<include>
+			<file>./aspire-update.php</file>
+			<directory suffix=".php">./includes</directory>
+		</include>
+		<exclude>
+			<file>./includes/autoload.php</file>
+		</exclude>
+		<report>
+			<text outputFile="php://stdout" showOnlySummary="true"/>
+			<html outputDirectory="./tests/coverage"/>
+		</report>
+	</coverage>
+</phpunit>

@@ -33,4 +33,6 @@ if ( ! defined( 'AP_VERSION' ) ) {
 
 require_once __DIR__ . '/includes/autoload.php';
 
-new AspireUpdate\Controller();
+if ( ! defined( 'AP_RUN_TESTS' ) ) {
+	new AspireUpdate\Controller();
+}

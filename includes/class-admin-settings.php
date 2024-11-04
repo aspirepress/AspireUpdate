@@ -382,7 +382,7 @@ class Admin_Settings {
 					),
 					array(
 						'value'           => 'other',
-						'label'           => 'Other',
+						'label'           => esc_html__( 'Other', 'AspireUpdate' ),
 						'require-api-key' => 'false',
 					),
 				),
@@ -521,7 +521,7 @@ class Admin_Settings {
 			case 'api-key':
 				?>
 					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo esc_attr( $options[ $id ] ?? '' ); ?>" class="regular-text" />
-					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="Generate API Key" />
+					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="<?php esc_attr_e( 'Generate API Key', 'AspireUpdate' ); ?>" />
 					<p class="error"></p>
 					<?php
 				break;
