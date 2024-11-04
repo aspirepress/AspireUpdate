@@ -90,7 +90,12 @@ class Themes_Screens {
 	 * @return void
 	 */
 	public function redirect_to_theme_install() {
-		$browse = isset( $_GET['browse'] ) ? wp_unslash( $_GET['browse'] ) : '';
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : false;
+		if ( $nonce && ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
+			return;
+		}
+		
+		$browse = isset( $_GET['browse'] ) ? sanitize_text_field( wp_unslash( $_GET['browse'] ) ) : '';
 		if ( ! in_array( $browse, $this->unsupported_filters, true ) ) {
 			return;
 		}

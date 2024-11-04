@@ -31,8 +31,19 @@ if ( ! defined( 'AP_VERSION' ) ) {
 	define( 'AP_VERSION', '0.5' );
 }
 
+
+add_action( 'plugins_loaded', 'define_constant' );
+function define_constant() {
+	if ( ! defined( 'AP_PATH' ) ) {
+		define( 'AP_PATH', dirname( plugin_basename( __FILE__ ) ) );
+	}
+}
+
 require_once __DIR__ . '/includes/autoload.php';
 
-if ( ! defined( 'AP_RUN_TESTS' ) ) {
-	new AspireUpdate\Controller();
+add_action( 'plugins_loaded', 'aspire_update' );
+function aspire_update() {
+	if ( ! defined( 'AP_RUN_TESTS' ) ) {
+		new AspireUpdate\Controller();
+	}
 }

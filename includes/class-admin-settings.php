@@ -377,7 +377,7 @@ class Admin_Settings {
 					array(
 						'value'           => 'api.aspirecloud.org',
 						'label'           => 'AspireCloud (api.aspirecloud.org)',
-						'require-api-key' => 'true',
+						'require-api-key' => 'false',
 						'api-key-url'     => 'api.aspirecloud.org/v1/apitoken',
 					),
 					array(
