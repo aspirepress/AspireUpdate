@@ -44,6 +44,7 @@
     font-size: 8px;
     line-height: 6px;
     display: inline-block;
+    cursor: default;
 }
 
 #voltron:hover {
