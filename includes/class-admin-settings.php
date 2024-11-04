@@ -128,7 +128,7 @@ class Admin_Settings {
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
-			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ) . '.</p></div>';
 			delete_site_option( 'aspireupdate-reset' );
 		}
 	}
