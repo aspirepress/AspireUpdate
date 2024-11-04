@@ -1,8 +1,6 @@
 jQuery(document).ready(function () {
     new ApiRewrites();
     new ApiDebug();
-
-    jQuery("#voltron").css('color', jQuery("#voltron").css('background-color'));
 });
 
 class ApiRewrites {
