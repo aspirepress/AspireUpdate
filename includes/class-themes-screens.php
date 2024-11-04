@@ -23,9 +23,9 @@ class Themes_Screens {
 	 *
 	 * @var array
 	 */
-	protected $unsupported_filters = array(
+	protected $unsupported_filters = [
 		'favorites',
-	);
+	];
 
 	/**
 	 * The Constructor.
@@ -33,8 +33,8 @@ class Themes_Screens {
 	public function __construct() {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-			add_action( 'load-theme-install.php', array( $this, 'redirect_to_theme_install' ) );
+			add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+			add_action( 'load-theme-install.php', [ $this, 'redirect_to_theme_install' ] );
 		}
 	}
 
@@ -65,13 +65,13 @@ class Themes_Screens {
 			wp_register_style(
 				'aspire_update_themes_screens_css',
 				false,
-				array(),
+				[],
 				AP_VERSION
 			);
 
 			wp_enqueue_style( 'aspire_update_themes_screens_css' );
 
-			$css_selectors = array();
+			$css_selectors = [];
 			foreach ( $this->unsupported_filters as $filter ) {
 				$css_selectors[] = '.wp-filter .filter-links a[data-sort="' . $filter . '"]';
 			}
@@ -94,7 +94,7 @@ class Themes_Screens {
 		if ( $nonce && ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
 			return;
 		}
-		
+
 		$browse = isset( $_GET['browse'] ) ? sanitize_text_field( wp_unslash( $_GET['browse'] ) ) : '';
 		if ( ! in_array( $browse, $this->unsupported_filters, true ) ) {
 			return;

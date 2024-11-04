@@ -44,14 +44,14 @@ class Admin_Settings {
 	 * The Constructor.
 	 */
 	public function __construct() {
-		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', array( $this, 'register_admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'reset_settings' ) );
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_action( 'admin_notices', array( $this, 'reset_admin_notice' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', [ $this, 'register_admin_menu' ] );
+		add_action( 'admin_init', [ $this, 'reset_settings' ] );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'admin_notices', [ $this, 'reset_admin_notice' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 
-		add_action( 'admin_init', array( $this, 'update_settings' ) );
-		add_action( 'network_admin_edit_aspireupdate-settings', array( $this, 'update_settings' ) );
+		add_action( 'admin_init', [ $this, 'update_settings' ] );
+		add_action( 'network_admin_edit_aspireupdate-settings', [ $this, 'update_settings' ] );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Admin_Settings {
 	 * @return array The default values.
 	 */
 	private function get_default_settings() {
-		$options             = array();
+		$options             = [];
 		$options['api_host'] = 'api.aspirecloud.org';
 		return $options;
 	}
@@ -95,10 +95,10 @@ class Admin_Settings {
 
 			wp_safe_redirect(
 				add_query_arg(
-					array(
+					[
 						'reset-success'       => 'success',
 						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
-					),
+					],
 					network_admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
@@ -161,7 +161,7 @@ class Admin_Settings {
 				}
 
 				if ( isset( $options['enable_debug_type'] ) && is_array( $options['enable_debug_type'] ) ) {
-					$debug_types = array();
+					$debug_types = [];
 					foreach ( $options['enable_debug_type'] as $debug_type_name => $debug_type_enabled ) {
 						if ( $debug_type_enabled ) {
 							$debug_types[] = $debug_type_name;
@@ -181,7 +181,7 @@ class Admin_Settings {
 	 * @return array An array of values as defined in the Config File.
 	 */
 	private function get_settings_from_config_file() {
-		$options = array();
+		$options = [];
 
 		if ( ! defined( 'AP_ENABLE' ) ) {
 			define( 'AP_ENABLE', false );
@@ -208,7 +208,7 @@ class Admin_Settings {
 		}
 
 		if ( ! defined( 'AP_DEBUG_TYPES' ) ) {
-			define( 'AP_DEBUG_TYPES', array() );
+			define( 'AP_DEBUG_TYPES', [] );
 		} elseif ( is_array( AP_DEBUG_TYPES ) ) {
 			$options['enable_debug_type'] = AP_DEBUG_TYPES;
 		}
@@ -241,7 +241,7 @@ class Admin_Settings {
 			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
 
 			wp_safe_redirect(
-				add_query_arg( array( network_admin_url( 'index.php?page=aspireupdate-settings' ) ) )
+				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
 			);
 			exit;
 		}
@@ -263,7 +263,7 @@ class Admin_Settings {
 				'AspireUpdate',
 				is_multisite() ? 'manage_network_options' : 'manage_options',
 				'aspireupdate-settings',
-				array( $this, 'the_settings_page' )
+				[ $this, 'the_settings_page' ]
 			);
 		}
 	}
@@ -275,19 +275,19 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-		if ( ! in_array( $hook, array( 'dashboard_page_aspireupdate-settings','index_page_aspireupdate-settings' ) ) ) {
+		if ( ! in_array( $hook, [ 'dashboard_page_aspireupdate-settings', 'index_page_aspireupdate-settings' ], true ) ) {
 			return;
 		}
-		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), AP_VERSION );
-		wp_enqueue_script( 'aspire_update_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspire-update.js', array( 'jquery' ), AP_VERSION, true );
+		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', [], AP_VERSION );
+		wp_enqueue_script( 'aspire_update_settings_js', plugin_dir_url( __DIR__ ) . 'assets/js/aspire-update.js', [ 'jquery' ], AP_VERSION, true );
 		wp_localize_script(
 			'aspire_update_settings_js',
 			'aspireupdate',
-			array(
+			[
 				'ajax_url' => network_admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
 				'domain'   => Utilities::get_top_level_domain(),
-			)
+			]
 		);
 	}
 
@@ -298,10 +298,10 @@ class Admin_Settings {
 	 */
 	public function the_settings_page() {
 		$reset_url = add_query_arg(
-			array(
+			[
 				'reset'       => 'reset',
 				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
-			),
+			],
 			network_admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>
@@ -408,9 +408,9 @@ class Admin_Settings {
 		register_setting(
 			$this->option_group,
 			$this->option_name,
-			array(
-				'sanitize_callback' => array( $this, 'sanitize_settings' ),
-			)
+			[
+				'sanitize_callback' => [ $this, 'sanitize_settings' ],
+			]
 		);
 
 		add_settings_section(
@@ -418,64 +418,64 @@ class Admin_Settings {
 			esc_html__( 'API Configuration', 'AspireUpdate' ),
 			null,
 			'aspireupdate-settings',
-			array(
+			[
 				'before_section' => '<div class="%s">',
 				'after_section'  => '</div>',
-			)
+			]
 		);
 
 		add_settings_field(
 			'enable',
 			esc_html__( 'Enable AspireUpdate API Rewrites', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
-			array(
+			[
 				'id'   => 'enable',
 				'type' => 'checkbox',
 				'data' => $options,
-			)
+			]
 		);
 
 		add_settings_field(
 			'api_host',
 			esc_html__( 'API Host', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
-			array(
+			[
 				'id'          => 'api_host',
 				'type'        => 'hosts',
 				'data'        => $options,
 				'description' => esc_html__( 'Your new API Host.', 'AspireUpdate' ),
-				'options'     => array(
-					array(
+				'options'     => [
+					[
 						'value'           => 'api.aspirecloud.org',
 						'label'           => 'AspireCloud (api.aspirecloud.org)',
 						'require-api-key' => 'false',
 						'api-key-url'     => 'api.aspirecloud.org/v1/apitoken',
-					),
-					array(
+					],
+					[
 						'value'           => 'other',
 						'label'           => esc_html__( 'Other', 'AspireUpdate' ),
 						'require-api-key' => 'false',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		add_settings_field(
 			'api_key',
 			esc_html__( 'API Key', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_settings_section',
-			array(
+			[
 				'id'          => 'api_key',
 				'type'        => 'api-key',
 				'data'        => $options,
 				'description' => esc_html__( 'Provides an API key for repositories that may require authentication.', 'AspireUpdate' ),
-			)
+			]
 		);
 
 		add_settings_section(
@@ -483,58 +483,58 @@ class Admin_Settings {
 			esc_html__( 'API Debug Configuration', 'AspireUpdate' ),
 			null,
 			'aspireupdate-settings',
-			array(
+			[
 				'before_section' => '<div class="%s">',
 				'after_section'  => '</div>',
-			)
+			]
 		);
 
 		add_settings_field(
 			'enable_debug',
 			esc_html__( 'Enable Debug Mode', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
-			array(
+			[
 				'id'          => 'enable_debug',
 				'type'        => 'checkbox',
 				'data'        => $options,
 				'description' => esc_html__( 'Enables debug mode for the plugin.', 'AspireUpdate' ),
-			)
+			]
 		);
 
 		add_settings_field(
 			'enable_debug_type',
 			esc_html__( 'Enable Debug Type', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
-			array(
+			[
 				'id'          => 'enable_debug_type',
 				'type'        => 'checkbox-group',
 				'data'        => $options,
-				'options'     => array(
+				'options'     => [
 					'request'  => esc_html__( 'Request', 'AspireUpdate' ),
 					'response' => esc_html__( 'Response', 'AspireUpdate' ),
 					'string'   => esc_html__( 'String', 'AspireUpdate' ),
-				),
+				],
 				'description' => esc_html__( 'Outputs the request URL and headers / response headers and body / string that is being rewritten.', 'AspireUpdate' ),
-			)
+			]
 		);
 
 		add_settings_field(
 			'disable_ssl_verification',
 			esc_html__( 'Disable SSL Verification', 'AspireUpdate' ),
-			array( $this, 'add_settings_field_callback' ),
+			[ $this, 'add_settings_field_callback' ],
 			'aspireupdate-settings',
 			'aspireupdate_debug_settings_section',
-			array(
+			[
 				'id'          => 'disable_ssl_verification',
 				'type'        => 'checkbox',
 				'data'        => $options,
 				'class'       => 'advanced-setting',
 				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'AspireUpdate' ),
-			)
+			]
 		);
 	}
 
@@ -545,15 +545,15 @@ class Admin_Settings {
 	 *
 	 * @return void Echos the Field HTML.
 	 */
-	public function add_settings_field_callback( $args = array() ) {
+	public function add_settings_field_callback( $args = [] ) {
 
-		$defaults      = array(
+		$defaults      = [
 			'id'          => '',
 			'type'        => 'text',
 			'description' => '',
-			'data'        => array(),
-			'options'     => array(),
-		);
+			'data'        => [],
+			'options'     => [],
+		];
 		$args          = wp_parse_args( $args, $defaults );
 		$id            = $args['id'];
 		$type          = $args['type'];
@@ -642,7 +642,7 @@ class Admin_Settings {
 	 * @return array The processed Input.
 	 */
 	public function sanitize_settings( $input ) {
-		$sanitized_input = array();
+		$sanitized_input = [];
 
 		$sanitized_input['enable']         = (int) ! empty( $input['enable'] );
 		$sanitized_input['api_key']        = sanitize_text_field( $input['api_key'] ?? '' );
@@ -653,7 +653,7 @@ class Admin_Settings {
 		if ( isset( $input['enable_debug_type'] ) && is_array( $input['enable_debug_type'] ) ) {
 			$sanitized_input['enable_debug_type'] = array_map( 'sanitize_text_field', $input['enable_debug_type'] );
 		} else {
-			$sanitized_input['enable_debug_type'] = array();
+			$sanitized_input['enable_debug_type'] = [];
 		}
 		$sanitized_input['disable_ssl_verification'] = (int) ! empty( $input['disable_ssl_verification'] );
 

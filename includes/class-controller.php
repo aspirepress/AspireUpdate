@@ -21,7 +21,7 @@ class Controller {
 
 		$this->api_rewrite();
 
-		add_action( 'init', array( $this, 'load_textdomain' ) );
+		add_action( 'init', [ $this, 'load_textdomain' ] );
 	}
 
 	/**
@@ -56,5 +56,4 @@ class Controller {
 	public function load_textdomain() {
 		\load_plugin_textdomain( 'AspireUpdate', false, AP_PATH . '/languages/' );
 	}
-
 }
