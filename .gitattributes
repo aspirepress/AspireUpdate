@@ -5,6 +5,7 @@
 .editorconfig export-ignore
 composer.lock export-ignore
 phpunit.xml export-ignore
+phpunit.xml.dist export-ignore
 phpcs.xml export-ignore
 phpcs.xml.dist export-ignore
 .phpcs.xml export-ignore
