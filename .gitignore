@@ -7,3 +7,4 @@
 .cache/*
 /tests/cache
 /tests/coverage
+.DS_Store
