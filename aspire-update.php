@@ -46,3 +46,13 @@ function aspire_update() {
 		new AspireUpdate\Controller();
 	}
 }
+
+register_activation_hook( __FILE__, 'aspire_update_activation_hook' );
+function aspire_update_activation_hook() {
+	register_uninstall_hook( __FILE__, 'aspire_update_uninstall_hook' );
+}
+
+function aspire_update_uninstall_hook() {
+	$admin_settings = AspireUpdate\Admin_Settings::get_instance();
+	$admin_settings->delete_all_settings();
+}
