@@ -21,7 +21,7 @@
     width: 30px;
     height: 30px;
     background: url(../images/icon-key.svg) no-repeat center center / 24px 24px;
-    background-color: #CBCBCB;
+    background-color: #cbcbcb;
     border: 1px solid #8c8f94;
     border-radius: 3px;
     clip-path: inset(0 0 0 0);
@@ -31,10 +31,33 @@
 }
 
 #aspireupdate-generate-api-key:hover {
-    background-color: #E3E3E3;
+    background-color: #e3e3e3;
 }
 
-.aspireupdate-settings-field-wrapper  p.error {
-    color: #BC3B3B;
+.aspireupdate-settings-field-wrapper p.error {
+    color: #bc3b3b;
     display: none;
+}
+
+#voltron {
+    color: transparent;
+    font-size: 8px;
+    line-height: 6px;
+    display: inline-block;
+    cursor: default;
+}
+
+#voltron:hover {
+    animation: blink 1.8s ease-in-out infinite;
+    animation-delay: 5s;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        color: inherit;
+    }
+    50% {
+        color: transparent;
+    }
 }
