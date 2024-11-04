@@ -104,6 +104,15 @@ class Admin_Settings {
 	}
 
 	/**
+	 * Delete all settings.
+	 *
+	 * @return void
+	 */
+	public function delete_all_settings() {
+		delete_site_option( $this->option_name );
+	}
+
+	/**
 	 * The Admin Notice to convey a Reset Operation has happened.
 	 *
 	 * @return void
