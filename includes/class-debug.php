@@ -71,20 +71,16 @@ class Debug {
 
 		$file_path = WP_CONTENT_DIR . '/' . self::$log_file;
 
-		$content = $wp_filesystem->get_contents( $file_path );
-		if ( false === $content ) {
-			$wp_filesystem->put_contents(
-				$file_path,
-				$formatted_message,
-				FS_CHMOD_FILE
-			);
-		} else {
-			$wp_filesystem->put_contents(
-				$file_path,
-				$content . $formatted_message,
-				FS_CHMOD_FILE
-			);
+		$content = '';
+		if ( $wp_filesystem->exists( $file_path ) ) {
+			$content = $wp_filesystem->get_contents( $file_path );
 		}
+
+		$wp_filesystem->put_contents(
+			$file_path,
+			$content . $formatted_message,
+			FS_CHMOD_FILE
+		);
 	}
 
 	/**
