@@ -305,7 +305,7 @@ class Admin_Settings {
 				?>
 				<p class="submit">
 					<?php wp_nonce_field( 'aspireupdate-settings' ); ?>
-					<?php submit_button( esc_html__( 'Save Changes', 'aspireupdate-settings' ), 'primary', 'submit', false ); ?>
+					<?php submit_button( '', 'primary', 'submit', false ); ?>
 
 					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" >Reset</a>
 				</p>
