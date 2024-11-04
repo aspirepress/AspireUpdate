@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: AspireUpdate\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-03 17:59+0000\n"
-"PO-Revision-Date: 2024-11-03 18:06+0000\n"
+"PO-Revision-Date: 2024-11-04 06:23+0000\n"
 "Last-Translator: \n"
-"Language-Team: French (France)\n"
+"Language-Team: Français\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
@@ -67,13 +67,21 @@ msgstr "Activer le type de débogage"
 msgid "Enables debug mode for the plugin."
 msgstr "Active le mode débogage de l’extension."
 
+#: includes/class-admin-settings.php:494
+msgid "Generate API Key"
+msgstr "Générer une clé API"
+
 #. URI of the plugin
 msgid "https://aspirepress.org/"
-msgstr "AspireUpdate"
+msgstr "https://aspirepress.org/"
 
 #. Author URI of the plugin
 msgid "https://docs.aspirepress.org/aspireupdate/"
 msgstr "https://docs.aspirepress.org/aspireupdate/"
+
+#: includes/class-admin-settings.php:355
+msgid "Other"
+msgstr "Autre"
 
 #: includes/class-admin-settings.php:416
 msgid ""
@@ -93,9 +101,21 @@ msgstr ""
 msgid "Request"
 msgstr "Rquête"
 
+#: includes/class-admin-settings.php:280
+msgid "Reset"
+msgstr "Réinitialiser"
+
 #: includes/class-admin-settings.php:413
 msgid "Response"
 msgstr "Réponse"
+
+#: includes/class-admin-settings.php:279
+msgid "Save Changes"
+msgstr "Enregistrer les changements"
+
+#: includes/class-admin-settings.php:119
+msgid "Settings have been reset to default."
+msgstr "Les réglages ont été réinitialisés à ceux par défaut."
 
 #: includes/class-admin-settings.php:414
 msgid "String"

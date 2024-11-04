@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AspireUpdate\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-03 17:59+0000\n"
+"POT-Creation-Date: 2024-11-04 06:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -68,12 +68,20 @@ msgstr ""
 msgid "Enables debug mode for the plugin."
 msgstr ""
 
+#: includes/class-admin-settings.php:494
+msgid "Generate API Key"
+msgstr ""
+
 #. URI of the plugin
 msgid "https://aspirepress.org/"
 msgstr ""
 
 #. Author URI of the plugin
 msgid "https://docs.aspirepress.org/aspireupdate/"
+msgstr ""
+
+#: includes/class-admin-settings.php:355
+msgid "Other"
 msgstr ""
 
 #: includes/class-admin-settings.php:416
@@ -90,8 +98,20 @@ msgstr ""
 msgid "Request"
 msgstr ""
 
+#: includes/class-admin-settings.php:280
+msgid "Reset"
+msgstr ""
+
 #: includes/class-admin-settings.php:413
 msgid "Response"
+msgstr ""
+
+#: includes/class-admin-settings.php:279
+msgid "Save Changes"
+msgstr ""
+
+#: includes/class-admin-settings.php:119
+msgid "Settings have been reset to default."
 msgstr ""
 
 #: includes/class-admin-settings.php:414
