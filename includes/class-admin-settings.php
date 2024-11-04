@@ -581,6 +581,7 @@ class Admin_Settings {
 			$sanitized_input['enable_debug_type'] = array();
 		}
 		$sanitized_input['disable_ssl_verification'] = (int) ! empty( $input['disable_ssl_verification'] );
+
 		return $sanitized_input;
 	}
 }
