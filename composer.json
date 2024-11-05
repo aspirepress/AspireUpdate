@@ -1,20 +1,31 @@
 {
-	"name": "aspirepress/aspire-update",
-	"description": "Update plugins and themes for WordPress.",
-	"type": "wordpress-plugin",
-	"license": "GPL-3.0-or-later",
-	"authors": [
-		{
-			"name": "AspirePress"
+
+    "name": "aspirepress/aspire-update",
+    "description": "Update plugins and themes for WordPress.",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "AspirePress"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0"
+    },
+    "require-dev": {
+		"squizlabs/php_codesniffer": "3.10.3",
+		"wp-coding-standards/wpcs": "~3.1.0",
+        "yoast/phpunit-polyfills": "^1.1.0"
+    },
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
-	],
-	"require": {
-		"php": ">=7.4.0"
 	},
-	"require-dev": {
-		"yoast/phpunit-polyfills": "^1.1.0"
-	},
-	"scripts": {
-		"test": [ "Composer\\Config::disableProcessTimeout", "@php ./vendor/phpunit/phpunit/phpunit" ]
-	}
+    "scripts": {
+		"format": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --report=summary,source",
+		"lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --report=summary, source",
+        "test": [ "Composer\\Config::disableProcessTimeout", "@php ./vendor/phpunit/phpunit/phpunit" ]
+    }
+
 }
