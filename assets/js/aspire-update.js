@@ -1,3 +1,4 @@
+
 jQuery(document).ready(function () {
 	new ApiRewrites();
 	new ApiDebug();
@@ -237,3 +238,4 @@ class Fields {
 		});
 	}
 }
+

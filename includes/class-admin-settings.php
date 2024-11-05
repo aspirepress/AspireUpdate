@@ -44,6 +44,7 @@ class Admin_Settings {
 	 * The Constructor.
 	 */
 	public function __construct() {
+
 		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', [ $this, 'register_admin_menu' ] );
 		add_action( 'admin_init', [ $this, 'reset_settings' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -52,6 +53,7 @@ class Admin_Settings {
 
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
 		add_action( 'network_admin_edit_aspireupdate-settings', [ $this, 'update_settings' ] );
+
 	}
 
 	/**
@@ -98,7 +100,9 @@ class Admin_Settings {
 					[
 						'reset-success'       => 'success',
 						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
+
 					],
+
 					network_admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
@@ -241,7 +245,9 @@ class Admin_Settings {
 			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
 
 			wp_safe_redirect(
+
 				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
+
 			);
 			exit;
 		}
@@ -275,7 +281,9 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
+
 		if ( ! in_array( $hook, [ 'dashboard_page_aspireupdate-settings', 'index_page_aspireupdate-settings' ], true ) ) {
+
 			return;
 		}
 		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', [], AP_VERSION );
@@ -283,7 +291,9 @@ class Admin_Settings {
 		wp_localize_script(
 			'aspire_update_settings_js',
 			'aspireupdate',
+
 			[
+
 				'ajax_url' => network_admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
 				'domain'   => Utilities::get_top_level_domain(),
@@ -301,7 +311,9 @@ class Admin_Settings {
 			[
 				'reset'       => 'reset',
 				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
+
 			],
+
 			network_admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>

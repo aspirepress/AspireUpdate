@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+
     "content-hash": "ee8f3669b94f591108fa37dfcf3db475",
     "packages": [],
     "packages-dev": [
@@ -86,6 +87,7 @@
             "time": "2023-01-05T11:28:13+00:00"
         },
         {
+
             "name": "doctrine/instantiator",
             "version": "1.5.0",
             "source": {
@@ -392,6 +394,7 @@
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
+
             "name": "phpcsstandards/phpcsextra",
             "version": "1.2.1",
             "source": {
@@ -558,6 +561,7 @@
             "time": "2024-05-20T13:34:27+00:00"
         },
         {
+
             "name": "phpunit/php-code-coverage",
             "version": "9.2.32",
             "source": {
@@ -1943,6 +1947,7 @@
             "time": "2020-09-28T06:39:44+00:00"
         },
         {
+
             "name": "squizlabs/php_codesniffer",
             "version": "3.10.3",
             "source": {
@@ -2023,6 +2028,7 @@
             "time": "2024-09-18T10:38:58+00:00"
         },
         {
+
             "name": "theseer/tokenizer",
             "version": "1.2.3",
             "source": {
@@ -2073,6 +2079,7 @@
             "time": "2024-03-03T12:36:25+00:00"
         },
         {
+
             "name": "wp-coding-standards/wpcs",
             "version": "3.1.0",
             "source": {
@@ -2139,6 +2146,7 @@
             "time": "2024-03-25T16:39:00+00:00"
         },
         {
+
             "name": "yoast/phpunit-polyfills",
             "version": "1.1.2",
             "source": {
