@@ -239,8 +239,12 @@ class Admin_Settings {
 		}
 
 		// Save settings and redirect.
-		if ( ( isset( $_POST['option_page'] ) && 'aspireupdate_settings' === $_POST['option_page'] ) ) {
-			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
+		if ( ( isset( $_POST['option_page'], $_POST['aspireupdate_settings'] ) && 'aspireupdate_settings' === $_POST['option_page'] ) ) {
+			update_site_option(
+				$this->option_name,
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Contents are sanitized in Admin_Settings::sanitize_settings.
+				$this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) )
+			);
 
 			wp_safe_redirect(
 				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
