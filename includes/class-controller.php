@@ -20,7 +20,9 @@ class Controller {
 		Themes_Screens::get_instance();
 		$this->api_rewrite();
 
-		add_action( 'init', array( $this, 'load_textdomain' ) );
+
+		add_action( 'init', [ $this, 'load_textdomain' ] );
+
 	}
 
 	/**

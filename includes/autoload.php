@@ -15,7 +15,7 @@ spl_autoload_register( 'aspire_update_autoloader' );
  */
 function aspire_update_autoloader( $class_name ) {
 	if ( false !== strpos( $class_name, 'AspireUpdate\\' ) ) {
-		$class_name = strtolower( str_replace( array( 'AspireUpdate\\', '_' ), array( '', '-' ), $class_name ) );
+		$class_name = strtolower( str_replace( [ 'AspireUpdate\\', '_' ], [ '', '-' ], $class_name ) );
 		$file       = __DIR__ . DIRECTORY_SEPARATOR . 'class-' . $class_name . '.php';
 
 		if ( file_exists( $file ) ) {
