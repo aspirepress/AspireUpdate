@@ -44,11 +44,14 @@ class Admin_Settings {
 	 * The Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_admin_menu' ) );
+		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', array( $this, 'register_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'reset_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_notices', array( $this, 'reset_admin_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
+		add_action( 'admin_init', array( $this, 'update_settings' ) );
+		add_action( 'network_admin_edit_aspireupdate-settings', array( $this, 'update_settings' ) );
 	}
 
 	/**
@@ -87,8 +90,8 @@ class Admin_Settings {
 			wp_verify_nonce( sanitize_key( $_GET['reset-nonce'] ), 'aspireupdate-reset-nonce' )
 		) {
 			$options = $this->get_default_settings();
-			update_option( $this->option_name, $options );
-			update_option( 'aspireupdate-reset', 'true' );
+			update_site_option( $this->option_name, $options );
+			update_site_option( 'aspireupdate-reset', 'true' );
 
 			wp_safe_redirect(
 				add_query_arg(
@@ -96,11 +99,20 @@ class Admin_Settings {
 						'reset-success'       => 'success',
 						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
 					),
-					admin_url( 'index.php?page=aspireupdate-settings' )
+					network_admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
 			exit;
 		}
+	}
+
+	/**
+	 * Delete all settings.
+	 *
+	 * @return void
+	 */
+	public function delete_all_settings() {
+		delete_site_option( $this->option_name );
 	}
 
 	/**
@@ -110,14 +122,14 @@ class Admin_Settings {
 	 */
 	public function reset_admin_notice() {
 		if (
-			( 'true' === get_option( 'aspireupdate-reset' ) ) &&
+			( 'true' === get_site_option( 'aspireupdate-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
 			( 'success' === $_GET['reset-success'] ) &&
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
-			echo '<div class="notice notice-success is-dismissible"><p>Settings have been reset to default.</p></div>';
-			delete_option( 'aspireupdate-reset' );
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ) . '.</p></div>';
+			delete_site_option( 'aspireupdate-reset' );
 		}
 	}
 
@@ -131,13 +143,13 @@ class Admin_Settings {
 	 */
 	public function get_setting( $setting_name, $default_value = false ) {
 		if ( null === $this->options ) {
-			$options = get_option( $this->option_name, false );
+			$options = get_site_option( $this->option_name, false );
 			/**
 			 * If the options are not set load defaults.
 			 */
 			if ( false === $options ) {
 				$options = $this->get_default_settings();
-				update_option( $this->option_name, $options );
+				update_site_option( $this->option_name, $options );
 			}
 			$config_file_options = $this->get_settings_from_config_file();
 			if ( is_array( $options ) ) {
@@ -211,6 +223,31 @@ class Admin_Settings {
 	}
 
 	/**
+	 * Update settings for single site or network activated.
+	 *
+	 * @link http://wordpress.stackexchange.com/questions/64968/settings-api-in-multisite-missing-update-message
+	 * @link http://benohead.com/wordpress-network-wide-plugin-settings/
+	 *
+	 * @return void
+	 */
+	public function update_settings() {
+		// Exit if improper privileges.
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'aspireupdate-settings' ) ) {
+			return;
+		}
+
+		// Save settings and redirect.
+		if ( ( isset( $_POST['option_page'] ) && 'aspireupdate_settings' === $_POST['option_page'] ) ) {
+			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
+
+			wp_safe_redirect(
+				add_query_arg( array( network_admin_url( 'index.php?page=aspireupdate-settings' ) ) )
+			);
+			exit;
+		}
+	}
+
+	/**
 	 * Register the Admin Menu.
 	 *
 	 * @return void
@@ -224,7 +261,7 @@ class Admin_Settings {
 				'index.php',
 				'AspireUpdate',
 				'AspireUpdate',
-				'manage_options',
+				is_multisite() ? 'manage_network_options' : 'manage_options',
 				'aspireupdate-settings',
 				array( $this, 'the_settings_page' )
 			);
@@ -238,7 +275,7 @@ class Admin_Settings {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-		if ( 'dashboard_page_aspireupdate-settings' !== $hook ) {
+		if ( ! in_array( $hook, array( 'dashboard_page_aspireupdate-settings','index_page_aspireupdate-settings' ) ) ) {
 			return;
 		}
 		wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', array(), AP_VERSION );
@@ -247,7 +284,7 @@ class Admin_Settings {
 			'aspire_update_settings_js',
 			'aspireupdate',
 			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'ajax_url' => network_admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
 				'domain'   => Utilities::get_top_level_domain(),
 			)
@@ -265,21 +302,89 @@ class Admin_Settings {
 				'reset'       => 'reset',
 				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
 			),
-			admin_url( 'index.php?page=aspireupdate-settings' )
+			network_admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'AspireUpdate Settings', 'AspireUpdate' ); ?></h1>
-			<form id="aspireupdate-settings-form" method="post" action="options.php">
+			<form id="aspireupdate-settings-form" method="post" action="index.php?page=aspireupdate-settings">
 				<?php
 				settings_fields( $this->option_group );
 				do_settings_sections( 'aspireupdate-settings' );
 				?>
 				<p class="submit">
-					<input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes">
-					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" >Reset</a>
+					<?php wp_nonce_field( 'aspireupdate-settings' ); ?>
+					<?php submit_button( '', 'primary', 'submit', false ); ?>
+
+					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" ><?php esc_html_e( 'Reset', 'AspireUpdate' ); ?></a>
 				</p>
 			</form>
+<pre id="voltron">
+...................................................................................................:?%,.............................................................................
+.................................................................................................,;*%:..............................................................................
+...............................................................................................,++?+,...............................................................................
+..............................................................................................;**?+.................................................................................
+............................................................................................:*+;?;:++++:,...........................................................................
+..........................................................................................:*+:;%*++::;;;+++:........................................................................
+........................................................................................,+*:,+S*::+%#@#+.,*?........................................................................
+......................................................................................,+*;,.,;:;?#@@@%;,;*+,........................................................................
+....................................................................................,+*;:..,+?S@@@@@%,.+*,..........................................................................
+...................................................................................:*+:*+,;:*#@@@@@@?.;*,...........................................................................
+.................................................................................,+*:;?;:?*%.;S@@@@#+.++............................................................................
+...............................................................................,*+::?S:;%:,%:,%@@@@#?.++............................................................................
+.............................................................................,+*;,*@%,;%:.,%:,?@@@@@%.++............................................................................
+............................................................................;*;,+#@?,+%:..,%::%@@@@@?.++............................................................................
+..........................................................................:*+,;S@@*,*?,...,%,:S@@@@@?.++............................................................................
+........................................................................,**::%@@#;,?%+;;;;+?.:S@@@@@?.;*:;;;:.......................................................................
+......................................................................,+*::?##@S::%??;,::::,,;S#####?,,::;;;%;......................................................................
+.....................................................................;*;,+S###%,:%??::?SSS%%SS#######SS%SS%:,?+.....................................................................
+...................................................................:*;,+S####?,;%%*,+S#####################S;,*+....................................................................
+.................................................................:*+::%##S##*,+%?+,*#SSSSSSSSSSSSSSSSSSSSSSSS+,**,..................................................................
+...............................................................,+*::?#SSSS#+,*%%;,?#SSSSS?*?#SSSSSSS##%SSSSSSS*,+*,.................................................................
+.............................................................,+*:,*SSSSSSS;,?S?::%SSSSSS*,.*@SSSSSSS@S.+SSSSSSS?,;?:.........................................................,;;;;;:
+............................................................;*;,+SSSSSS#S::%S?,.???%??%+,.,%#%SSSSSS#S..+SSSSSSS%,:?:.......................................................:%;;;;;S
+..........................................................:*+,;%#S%%%%#%,:%?%;:;;;;;:,,,:,,S#%%%%%%S@S,..,;++;;++;:;S;.....................................................,?+,?S+.%
+++:::::::::::::::::::::::::::;;.........................:*+,:?SS%%%%%#?,;%:,::::::+%,.,%S,,@S%%%%%%S@#?+;,:+?%*+;;::;:.....................................................;S.+#S*,%
+:?*,,,;+++++++++++++++++++++;,*+......................,+*:,*SS%%%%%S#*,*%,.......;?,+*,S%,;@S%%%%%%S@#%%S%?+;:;++;:.................................,+;...................,%;:%SS*,%
+..+?;.:%#SSSSSSSSSSSSSSSSSSS%;,?;...................,;*;,*SS%%%%%%S#;,??,.......;?,+@S:;:,*@%%%%%%%S@#%%%%%%S%*;:;+*+;,................:*;..........;%S+..................+?.+#%S*,%
+...,+*:.;SS%%%%%%%%%%%%%%%%%%%::?:.................;*;,;%S%%%%%%%SS:,%*........*?,+#SS;..,%#%%%%%%%S@#%%%%%%%%%S%?+;:;+*+:,..........:*+;?*,........;?:*?,...............,S::S%%S*,%
+.....:*+,,*SS%%%%%%%%%%%%%%%%S?,+*,..............:*+,:%S%%%%%%%%#%::%+........+?,+#%%#+.,,##%%%%%%%S@#%%%%%%%%%%%%%%%*+::;++;:,....,+*:,;:+?;.......;?:.;%:..............?*,?S%%S*,%
+.......+?;.:%#S%%%%%%%%%%%%%%%S*.*+............:++,:?#S%%%%%%%%#?,;%;........+*,+#%%%#?,.,@S%%%%%%%S@#%%%%%%%%%%%%%%%%%%?*;:;+*+::+*;,+%S%;:?*,.....;?:.::?+............;%,:#%%%S*,%
+........,+*:.;SS%%%%%%%%%%%%%%%S+.?;.........,+*:,*SS%%%%%%%%S#*.+%:........+*,*#%%%%S%:.+@%%%%%%%%S@#%%%%%%%%%%%%%%%%%%%%S%?;::;;;,:%S%%%S*,+?;....;?:.#*,??,.........,%+,%S%%%S*,%
+..........:**,,*SS%%%%%%%%%%%%%SS:,?:......,;*;,+SS%%%%%%%%%S#+,*%:.......,**,*#%%%%%%#;.*#%%%%%%%%S@#%%%%%%%%S@##S%%%%%%%%%%%%?*;;?S%%%%%%S%::?*,..;?:.#S?:+%;........+?,+#%%%%S+,%
+...........,;*;.:?#%%%%%%%%%%%%%S%,:%,....;*;,;%S%%%%%%%%%%SS;,*+,.......,**,*#%%%%%%%@+.%#%%%%%%%%%@#%%%%%%%%S@@@@#%%%%%%%%%%%S@@S%????????%S+,+?;.;?:.#%%%;;%+......,%;,S%%%%%S+,%
+.............,*?:.+S?????????????S?,;?,.:++,:?S%??????????S@;.;*.........**,*#%???????#?,#S?????????@#????????%@@S????????????S@#%????????????%?::?*;?:.#???%+:?*,....*?,*S?????S;.%
+...............:%+.;S?************S*.+?**:,*S%***********SS%?:,?+......,**,*#?********%%;@?*********@#********?S?***********%@#%***************?%+,+S%:.#?***?*:*?:..:%;,S?*****S;.%
+................,%+.+S*++++++++++++S;,+:,*S?*++++++++++*S%*+?%;,**....,?*.*#?+++++++++*S*#*++++++++*@#*+++++++++++++++++++?#@%*++++++++?*++++++++?*:;+,.#*++++*?:;%;.*?.??++++++S;.%
+.................,%;.*%+;++++;;;;;;+S,.;%%+;;;;;;;;;;;*#?;++;+S+,**,.,?+.*#*;++++++++;;#SS++++++++++##+++++++++++++;;;;;*S@%+;;+++;;;+?@S*;;+++++;+?;...#+++++;+*+:?%%,;?+;;;;;;%;.%
+..................:%:,*?;;;;;;;;;;;;*S?%+;;;;;;;;;;;;?S+;;;;;;;%*,**:?+.*#+;;;;;;;;;;;*#@%;;;;;;;;;+##;;;;;;;;;;;;;;;;;?#S*;;;;;;;;;?#@@@@*;;;;;;;;;?*,.#;;;;;;;;**:+;,?*;;;;;;;%;.%
+...................;?:,??::::::::::::*+:::::::::::::%S;::::::::;?*,+%;.?#+::::::::::;%@@@*:::::::::+##;::::::::::::::*S#*:::::::::;S@@@@@@#*:::::::::+?:#:::::::::;*;.+?;:::::::%;.%
+....................;?,,?*::::::::::::::::::::::::;%?:::::*%;::::??,..?#+::::::::::*#@@@@;:::::::::;#S:::::::::::::::%@*::::::::;?@@@@@@@@@@?::::::::::%@:::::::::::**%+::::::::%;.%
+.....................+*,,%*::::::::::::::::::::::+S?:::::*@@%;::::*?:?#+:::::::::;%@@@@@@;:::::::::;##;:::::::::::::::?#?:::::::;S@@@@@@@@@@@+::::::::+#@::::::::::::*?:::::::::?;.%
+.....................,**,,S+::::::::::::::::::::*S*:;;;:*#@@@S;;;;:*##+:::::::::*#@@@@@@S;:::::::::;##;::::;;;+::::::::?@S+::::::;?@@@@@@@@#*;;:::::;%%*@;::::::::::::::::::::::*:.%
+.......................?+.:%*;;;;;;;;;;;;;;;;;+*SS;;;;;+#@@@@@*+++;*S*;;;;;;;;+S@@@@@@@@%+;;;;;;;;;+@#+;;;;;;+%?;;;;;;;;?@@?+;;;;;;*S@@@@@%+;;;;;;;?S*,:@+;;;;++;;;;;;;;;;;;;;;;?;.%
+.......................,?;.:S?+++++++++++++*+*?;,?%*+***%@@@@%***+?S?+++++++*%@@@@@@@@@@?++++++++++*@#*++++++*S@?++++++++?#@S*++++++*%@@#?+++++++*S%:..:@*++++?S?+++++++++++++++%;.%
+........................:%;.;S?*************??:,:.*S????*%@@%???*?#%*???????#@@@@@@####@?*??????????@#?*????*?S@#?*****?**?#@@%*????**?%?*??????%S+,**,:@???*%?:*%???***********%;.%
+.........................:%:.;#%%%%%%%%%%%%%?,;%?+.;SS%%%%%%%%%%%#S%%%%%%%%SSS%%%%%%%?S#%%%%%%%%%%%%@@%%%%%%%%S@@#%%%%%%%%%%#@@S%%%%%%%%%%%%%%%#%::*%*,:@%%%S?,,,;S%%%%%%%%%%%%%S;.%
+..........................:%:.+#SSSSSSSSSSS*,+?,,**,:%#SSSSSSSSS@#SSSSSSSSSS%SSSSSSSSS##SSSSSSSSSS%S@@SSSSSSSSS@@@#SSSSSSSSSS#@@@SS%SSSSSSS%S##+,+*,;*,:@SSSS:,%%::%SSSSSSSSSSSSS;.S
+...........................:%,.*#SSSSSSSSS+,**,...+?:,?#SSSSSS#@#SSSSSSSSSSSSSSSSSSSS#@#SSSSSSSSSSS#@@SSSSSSSS#@@@@#SSSSSSSSSS#@@@@SSSSSSSS##?,:*+..;+,:@SS#;,%+;%;,?#SSSSSSSSSS#:.#
+............................;?,.?@######S;,?+......:?;.+##S#S#@#S####################@@#S###########@@#SSSSSSS#@@@@@#SSSSSSSSSS#@@@@##S#S#@S;,+*:...;+,:@##*,?*,.,?*,+##SSSSSSS##:.#
+.............................+?,,%@####%::?;........,*+.;S###@@#####################@@@#############@@#########@@@@@@############@@@@@###@?,:?+.....;+,:@@?,*?,....*?,;S#########:.#
+.............................,**,,%@##?,;?:...........+*,,%@#%%%%%%%%%%%%%%%%%%%%%%%%S@#############@#########################@@@@@@@@@#S+,+?:......;+,,?*,+%,......;?::%########;.#
+..............................,*+.,%@*,+*,.............;?:,+:.,,,,,,,,,,,,,,,,,,,,...;##############%,::::::::::::::::::::::::;;;;;;;;;:,:*+,.......;*+;;;+?:........;%+,?######S:.#
+...............................,?+.,;,**,...............:?+.,*;;;;;;;;;;;;;;;;;;;+?,.*@@@@@@@@@@@@@@?..**;;;;;;;;;;;;;;;;::::::::::::::::+:.........,::::::,..........:?*,+#@@@@%:.#
+................................,%;.,?+..................,**?;...................,#..+@@@@@@@@@@@@@@?..*+..............................................................,*?,:S@@@%:.#
+.................................:%+?:.....................;:....................,++,.+#@@@@@@@@@@@@S..*;................................................................;%:,%@@%:.#
+..................................:+,..............................................;?:.:S@@@@@@@@@@@%..*+.................................................................:%+,*@S:.#
+....................................................................................:?;.,%@@@@@@@@@@+.:?:..................................................................,?*,+?:.#
+.....................................................................................,?+.,?@@@@@@@@%,;?;....................................................................,*?:.,.#
+......................................................................................,**,.+@@@@@@*,;?:.......................................................................;%;..#
+........................................................................................;?:.;#@@#+.+?,.........................................................................:%+.#
+.........................................................................................:?;.:S#;.*?,...........................................................................,?*#
+..........................................................................................,**,,,,**..............................................................................,*S
+............................................................................................+?,,?+.................................................................................,
+.............................................................................................;?%;...................................................................................
+</pre>
 		</div>
 		<?php
 	}
@@ -291,13 +396,13 @@ class Admin_Settings {
 	 */
 	public function register_settings() {
 		$nonce   = wp_create_nonce( 'aspireupdate-settings' );
-		$options = get_option( $this->option_name, false );
+		$options = get_site_option( $this->option_name, false );
 		/**
 		 * If the options are not set load defaults.
 		 */
 		if ( false === $options ) {
 			$options = $this->get_default_settings();
-			update_option( $this->option_name, $options );
+			update_site_option( $this->option_name, $options );
 		}
 
 		register_setting(
@@ -347,12 +452,12 @@ class Admin_Settings {
 					array(
 						'value'           => 'api.aspirecloud.org',
 						'label'           => 'AspireCloud (api.aspirecloud.org)',
-						'require-api-key' => 'true',
+						'require-api-key' => 'false',
 						'api-key-url'     => 'api.aspirecloud.org/v1/apitoken',
 					),
 					array(
 						'value'           => 'other',
-						'label'           => 'Other',
+						'label'           => esc_html__( 'Other', 'AspireUpdate' ),
 						'require-api-key' => 'false',
 					),
 				),
@@ -491,7 +596,7 @@ class Admin_Settings {
 			case 'api-key':
 				?>
 					<input type="text" id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>]" value="<?php echo esc_attr( $options[ $id ] ?? '' ); ?>" class="regular-text" />
-					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="Generate API Key" />
+					<input type="button" id="aspireupdate-generate-api-key" value="Generate API Key" title="<?php esc_attr_e( 'Generate API Key', 'AspireUpdate' ); ?>" />
 					<p class="error"></p>
 					<?php
 				break;
@@ -502,10 +607,10 @@ class Admin_Settings {
 					<?php
 					foreach ( $group_options as $group_option ) {
 						?>
-							<option 
-								data-api-key-url="<?php echo esc_html( $group_option['api-key-url'] ?? '' ); ?>" 
-								data-require-api-key="<?php echo esc_html( $group_option['require-api-key'] ?? 'false' ); ?>" 
-								value="<?php echo esc_attr( $group_option['value'] ?? '' ); ?>" 
+							<option
+								data-api-key-url="<?php echo esc_html( $group_option['api-key-url'] ?? '' ); ?>"
+								data-require-api-key="<?php echo esc_html( $group_option['require-api-key'] ?? 'false' ); ?>"
+								value="<?php echo esc_attr( $group_option['value'] ?? '' ); ?>"
 								<?php selected( esc_attr( $group_option['value'] ?? '' ), esc_attr( $options[ $id ] ?? '' ) ); ?>
 							>
 								<?php echo esc_html( $group_option['label'] ?? '' ); ?>
@@ -516,10 +621,10 @@ class Admin_Settings {
 				</select>
 				<p>
 					<input
-						type="text" 
-						id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other" 
-						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]" 
-						value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>" 
+						type="text"
+						id="aspireupdate-settings-field-<?php echo esc_attr( $id ); ?>_other"
+						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $id ); ?>_other]"
+						value="<?php echo esc_attr( $options[ $id . '_other' ] ?? '' ); ?>"
 						class="regular-text"
 					/>
 				</p>
@@ -539,18 +644,19 @@ class Admin_Settings {
 	public function sanitize_settings( $input ) {
 		$sanitized_input = array();
 
-		$sanitized_input['enable']         = ( isset( $input['enable'] ) && $input['enable'] ) ? 1 : 0;
+		$sanitized_input['enable']         = (int) ! empty( $input['enable'] );
 		$sanitized_input['api_key']        = sanitize_text_field( $input['api_key'] ?? '' );
 		$sanitized_input['api_host']       = sanitize_text_field( $input['api_host'] ?? '' );
 		$sanitized_input['api_host_other'] = sanitize_text_field( $input['api_host_other'] ?? '' );
 
-		$sanitized_input['enable_debug'] = isset( $input['enable_debug'] ) ? 1 : 0;
+		$sanitized_input['enable_debug'] = (int) ! empty( $input['enable_debug'] );
 		if ( isset( $input['enable_debug_type'] ) && is_array( $input['enable_debug_type'] ) ) {
 			$sanitized_input['enable_debug_type'] = array_map( 'sanitize_text_field', $input['enable_debug_type'] );
 		} else {
 			$sanitized_input['enable_debug_type'] = array();
 		}
-		$sanitized_input['disable_ssl_verification'] = ( isset( $input['disable_ssl_verification'] ) && $input['disable_ssl_verification'] ) ? 1 : 0;
+		$sanitized_input['disable_ssl_verification'] = (int) ! empty( $input['disable_ssl_verification'] );
+
 		return $sanitized_input;
 	}
 }

@@ -1,0 +1,10 @@
+# gitignore files for Aspire Update
+
+# Files and folders related to build and test tools.
+.phpunit.result.cache
+/phpunit.xml
+/vendor
+.cache/*
+/tests/cache
+/tests/coverage
+.DS_Store
