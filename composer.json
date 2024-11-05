@@ -2,7 +2,7 @@
     "name": "aspirepress/aspire-update",
     "description": "Update plugins and themes for WordPress.",
     "type": "wordpress-plugin",
-    "license": "GPL-3.0-or-later",
+    "license": "GPLv2",
     "authors": [
         {
             "name": "AspirePress"
