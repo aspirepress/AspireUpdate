@@ -1,4 +1,5 @@
 {
+
     "name": "aspirepress/aspire-update",
     "description": "Update plugins and themes for WordPress.",
     "type": "wordpress-plugin",
@@ -26,4 +27,5 @@
 		"lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --report=summary, source",
         "test": [ "Composer\\Config::disableProcessTimeout", "@php ./vendor/phpunit/phpunit/phpunit" ]
     }
+
 }
