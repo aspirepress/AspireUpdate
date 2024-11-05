@@ -95,7 +95,7 @@ class Themes_Screens {
 		if ( $nonce && ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
 			return;
 		}
-		
+
 		$browse = isset( $_GET['browse'] ) ? sanitize_text_field( wp_unslash( $_GET['browse'] ) ) : '';
 
 		if ( ! in_array( $browse, $this->unsupported_filters, true ) ) {
