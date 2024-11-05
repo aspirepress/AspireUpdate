@@ -53,7 +53,6 @@ class Admin_Settings {
 
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
 		add_action( 'network_admin_edit_aspireupdate-settings', [ $this, 'update_settings' ] );
-
 	}
 
 	/**
@@ -102,7 +101,6 @@ class Admin_Settings {
 						'reset-success-nonce' => wp_create_nonce( 'aspireupdate-reset-success-nonce' ),
 
 					],
-
 					network_admin_url( 'index.php?page=aspireupdate-settings' )
 				)
 			);
@@ -245,9 +243,7 @@ class Admin_Settings {
 			update_site_option( $this->option_name, $this->sanitize_settings( wp_unslash( $_POST['aspireupdate_settings'] ) ) );
 
 			wp_safe_redirect(
-
 				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
-
 			);
 			exit;
 		}
@@ -291,12 +287,11 @@ class Admin_Settings {
 		wp_localize_script(
 			'aspire_update_settings_js',
 			'aspireupdate',
-
 			[
-
-				'ajax_url' => network_admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'aspireupdate-ajax' ),
-				'domain'   => Utilities::get_top_level_domain(),
+				'ajax_url'                => network_admin_url( 'admin-ajax.php' ),
+				'nonce'                   => wp_create_nonce( 'aspireupdate-ajax' ),
+				'domain'                  => Utilities::get_top_level_domain(),
+				'string_unexpected_error' => esc_html__( 'Unexpected Error:', 'AspireUpdate' ),
 			]
 		);
 	}
@@ -313,7 +308,6 @@ class Admin_Settings {
 				'reset-nonce' => wp_create_nonce( 'aspireupdate-reset-nonce' ),
 
 			],
-
 			network_admin_url( 'index.php?page=aspireupdate-settings' )
 		);
 		?>
