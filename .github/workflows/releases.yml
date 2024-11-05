@@ -18,7 +18,7 @@ jobs:
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Build project
-        run: git archive -o /tmp/AspireUpdate-${{ steps.tag.outputs.tag }}.zip --prefix=AspireUpdate/ ${{ steps.tag.outputs.tag }}
+        run: git archive -o /tmp/aspire-update-${{ steps.tag.outputs.tag }}.zip --prefix=aspire-update/ ${{ steps.tag.outputs.tag }}
 
       - name: Create Release
         id: create_release
@@ -38,6 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /tmp/AspireUpdate-${{ steps.tag.outputs.tag }}.zip
-          asset_name: AspireUpdate-${{ steps.tag.outputs.tag }}.zip
+          asset_path: /tmp/aspire-update-${{ steps.tag.outputs.tag }}.zip
+          asset_name: aspire-update-${{ steps.tag.outputs.tag }}.zip
           asset_content_type: application/zip
