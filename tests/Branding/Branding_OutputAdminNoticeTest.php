@@ -33,24 +33,24 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	 */
 	public function data_screen_specific_messages() {
 		return [
-			'update-core.php'    => [
-				'hook'     => 'update-core.php',
+			'update-core'    => [
+				'hook'     => 'update-core',
 				'expected' => 'WordPress, plugin, theme and translation updates',
 			],
-			'plugins.php'        => [
-				'hook'     => 'plugins.php',
+			'plugins'        => [
+				'hook'     => 'plugins',
 				'expected' => 'plugin updates',
 			],
-			'plugin-install.php' => [
-				'hook'     => 'plugin-install.php',
+			'plugin-install' => [
+				'hook'     => 'plugin-install',
 				'expected' => 'plugin updates',
 			],
-			'themes.php'         => [
-				'hook'     => 'themes.php',
+			'themes'         => [
+				'hook'     => 'themes',
 				'expected' => 'theme updates',
 			],
-			'theme-install.php'  => [
-				'hook'     => 'theme-install.php',
+			'theme-install'  => [
+				'hook'     => 'theme-install',
 				'expected' => 'theme updates',
 			],
 		];
@@ -78,9 +78,9 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	public function data_adjacent_screens() {
 		return self::text_array_to_dataprovider(
 			[
-				'index.php',
-				'nav-menus.php',
-				'plugin-editor.php',
+				'dashboard',
+				'nav-menus',
+				'plugin-editor',
 			]
 		);
 	}

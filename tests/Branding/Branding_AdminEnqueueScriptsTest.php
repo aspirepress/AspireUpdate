@@ -41,11 +41,11 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 	public function data_hooks() {
 		return self::text_array_to_dataprovider(
 			[
-				'update-core.php',
-				'plugins.php',
-				'plugin-install.php',
-				'themes.php',
-				'theme-install.php',
+				'update-core',
+				'plugins',
+				'plugin-install',
+				'themes',
+				'theme-install',
 			]
 		);
 	}
@@ -71,9 +71,9 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 	public function data_adjacent_screens() {
 		return self::text_array_to_dataprovider(
 			[
-				'index.php',
-				'nav-menus.php',
-				'plugin-editor.php',
+				'dashboard',
+				'nav-menus',
+				'plugin-editor',
 			]
 		);
 	}
