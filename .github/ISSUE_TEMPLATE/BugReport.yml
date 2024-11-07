@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        Thanks for taking the time to fill out this bug report! You can use the Site Health option in your website to collect a lot of the data requested below.
   - type: input
     id: contact
     attributes:
@@ -32,6 +32,7 @@ body:
       description: What version of AspireUpdate are you running?
       options:
         - 0.5 (Default)
+        - 1.0
         - Nightly
       default: 0
     validations:
@@ -106,6 +107,15 @@ body:
       label: 'Plugins'
       description: 'A list of active plugins.'
     
+
+
+  - type: textarea
+    id: sitehealth
+    attributes:
+      label: WordPress Site Health Output (optional)
+      description: Please copy and paste a SiteHealth report with details of your WordPress configuration. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
 
   - type: textarea
     id: logs
