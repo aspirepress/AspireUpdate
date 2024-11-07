@@ -71,20 +71,16 @@ class Debug {
 
 		$file_path = WP_CONTENT_DIR . '/' . self::$log_file;
 
-		$content = $wp_filesystem->get_contents( $file_path );
-		if ( false === $content ) {
-			$wp_filesystem->put_contents(
-				$file_path,
-				$formatted_message,
-				FS_CHMOD_FILE
-			);
-		} else {
-			$wp_filesystem->put_contents(
-				$file_path,
-				$content . $formatted_message,
-				FS_CHMOD_FILE
-			);
+		$content = '';
+		if ( $wp_filesystem->exists( $file_path ) ) {
+			$content = $wp_filesystem->get_contents( $file_path );
 		}
+
+		$wp_filesystem->put_contents(
+			$file_path,
+			$content . $formatted_message,
+			FS_CHMOD_FILE
+		);
 	}
 
 	/**
@@ -113,7 +109,7 @@ class Debug {
 	public static function log_string( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'string', $debug_types, true ) ) {
 			self::log( $message, 'string' );
 		}
@@ -127,7 +123,7 @@ class Debug {
 	public static function log_request( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'request', $debug_types, true ) ) {
 			self::log( $message, 'request' );
 		}
@@ -141,7 +137,7 @@ class Debug {
 	public static function log_response( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'response', $debug_types, true ) ) {
 			self::log( $message, 'response' );
 		}
