@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: AspireUpdate\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-04 00:29+0000\n"
-"PO-Revision-Date: 2024-11-04 00:29+0000\n"
+"PO-Revision-Date: 2024-11-06 21:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de_DE\n"
@@ -25,7 +25,7 @@ msgstr "API-Debug-Konfiguration"
 
 #: includes/class-admin-settings.php:337
 msgid "API Host"
-msgstr "API-Host"
+msgstr "API-Host."
 
 #: includes/class-admin-settings.php:364
 msgid "API Key"
@@ -53,7 +53,7 @@ msgstr "Deaktiviert die SSL-Überprüfung, um lokale Tests zu ermöglichen."
 
 #: includes/class-admin-settings.php:324
 msgid "Enable AspireUpdate API Rewrites"
-msgstr "Aktivieren der AspireUpdate API-Umschreibungen"
+msgstr "AspireUpdate API-Umschreibungen aktivieren"
 
 #: includes/class-admin-settings.php:389
 msgid "Enable Debug Mode"
@@ -69,7 +69,7 @@ msgstr "Aktiviert den Debug-Modus für das Plugin."
 
 #. URI of the plugin
 msgid "https://aspirepress.org/"
-msgstr "AspireUpdate"
+msgstr "https://aspirepress.org/"
 
 #. Author URI of the plugin
 msgid "https://docs.aspirepress.org/aspireupdate/"
@@ -107,4 +107,24 @@ msgstr "Aktualisiert Plugins und Themes für WordPress."
 
 #: includes/class-admin-settings.php:345
 msgid "Your new API Host."
-msgstr "Ihr neuer API-Host"
+msgstr "Ihr neuer API-Host."
+
+#: includes/class-admin-settings.php:494
+msgid "Generate API Key"
+msgstr "API-Schlüssel generieren"
+
+#: includes/class-admin-settings.php:355
+msgid "Other"
+msgstr "Andere"
+
+#: includes/class-admin-settings.php:280
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: includes/class-admin-settings.php:279
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: includes/class-admin-settings.php:119
+msgid "Settings have been reset to default."
+msgstr "Die Einstellungen wurden auf die Standardwerte zurückgesetzt."
