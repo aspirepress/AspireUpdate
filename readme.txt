@@ -16,7 +16,6 @@ This plugin allows a WordPress user to automatically rewrite certain URLs and UR
 This plugin allows a WordPress user to automatically rewrite certain URLs and URL paths to a new URL. This is helpful because it allows for the rewriting of api.wordpress.org to some other repository that contains the plugins the user wants.
 
 The plugin supports multiple rewrites, and also supports rewriting the URL paths of the requests on a per-host basis. This improves the capacity of the plugin to adequately support newer or different repositories.
-.
 
 == Frequently Asked Questions ==
 
@@ -39,3 +38,4 @@ Answer to foo bar dilemma.
 * first stable version, connects to api.wordpress.org or an alternative AspireCloud repository
 
 == Upgrade Notice ==
+

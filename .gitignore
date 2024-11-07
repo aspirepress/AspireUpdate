@@ -5,3 +5,9 @@
 /phpunit.xml
 /vendor
 .cache/*
+/tests/cache
+/tests/coverage
+.DS_Store
+
+# Track placeholders so that empty directories stay in the repo.
+!.gitkeep
