@@ -21,7 +21,7 @@
     width: 30px;
     height: 30px;
     background: url(../images/icon-key.svg) no-repeat center center / 24px 24px;
-    background-color: #CBCBCB;
+    background-color: #cbcbcb;
     border: 1px solid #8c8f94;
     border-radius: 3px;
     clip-path: inset(0 0 0 0);
@@ -31,10 +31,56 @@
 }
 
 #aspireupdate-generate-api-key:hover {
-    background-color: #E3E3E3;
+    background-color: #e3e3e3;
 }
 
-.aspireupdate-settings-field-wrapper  p.error {
-    color: #BC3B3B;
+.aspireupdate-settings-field-wrapper p.error {
+    color: #bc3b3b;
     display: none;
+}
+
+.aspireupdate-notice {
+	background-color: #f0f6fc;
+	border: 1px solid #70b9e3;
+	border-radius: 50px;
+	max-width: max-content;
+}
+
+.aspireupdate-notice p::before {
+	content: '';
+	display: inline-block;
+	margin-inline-end: .5em;
+	vertical-align: middle;
+    background: url(../images/aspirepress-logo-icon.svg) no-repeat center center / 20px 20px;
+    height: 20px;
+    width: 20px;
+}
+
+#voltron {
+    color: transparent;
+    font-size: clamp(4px, 0.9vw, 8px);
+    line-height: 6px;
+    display: inline-block;
+    cursor: default;
+}
+
+#voltron:hover {
+    animation: blink 1.8s ease-in-out infinite;
+    animation-delay: 5s;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        color: inherit;
+    }
+    50% {
+        color: transparent;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    #voltron {
+        display: none;
+    }
 }

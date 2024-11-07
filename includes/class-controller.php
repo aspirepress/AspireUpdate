@@ -18,8 +18,10 @@ class Controller {
 		Admin_Settings::get_instance();
 		Plugins_Screens::get_instance();
 		Themes_Screens::get_instance();
-
+		Branding::get_instance();
 		$this->api_rewrite();
+
+		add_action( 'init', [ $this, 'load_textdomain' ] );
 	}
 
 	/**
@@ -45,5 +47,13 @@ class Controller {
 				new API_Rewrite( $api_host, false );
 			}
 		}
+	}
+
+	/**
+	 * Load translations.
+	 * @return void
+	 */
+	public function load_textdomain() {
+		\load_plugin_textdomain( 'AspireUpdate', false, AP_PATH . '/languages/' );
 	}
 }

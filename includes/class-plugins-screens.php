@@ -23,10 +23,10 @@ class Plugins_Screens {
 	 *
 	 * @var array
 	 */
-	protected $unsupported_filters = array(
+	protected $unsupported_filters = [
 		'featured',
 		'favorites',
-	);
+	];
 
 	/**
 	 * The Constructor.
@@ -34,7 +34,7 @@ class Plugins_Screens {
 	public function __construct() {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
-			add_filter( 'install_plugins_tabs', array( $this, 'remove_unused_filter_tabs' ) );
+			add_filter( 'install_plugins_tabs', [ $this, 'remove_unused_filter_tabs' ] );
 		}
 	}
 
