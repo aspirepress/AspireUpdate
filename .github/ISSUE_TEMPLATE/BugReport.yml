@@ -20,21 +20,35 @@ body:
     attributes:
       label: What happened?
       description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      placeholder: Tell us what you are seeing or experiencing.
+      value: "A bug was witnessed!"
     validations:
       required: true
   - type: dropdown
     id: version
     attributes:
       label: Version
-      description: What version of our software are you running?
+      description: What version of AspireUpdate are you running?
       options:
         - 0.5 (Default)
         - Nightly
       default: 0
     validations:
       required: true
+ 
+  - type: dropdown
+    id: os
+    attributes:
+      label: 'OS'
+      description: 'The operating system you are running on (Linux, Windows, Mac, etc).'
+      options:
+        - Windows
+        - MacOS
+        - iOS
+        - Android
+        - Linux
+        - Other
+ 
   - type: dropdown
     id: browsers
     attributes:
@@ -45,6 +59,51 @@ body:
         - Chrome
         - Safari
         - Microsoft Edge
+        - Opera
+        - Other
+
+  - type: input
+    id: wordpress
+    attributes:
+      label: 'WordPress'
+      description: 'The version of WordPress that your site uses.'
+ 
+  - type: input
+    id: php
+    attributes:
+      label: 'PHP'
+      description: 'The version of PHP your site runs on.'
+  
+  - type: input
+    id: server
+    attributes:
+      label: 'Server'
+      description: 'The server your site runs on (apache, nginx, etc).'
+  
+  - type: input
+    id: database
+    attributes:
+      label: 'Database'
+      description: 'The database engine used by your site.'
+
+  - type: input
+    id: theme
+    attributes:
+      label: 'Theme'
+      description: 'The currently active theme.'
+  
+  - type: input
+    id: must_use_plugins
+    attributes:
+      label: 'Must-Use Plugins'
+      description: 'A list of Must-Use Plugins.'
+  
+  - type: input
+    id: plugins
+    attributes:
+      label: 'Plugins'
+      description: 'A list of active plugins.'
+    
   - type: textarea
     id: logs
     attributes:
@@ -57,6 +116,14 @@ body:
       description: Add some screenshots to help explain the problem.
     validations:
       required: false
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: 'Additional Notes'
+      description: 'Any additional details worth mentioning.'
+
+
   - type: checkboxes
     id: terms
     attributes:
