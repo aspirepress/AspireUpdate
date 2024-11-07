@@ -32,6 +32,7 @@ body:
       description: What version of AspireUpdate are you running?
       options:
         - 0.5 (Default)
+        - 1.0
         - Nightly
       default: 0
     validations:
@@ -107,12 +108,14 @@ body:
       description: 'A list of active plugins.'
     
 
+
   - type: textarea
     id: sitehealth
     attributes:
       label: WordPress Site Health Output (optional)
       description: Please copy and paste a SiteHealth report with details of your WordPress configuration. This will be automatically formatted into code, so no need for backticks.
       render: shell
+
 
   - type: textarea
     id: logs
