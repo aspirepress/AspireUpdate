@@ -61,7 +61,8 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow the AsiprePress [Code of Conduct](https://github.com/aspirepress/AspireUpdate?tab=coc-ov-file). 
+      description: By submitting this issue, you agree to follow the AspirePress [Code of Conduct](https://github.com/aspirepress/AspireUpdate?tab=coc-ov-file). 
+
       options:
       - label: I agree to follow the Code of Conduct.
         required: true
