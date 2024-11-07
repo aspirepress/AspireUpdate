@@ -71,7 +71,7 @@ msgstr "Host de API"
 
 #: includes/class-admin-settings.php:460
 msgid "Your new API Host."
-msgstr "Su nuevo host de API"
+msgstr "Tu nuevo host de API"
 
 #: includes/class-admin-settings.php:470
 msgid "Other"
