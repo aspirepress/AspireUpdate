@@ -18,6 +18,7 @@ class Controller {
 		Admin_Settings::get_instance();
 		Plugins_Screens::get_instance();
 		Themes_Screens::get_instance();
+		Branding::get_instance();
 		$this->api_rewrite();
 
 		add_action( 'init', [ $this, 'load_textdomain' ] );

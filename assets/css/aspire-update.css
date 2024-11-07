@@ -39,6 +39,23 @@
     display: none;
 }
 
+.aspireupdate-notice {
+	background-color: #f0f6fc;
+	border: 1px solid #70b9e3;
+	border-radius: 50px;
+	max-width: max-content;
+}
+
+.aspireupdate-notice p::before {
+	content: '';
+	display: inline-block;
+	margin-inline-end: .5em;
+	vertical-align: middle;
+    background: url(../images/aspirepress-logo-icon.svg) no-repeat center center / 20px 20px;
+    height: 20px;
+    width: 20px;
+}
+
 #voltron {
     color: transparent;
     font-size: clamp(4px, 0.9vw, 8px);
