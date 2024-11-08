@@ -2,7 +2,83 @@
 jQuery(document).ready(function () {
 	new ApiRewrites();
 	new ApiDebug();
+
+	new ViewLog();
 });
+
+class ViewLog {
+	constructor() {
+		ViewLog.viewlog_button.init();
+		ViewLog.viewlog_popup.init();
+	}
+
+	static viewlog_button = {
+		field: jQuery('#aspireupdate-button-viewlog'),
+		init() {
+			ViewLog.viewlog_button.field.click(function () {
+				ViewLog.viewlog_popup.show();
+			});
+		}
+	}
+
+	static viewlog_popup = {
+		field: jQuery('#aspireupdate-log-viewer'),
+		popup_inner: jQuery('#aspireupdate-log-viewer .inner'),
+		close_button: jQuery('#aspireupdate-log-viewer span.close'),
+		init() {
+			ViewLog.viewlog_popup.close_button.click(function () {
+				ViewLog.viewlog_popup.close();
+			});
+
+			jQuery(document).keydown(function (event) {
+				if ((event.keyCode === 27) && ViewLog.viewlog_popup.field.is(':visible')) {
+					ViewLog.viewlog_popup.close();
+				}
+			});
+		},
+		show() {
+			let lines = jQuery('#voltron').html().split('\n');
+
+			jQuery.each(lines, function (index, line) {
+				jQuery('<div>')
+					.append(
+						jQuery('<span>').addClass('number'),
+						jQuery('<span>').addClass('content').text(line)
+					)
+					.appendTo(ViewLog.viewlog_popup.popup_inner);
+				jQuery('<div>')
+					.append(
+						jQuery('<span>').addClass('number'),
+						jQuery('<span>').addClass('content').text(line)
+					)
+					.appendTo(ViewLog.viewlog_popup.popup_inner);
+				jQuery('<div>')
+					.append(
+						jQuery('<span>').addClass('number'),
+						jQuery('<span>').addClass('content').text(line)
+					)
+					.appendTo(ViewLog.viewlog_popup.popup_inner);
+				jQuery('<div>')
+					.append(
+						jQuery('<span>').addClass('number'),
+						jQuery('<span>').addClass('content').text(line)
+					)
+					.appendTo(ViewLog.viewlog_popup.popup_inner);
+				jQuery('<div>')
+					.append(
+						jQuery('<span>').addClass('number'),
+						jQuery('<span>').addClass('content').text(line)
+					)
+					.appendTo(ViewLog.viewlog_popup.popup_inner);
+			});
+			ViewLog.viewlog_popup.field.show();
+		},
+		close() {
+			ViewLog.viewlog_popup.field.hide();
+			ViewLog.viewlog_popup.popup_inner.html('');
+		}
+	}
+}
 
 class ApiRewrites {
 	constructor() {

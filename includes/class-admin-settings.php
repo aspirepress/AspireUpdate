@@ -327,8 +327,17 @@ class Admin_Settings {
 					<?php submit_button( '', 'primary', 'submit', false ); ?>
 
 					<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" ><?php esc_html_e( 'Reset', 'AspireUpdate' ); ?></a>
+					<a href="javascript:;" id="aspireupdate-button-clearlog" class="button button-secondary button-clearlog" ><?php esc_html_e( 'Clear Log', 'AspireUpdate' ); ?></a>
+					<a href="javascript:;" id="aspireupdate-button-viewlog" class="button button-secondary button-viewlog" ><?php esc_html_e( 'View Log', 'AspireUpdate' ); ?></a>
 				</p>
 			</form>
+			<div id="aspireupdate-log-viewer">
+				<div class="outer">
+					<span class="close"></span>
+					<div class="inner">					
+					</div>
+				</div>
+			</div>
 <pre id="voltron">
 ...................................................................................................:?%,.............................................................................
 .................................................................................................,;*%:..............................................................................
@@ -546,6 +555,16 @@ class Admin_Settings {
 				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'AspireUpdate' ),
 			]
 		);
+	}
+
+	/**
+	 * Render content inside sections.
+	 *
+	 * @param array $args The Field Parameters.
+	 *
+	 * @return void Echos the Field HTML.
+	 */
+	public function add_settings_section_callback( $args = [] ) {
 	}
 
 	/**
