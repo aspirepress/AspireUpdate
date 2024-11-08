@@ -41,11 +41,11 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 	public function data_hooks() {
 		return self::text_array_to_dataprovider(
 			[
-				'update-core.php',
-				'plugins.php',
-				'plugin-install.php',
-				'themes.php',
-				'theme-install.php',
+				'update-core',
+				'plugins',
+				'plugin-install',
+				'themes',
+				'theme-install',
 			]
 		);
 	}
@@ -58,6 +58,10 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 	 * @param string $hook The current screen's hook.
 	 */
 	public function test_should_not_enqueue_style_on_adjacent_screens( $hook ) {
+		if ( is_multisite() ) {
+			$hook .= '-network';
+		}
+
 		$branding = new AspireUpdate\Branding();
 		$branding->admin_enqueue_scripts( $hook );
 		$this->assertFalse( wp_style_is( 'aspire_update_settings_css' ) );
@@ -71,9 +75,9 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 	public function data_adjacent_screens() {
 		return self::text_array_to_dataprovider(
 			[
-				'index.php',
-				'nav-menus.php',
-				'plugin-editor.php',
+				'dashboard',
+				'nav-menus',
+				'plugin-editor',
 			]
 		);
 	}
@@ -97,8 +101,9 @@ class Branding_AdminEnqueueScriptsTest extends WP_UnitTestCase {
 		// Prevent the notice from being displayed.
 		define( 'AP_REMOVE_UI', true );
 
+		$hook     = is_multisite() ? 'plugins-network' : 'plugins';
 		$branding = new AspireUpdate\Branding();
-		$branding->admin_enqueue_scripts( 'plugins.php' );
+		$branding->admin_enqueue_scripts( $hook );
 		$this->assertFalse( wp_style_is( 'aspire_update_settings_css' ) );
 	}
 }
