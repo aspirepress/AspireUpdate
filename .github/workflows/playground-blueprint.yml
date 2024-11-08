@@ -25,7 +25,7 @@ jobs:
           jq --tab '.plugins[0] |= "https://github-proxy.com/proxy/?repo='$GITHUB_REPOSITORY'&branch='$CURRENT_REF'"' assets/playground/blueprint.json > assets/playground/blueprint.json.tmp
           mv assets/playground/blueprint.json.tmp assets/playground/blueprint.json
 
-      - name: Commit and Push Changes1
+      - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
