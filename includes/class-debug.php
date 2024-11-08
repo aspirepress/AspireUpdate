@@ -109,7 +109,7 @@ class Debug {
 	public static function log_string( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'string', $debug_types, true ) ) {
 			self::log( $message, 'string' );
 		}
@@ -123,7 +123,7 @@ class Debug {
 	public static function log_request( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'request', $debug_types, true ) ) {
 			self::log( $message, 'request' );
 		}
@@ -137,7 +137,7 @@ class Debug {
 	public static function log_response( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
 		$debug_mode     = $admin_settings->get_setting( 'enable_debug', false );
-		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', array() );
+		$debug_types    = $admin_settings->get_setting( 'enable_debug_type', [] );
 		if ( $debug_mode && is_array( $debug_types ) && in_array( 'response', $debug_types, true ) ) {
 			self::log( $message, 'response' );
 		}
