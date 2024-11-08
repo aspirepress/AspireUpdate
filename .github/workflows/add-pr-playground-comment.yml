@@ -1,0 +1,29 @@
+name: Add PR Playground Comment
+
+on:
+  pull_request:
+    types: [opened]  # Trigger when a PR is first opened
+
+jobs:
+  comment-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Read and Base64 encode blueprint.json
+      id: encode_blueprint
+      run: |
+        # Read the content of blueprint.json and base64 encode it
+        encoded=$(base64 -w 0 assets/playground/blueprint.json)
+        echo "Encoded Blueprint: $encoded"
+        echo "encoded=$encoded" >> $GITHUB_ENV
+
+    - name: Add PR comment
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          A link to the playground with the base64-encoded blueprint is available:
+          [Playground Link](https://playground.wordpress.net/#${{ env.encoded }})
