@@ -1,0 +1,39 @@
+name: Update Blueprint Blueprint with Repository and Branch
+
+on:
+  push:
+
+jobs:
+  update-blueprint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set Branch or Tag Name
+        id: branch-name
+        run: |
+          if [ "${{ github.ref_type }}" == "branch" ]; then
+            echo "CURRENT_REF=${{ github.ref_name }}" >> $GITHUB_ENV
+          elif [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "CURRENT_REF=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Update Blueprint JSON
+        run: |
+          jq --tab '.plugins[0] |= "https://github-proxy.com/proxy/?repo='$GITHUB_REPOSITORY'&branch='$CURRENT_REF'"' assets/playground/blueprint.json > assets/playground/blueprint.json.tmp
+          mv assets/playground/blueprint.json.tmp assets/playground/blueprint.json
+
+      - name: Commit and Push Changes
+        run: |
+          if git diff --cached --quiet; then
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git add assets/playground/blueprint.json
+            git commit -m "Update blueprint.json for branch/tag ${{ env.name }}"
+            git push
+          fi
+        env:
+          name: ${{ env.name }}
+
