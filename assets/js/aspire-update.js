@@ -6,6 +6,27 @@ jQuery(document).ready(function () {
 	new ViewLog();
 });
 
+class ClearLog {
+	constructor() {
+		ClearLog.clearlog_button.init();
+	}
+
+	static clearlog_button = {
+		field: jQuery('#aspireupdate-button-clearlog'),
+		init() {
+			ClearLog.clearlog_button.field.click(function () {
+
+			});
+		},
+		show() {
+			ClearLog.clearlog_button.field.show();
+		},
+		hide() {
+			ClearLog.clearlog_button.field.hide();
+		}
+	}
+}
+
 class ViewLog {
 	constructor() {
 		ViewLog.viewlog_button.init();
@@ -18,6 +39,12 @@ class ViewLog {
 			ViewLog.viewlog_button.field.click(function () {
 				ViewLog.viewlog_popup.show();
 			});
+		},
+		show() {
+			ViewLog.viewlog_button.field.show();
+		},
+		hide() {
+			ViewLog.viewlog_button.field.hide();
 		}
 	}
 
@@ -268,7 +295,7 @@ class ApiDebug {
 		init() {
 			ApiDebug.enabled_debug.sub_fields = [
 				ApiDebug.debug_type,
-				ApiDebug.disable_ssl_verification
+				ApiDebug.disable_ssl_verification,
 			];
 
 			ApiDebug.enabled_debug.field.change(function () {
@@ -281,9 +308,13 @@ class ApiDebug {
 		},
 		show_options() {
 			Fields.show(ApiDebug.enabled_debug.sub_fields);
+			ViewLog.viewlog_button.show();
+			ClearLog.clearlog_button.show();
 		},
 		hide_options() {
 			Fields.hide(ApiDebug.enabled_debug.sub_fields);
+			ViewLog.viewlog_button.hide();
+			ClearLog.clearlog_button.hide();
 		}
 	}
 

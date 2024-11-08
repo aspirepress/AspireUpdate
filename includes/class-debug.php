@@ -20,6 +20,15 @@ class Debug {
 	private static $log_file = 'debug-aspire-update.log';
 
 	/**
+	 * Get the Log file path.
+	 *
+	 * @return string The Log file path.
+	 */
+	private static function get_file_path() {
+		return WP_CONTENT_DIR . '/' . self::$log_file;
+	}
+
+	/**
 	 * Initializes the WordPress Filesystem.
 	 *
 	 * @return WP_Filesystem_Base|false The filesystem object or false on failure.
@@ -36,14 +45,13 @@ class Debug {
 	}
 
 	/**
-	 * Logs a message to the debug log file.
+	 * Checks the filesystem status and logs error to debug log.
 	 *
-	 * @param mixed  $message The message to log.
-	 * @param string $type   The log level ('string', 'request', 'response').
+	 * @param WP_Filesystem_Base $wp_filesystem The filesystem object.
+	 *
+	 * @return true|false true omn success and false on failure.
 	 */
-	public static function log( $message, $type = 'string' ) {
-		$wp_filesystem = self::init_filesystem();
-
+	private static function verify_filesystem( $wp_filesystem ) {
 		if ( ! $wp_filesystem ) {
 			if (
 				defined( 'WP_DEBUG' ) &&
@@ -58,29 +66,87 @@ class Debug {
 				error_log( 'AspireUpdate - Could not open or write to the file system. Check file system permissions to debug log directory.' );
 				// phpcs:enable
 			}
-			return;
+			return false;
 		}
+		return true;
+	}
 
-		$timestamp         = gmdate( 'Y-m-d H:i:s' );
-		$formatted_message = sprintf(
-			"[%s] [%s]: %s\n" . PHP_EOL,
-			$timestamp,
-			strtoupper( $type ),
-			self::format_message( $message )
-		);
+	/**
+	 * Get the content of the log file truncated upto N number of lines.
+	 *
+	 * @param integer  $limit Max no of lines to return.
+	 *
+	 * @return string The File content truncate upto the number of lines set in the limit parameter.
+	 */
+	public static function read( $limit ) {
+		$wp_filesystem = self::init_filesystem();
+		if ( self::verify_filesystem( $wp_filesystem ) ) {
+			$file_path = self::get_file_path();
 
-		$file_path = WP_CONTENT_DIR . '/' . self::$log_file;
-
-		$content = '';
-		if ( $wp_filesystem->exists( $file_path ) ) {
-			$content = $wp_filesystem->get_contents( $file_path );
+			if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_readable( $file_path ) ) {
+				$file_handle = $wp_filesystem->get_contents_array( $file_path );
+				return implode( "\n", array_slice( $file_handle, 0, $limit ) );
+			} else {
+				return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
+			}
 		}
+	}
 
-		$wp_filesystem->put_contents(
-			$file_path,
-			$content . $formatted_message,
-			FS_CHMOD_FILE
-		);
+	/**
+	 * Clear content of the log file.
+	 *
+	 * @return void
+	 */
+	public static function clear() {
+		$wp_filesystem = self::init_filesystem();
+		if ( self::verify_filesystem( $wp_filesystem ) ) {
+			$file_path = self::get_file_path();
+			if ( $wp_filesystem->exists( $file_path ) ) {
+				if ( $wp_filesystem->is_writable( $file_path ) ) {
+					$wp_filesystem->put_contents(
+						$file_path,
+						'',
+						FS_CHMOD_FILE
+					);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Logs a message to the debug log file.
+	 *
+	 * @param mixed  $message The message to log.
+	 * @param string $type   The log level ('string', 'request', 'response').
+	 */
+	public static function log( $message, $type = 'string' ) {
+		$wp_filesystem = self::init_filesystem();
+		if ( self::verify_filesystem( $wp_filesystem ) ) {
+			$timestamp         = gmdate( 'Y-m-d H:i:s' );
+			$formatted_message = sprintf(
+				"[%s] [%s]: %s\n" . PHP_EOL,
+				$timestamp,
+				strtoupper( $type ),
+				self::format_message( $message )
+			);
+
+			$file_path = self::get_file_path();
+
+			$content = '';
+			if ( $wp_filesystem->exists( $file_path ) ) {
+				if ( $wp_filesystem->is_readable( $file_path ) ) {
+					$content = $wp_filesystem->get_contents( $file_path );
+				}
+			}
+
+			if ( $wp_filesystem->is_writable( $file_path ) ) {
+				$wp_filesystem->put_contents(
+					$file_path,
+					$formatted_message . $content,
+					FS_CHMOD_FILE
+				);
+			}
+		}
 	}
 
 	/**
