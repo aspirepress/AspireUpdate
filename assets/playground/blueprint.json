@@ -52,6 +52,10 @@
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/bgnightly-notice.php",
 			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Demo. Visit <a href=\"https://docs.aspirepress.org\">AspirePress documentation</a> for more details.</p></div>'; });"
+		},
+		{
+		        "step": "wp-cli",
+		        "command": "wp plugin delete hello-dolly"
 		}
 	]
 }
