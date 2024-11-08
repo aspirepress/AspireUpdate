@@ -31,7 +31,7 @@ body:
       label: Version
       description: What version of AspireUpdate are you running?
       options:
-        - 0.5 (Default)
+        - 0.5
         - 1.0
         - Nightly
       default: 0
@@ -41,7 +41,7 @@ body:
   - type: dropdown
     id: os
     attributes:
-      label: 'OS'
+      label: 'Operating System'
       description: 'The operating system you are running on (Linux, Windows, Mac, etc).'
       options:
         - Windows
@@ -50,7 +50,6 @@ body:
         - Android
         - Linux
         - Other
- 
 
   - type: dropdown
     id: browsers
@@ -58,10 +57,10 @@ body:
       label: What browsers are you seeing the problem on?
       multiple: true
       options:
-        - Firefox
         - Chrome
         - Safari
-        - Microsoft Edge
+        - Edge
+        - Firefox
         - Opera
         - Other
 
