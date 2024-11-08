@@ -1,4 +1,4 @@
-name: Update Blueprint Blueprint with Repository and Branch
+name: Update Playground Blueprint with Repository and Branch
 
 on:
   push:
