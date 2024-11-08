@@ -35,7 +35,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update blueprint.json for ${{ env.name }}"
+            git commit -m "Update blueprint.json for $CURRENT_REF"
             git push
           fi
         env:
