@@ -3,6 +3,7 @@ jQuery(document).ready(function () {
 	new ApiRewrites();
 	new ApiDebug();
 
+	new ClearLog();
 	new ViewLog();
 });
 
@@ -15,7 +16,7 @@ class ClearLog {
 		field: jQuery('#aspireupdate-button-clearlog'),
 		init() {
 			ClearLog.clearlog_button.field.click(function () {
-
+				ClearLog.clearlog_button.clear();
 			});
 		},
 		show() {
@@ -23,7 +24,24 @@ class ClearLog {
 		},
 		hide() {
 			ClearLog.clearlog_button.field.hide();
-		}
+		},
+		clear() {
+			let parameters = {
+				"url": aspireupdate.ajax_url,
+				"type": "POST",
+				"data": {
+					"nonce": aspireupdate.nonce,
+					"action": "aspireupdate_clear_log"
+				}
+			};
+			jQuery.ajax(parameters)
+				.done(function (response) {
+					alert(aspireupdate.clear_log_success_message);
+				})
+				.fail(function (response) {
+					alert(aspireupdate.clear_log_failed_message);
+				});
+		},
 	}
 }
 
@@ -64,41 +82,30 @@ class ViewLog {
 			});
 		},
 		show() {
-			let lines = jQuery('#voltron').html().split('\n');
-
-			jQuery.each(lines, function (index, line) {
-				jQuery('<div>')
-					.append(
-						jQuery('<span>').addClass('number'),
-						jQuery('<span>').addClass('content').text(line)
-					)
-					.appendTo(ViewLog.viewlog_popup.popup_inner);
-				jQuery('<div>')
-					.append(
-						jQuery('<span>').addClass('number'),
-						jQuery('<span>').addClass('content').text(line)
-					)
-					.appendTo(ViewLog.viewlog_popup.popup_inner);
-				jQuery('<div>')
-					.append(
-						jQuery('<span>').addClass('number'),
-						jQuery('<span>').addClass('content').text(line)
-					)
-					.appendTo(ViewLog.viewlog_popup.popup_inner);
-				jQuery('<div>')
-					.append(
-						jQuery('<span>').addClass('number'),
-						jQuery('<span>').addClass('content').text(line)
-					)
-					.appendTo(ViewLog.viewlog_popup.popup_inner);
-				jQuery('<div>')
-					.append(
-						jQuery('<span>').addClass('number'),
-						jQuery('<span>').addClass('content').text(line)
-					)
-					.appendTo(ViewLog.viewlog_popup.popup_inner);
-			});
-			ViewLog.viewlog_popup.field.show();
+			let parameters = {
+				"url": aspireupdate.ajax_url,
+				"type": "POST",
+				"data": {
+					"nonce": aspireupdate.nonce,
+					"action": "aspireupdate_read_log"
+				}
+			};
+			jQuery.ajax(parameters)
+				.done(function (response) {
+					let lines = response.data.content.split(aspireupdate.line_ending);
+					jQuery.each(lines, function (index, line) {
+						jQuery('<div>')
+							.append(
+								jQuery('<span>').addClass('number'),
+								jQuery('<span>').addClass('content').text(line)
+							)
+							.appendTo(ViewLog.viewlog_popup.popup_inner);
+					});
+					ViewLog.viewlog_popup.field.show();
+				})
+				.fail(function (response) {
+					alert(aspireupdate.read_log_failed_message);
+				});
 		},
 		close() {
 			ViewLog.viewlog_popup.field.hide();

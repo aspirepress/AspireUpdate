@@ -292,10 +292,14 @@ class Admin_Settings {
 			'aspire_update_settings_js',
 			'aspireupdate',
 			[
-				'ajax_url'                => network_admin_url( 'admin-ajax.php' ),
-				'nonce'                   => wp_create_nonce( 'aspireupdate-ajax' ),
-				'domain'                  => Utilities::get_top_level_domain(),
-				'string_unexpected_error' => esc_html__( 'Unexpected Error:', 'AspireUpdate' ),
+				'ajax_url'                  => network_admin_url( 'admin-ajax.php' ),
+				'nonce'                     => wp_create_nonce( 'aspireupdate-ajax' ),
+				'domain'                    => Utilities::get_top_level_domain(),
+				'line_ending'               => PHP_EOL,
+				'string_unexpected_error'   => esc_html__( 'Unexpected Error:', 'AspireUpdate' ),
+				'clear_log_success_message' => esc_html__( 'Log file successfully cleared.', 'AspireUpdate' ),
+				'clear_log_failed_message'  => esc_html__( 'Clearing Log file failed.', 'AspireUpdate' ),
+				'read_log_failed_message'   => esc_html__( 'Reading Log file failed.', 'AspireUpdate' ),
 			]
 		);
 	}

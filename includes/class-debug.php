@@ -74,18 +74,35 @@ class Debug {
 	/**
 	 * Get the content of the log file truncated upto N number of lines.
 	 *
-	 * @param integer  $limit Max no of lines to return.
+	 * @param integer  $limit Max no of lines to return. Defaults to a 1000 lines.
 	 *
 	 * @return string The File content truncate upto the number of lines set in the limit parameter.
 	 */
-	public static function read( $limit ) {
+	public static function read( $limit = 1000 ) {
 		$wp_filesystem = self::init_filesystem();
 		if ( self::verify_filesystem( $wp_filesystem ) ) {
 			$file_path = self::get_file_path();
 
 			if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_readable( $file_path ) ) {
-				$file_handle = $wp_filesystem->get_contents_array( $file_path );
-				return implode( "\n", array_slice( $file_handle, 0, $limit ) );
+				$file_content = $wp_filesystem->get_contents_array( $file_path );
+				$content      = '';
+				$index        = 0;
+				foreach ( $file_content as $file_content_lines ) {
+					if ( ( $index < $limit ) ) {
+						$content .= $file_content_lines . PHP_EOL;
+						++$index;
+					}
+				}
+				if ( '' === trim( $content ) ) {
+					$content = esc_html__( '*****Log file is empty.*****', 'AspireUpdate' );
+				} elseif ( $limit < count( $file_content ) ) {
+						$content .= PHP_EOL . sprintf(
+							/* translators: 1: The number of lines at which the content was truncated. */
+							esc_html__( '*****Log truncated at %s lines.*****', 'AspireUpdate' ),
+							$limit
+						);
+				}
+				return $content;
 			} else {
 				return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
 			}
@@ -124,11 +141,11 @@ class Debug {
 		if ( self::verify_filesystem( $wp_filesystem ) ) {
 			$timestamp         = gmdate( 'Y-m-d H:i:s' );
 			$formatted_message = sprintf(
-				"[%s] [%s]: %s\n" . PHP_EOL,
+				'[%s] [%s]: %s',
 				$timestamp,
 				strtoupper( $type ),
 				self::format_message( $message )
-			);
+			) . PHP_EOL;
 
 			$file_path = self::get_file_path();
 
@@ -138,14 +155,11 @@ class Debug {
 					$content = $wp_filesystem->get_contents( $file_path );
 				}
 			}
-
-			if ( $wp_filesystem->is_writable( $file_path ) ) {
-				$wp_filesystem->put_contents(
-					$file_path,
-					$formatted_message . $content,
-					FS_CHMOD_FILE
-				);
-			}
+			$wp_filesystem->put_contents(
+				$file_path,
+				$formatted_message . $content,
+				FS_CHMOD_FILE
+			);
 		}
 	}
 

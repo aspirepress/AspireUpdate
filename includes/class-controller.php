@@ -22,6 +22,8 @@ class Controller {
 		$this->api_rewrite();
 
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+		add_action( 'wp_ajax_aspireupdate_clear_log', [ $this, 'clear_log' ] );
+		add_action( 'wp_ajax_aspireupdate_read_log', [ $this, 'read_log' ] );
 	}
 
 	/**
@@ -50,7 +52,37 @@ class Controller {
 	}
 
 	/**
+	 * Ajax action to clear the Log file.
+	 *
+	 * @return void
+	 */
+	public function clear_log() {
+		if ( isset( $_POST['nonce'] ) || wp_verify_nonce( $_POST['nonce'], 'aspireupdate-ajax' ) ) {
+			Debug::clear();
+			wp_send_json_success();
+		}
+		wp_send_json_error();
+	}
+
+	/**
+	 * Ajax action to read the Log file.
+	 *
+	 * @return void
+	 */
+	public function read_log() {
+		if ( isset( $_POST['nonce'] ) || wp_verify_nonce( $_POST['nonce'], 'aspireupdate-ajax' ) ) {
+			wp_send_json_success(
+				[
+					'content' => Debug::read( 1000 ),
+				]
+			);
+		}
+		wp_send_json_error();
+	}
+
+	/**
 	 * Load translations.
+	 *
 	 * @return void
 	 */
 	public function load_textdomain() {
