@@ -338,7 +338,7 @@ class Admin_Settings {
 			<div id="aspireupdate-log-viewer">
 				<div class="outer">
 					<span class="close"></span>
-					<div class="inner">					
+					<div class="inner">
 					</div>
 				</div>
 			</div>
@@ -559,16 +559,6 @@ class Admin_Settings {
 				'description' => esc_html__( 'Disables the verification of SSL to allow local testing.', 'AspireUpdate' ),
 			]
 		);
-	}
-
-	/**
-	 * Render content inside sections.
-	 *
-	 * @param array $args The Field Parameters.
-	 *
-	 * @return void Echos the Field HTML.
-	 */
-	public function add_settings_section_callback( $args = [] ) {
 	}
 
 	/**

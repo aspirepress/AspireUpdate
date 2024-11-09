@@ -36,7 +36,11 @@ class ClearLog {
 			};
 			jQuery.ajax(parameters)
 				.done(function (response) {
-					alert(aspireupdate.clear_log_success_message);
+					if (true == response.data.cleared) {
+						alert(aspireupdate.clear_log_success_message);
+					} else {
+						alert(aspireupdate.clear_log_failed_message);
+					}
 				})
 				.fail(function (response) {
 					alert(aspireupdate.clear_log_failed_message);
@@ -92,16 +96,20 @@ class ViewLog {
 			};
 			jQuery.ajax(parameters)
 				.done(function (response) {
-					let lines = response.data.content.split(aspireupdate.line_ending);
-					jQuery.each(lines, function (index, line) {
-						jQuery('<div>')
-							.append(
-								jQuery('<span>').addClass('number'),
-								jQuery('<span>').addClass('content').text(line)
-							)
-							.appendTo(ViewLog.viewlog_popup.popup_inner);
-					});
-					ViewLog.viewlog_popup.field.show();
+					if ('' != response.data.content) {
+						let lines = response.data.content.split(aspireupdate.line_ending);
+						jQuery.each(lines, function (index, line) {
+							jQuery('<div>')
+								.append(
+									jQuery('<span>').addClass('number'),
+									jQuery('<span>').addClass('content').text(line)
+								)
+								.appendTo(ViewLog.viewlog_popup.popup_inner);
+						});
+						ViewLog.viewlog_popup.field.show();
+					} else {
+						alert(aspireupdate.read_log_failed_message);
+					}
 				})
 				.fail(function (response) {
 					alert(aspireupdate.read_log_failed_message);

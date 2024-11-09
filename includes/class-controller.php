@@ -57,9 +57,13 @@ class Controller {
 	 * @return void
 	 */
 	public function clear_log() {
-		if ( isset( $_POST['nonce'] ) || wp_verify_nonce( $_POST['nonce'], 'aspireupdate-ajax' ) ) {
-			Debug::clear();
-			wp_send_json_success();
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			$status = Debug::clear();
+			wp_send_json_success(
+				[
+					'cleared' => $status,
+				]
+			);
 		}
 		wp_send_json_error();
 	}
@@ -70,7 +74,7 @@ class Controller {
 	 * @return void
 	 */
 	public function read_log() {
-		if ( isset( $_POST['nonce'] ) || wp_verify_nonce( $_POST['nonce'], 'aspireupdate-ajax' ) ) {
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
 			wp_send_json_success(
 				[
 					'content' => Debug::read( 1000 ),

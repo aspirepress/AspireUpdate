@@ -49,7 +49,7 @@ class Debug {
 	 *
 	 * @param WP_Filesystem_Base $wp_filesystem The filesystem object.
 	 *
-	 * @return true|false true omn success and false on failure.
+	 * @return boolean true on success and false on failure.
 	 */
 	private static function verify_filesystem( $wp_filesystem ) {
 		if ( ! $wp_filesystem ) {
@@ -74,60 +74,62 @@ class Debug {
 	/**
 	 * Get the content of the log file truncated upto N number of lines.
 	 *
-	 * @param integer  $limit Max no of lines to return. Defaults to a 1000 lines.
+	 * @param integer $limit Max no of lines to return. Defaults to a 1000 lines.
 	 *
 	 * @return string The File content truncate upto the number of lines set in the limit parameter.
 	 */
 	public static function read( $limit = 1000 ) {
 		$wp_filesystem = self::init_filesystem();
-		if ( self::verify_filesystem( $wp_filesystem ) ) {
-			$file_path = self::get_file_path();
-
-			if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_readable( $file_path ) ) {
-				$file_content = $wp_filesystem->get_contents_array( $file_path );
-				$content      = '';
-				$index        = 0;
-				foreach ( $file_content as $file_content_lines ) {
-					if ( ( $index < $limit ) ) {
-						$content .= $file_content_lines . PHP_EOL;
-						++$index;
-					}
-				}
-				if ( '' === trim( $content ) ) {
-					$content = esc_html__( '*****Log file is empty.*****', 'AspireUpdate' );
-				} elseif ( $limit < count( $file_content ) ) {
-						$content .= PHP_EOL . sprintf(
-							/* translators: 1: The number of lines at which the content was truncated. */
-							esc_html__( '*****Log truncated at %s lines.*****', 'AspireUpdate' ),
-							$limit
-						);
-				}
-				return $content;
-			} else {
-				return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
-			}
+		if ( ! self::verify_filesystem( $wp_filesystem ) ) {
+			return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
 		}
+
+		$file_path = self::get_file_path();
+
+		if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_readable( $file_path ) ) {
+			$file_content = $wp_filesystem->get_contents_array( $file_path );
+			$content      = '';
+			$index        = 0;
+			foreach ( $file_content as $file_content_lines ) {
+				if ( ( $index < $limit ) ) {
+					$content .= $file_content_lines . PHP_EOL;
+					++$index;
+				}
+			}
+			if ( '' === trim( $content ) ) {
+				$content = esc_html__( '*****Log file is empty.*****', 'AspireUpdate' );
+			} elseif ( $limit < count( $file_content ) ) {
+					$content .= PHP_EOL . sprintf(
+						/* translators: 1: The number of lines at which the content was truncated. */
+						esc_html__( '*****Log truncated at %s lines.*****', 'AspireUpdate' ),
+						$limit
+					);
+			}
+			return $content;
+		}
+		return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
 	}
 
 	/**
 	 * Clear content of the log file.
 	 *
-	 * @return void
+	 * @return boolean true on success and false on failure.
 	 */
 	public static function clear() {
 		$wp_filesystem = self::init_filesystem();
-		if ( self::verify_filesystem( $wp_filesystem ) ) {
-			$file_path = self::get_file_path();
-			if ( $wp_filesystem->exists( $file_path ) ) {
-				if ( $wp_filesystem->is_writable( $file_path ) ) {
-					$wp_filesystem->put_contents(
-						$file_path,
-						'',
-						FS_CHMOD_FILE
-					);
-				}
-			}
+		if ( ! self::verify_filesystem( $wp_filesystem ) ) {
+			return false;
 		}
+		$file_path = self::get_file_path();
+		if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_writable( $file_path ) ) {
+			$wp_filesystem->put_contents(
+				$file_path,
+				'',
+				FS_CHMOD_FILE
+			);
+			return true;
+		}
+		return false;
 	}
 
 	/**
