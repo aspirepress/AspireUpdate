@@ -20,10 +20,29 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	 * @param string $expected The expected substring to find.
 	 */
 	public function test_should_output_admin_notice( $hook, $expected ) {
+		if ( is_multisite() ) {
+			$hook .= '-network';
+		}
 		set_current_screen( $hook );
 
 		$branding = new AspireUpdate\Branding();
 		$this->assertStringContainsString( $expected, get_echo( [ $branding, 'output_admin_notice' ] ) );
+	}
+
+	/**
+	 * Test that no admin notice is output on adjacent screens.
+	 *
+	 * @dataProvider data_screen_specific_messages
+	 *
+	 * @group ms-required
+	 *
+	 * @param string $hook The current screen's hook.
+	 */
+	public function test_should_not_output_notice_on_single_site_screens_in_multisite( $hook ) {
+		set_current_screen( $hook );
+
+		$branding = new AspireUpdate\Branding();
+		$this->assertSame( '', get_echo( [ $branding, 'output_admin_notice' ] ) );
 	}
 
 	/**
@@ -33,24 +52,24 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	 */
 	public function data_screen_specific_messages() {
 		return [
-			'update-core.php'    => [
-				'hook'     => 'update-core.php',
+			'update-core'    => [
+				'hook'     => 'update-core',
 				'expected' => 'WordPress, plugin, theme and translation updates',
 			],
-			'plugins.php'        => [
-				'hook'     => 'plugins.php',
+			'plugins'        => [
+				'hook'     => 'plugins',
 				'expected' => 'plugin updates',
 			],
-			'plugin-install.php' => [
-				'hook'     => 'plugin-install.php',
+			'plugin-install' => [
+				'hook'     => 'plugin-install',
 				'expected' => 'plugin updates',
 			],
-			'themes.php'         => [
-				'hook'     => 'themes.php',
+			'themes'         => [
+				'hook'     => 'themes',
 				'expected' => 'theme updates',
 			],
-			'theme-install.php'  => [
-				'hook'     => 'theme-install.php',
+			'theme-install'  => [
+				'hook'     => 'theme-install',
 				'expected' => 'theme updates',
 			],
 		];
@@ -64,6 +83,9 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	 * @param string $hook The current screen's hook.
 	 */
 	public function test_should_not_output_notice_on_adjacent_screens( $hook ) {
+		if ( is_multisite() ) {
+			$hook .= '-network';
+		}
 		set_current_screen( $hook );
 
 		$branding = new AspireUpdate\Branding();
@@ -78,9 +100,9 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	public function data_adjacent_screens() {
 		return self::text_array_to_dataprovider(
 			[
-				'index.php',
-				'nav-menus.php',
-				'plugin-editor.php',
+				'dashboard',
+				'nav-menus',
+				'plugin-editor',
 			]
 		);
 	}
@@ -108,7 +130,7 @@ class Branding_OutputAdminNoticeTest extends WP_UnitTestCase {
 	 */
 	public function test_should_not_output_notice_when_ap_remove_ui_is_true() {
 		// Set to a screen that should display an admin notice.
-		set_current_screen( 'plugins.php' );
+		set_current_screen( is_multisite() ? 'plugins-network' : 'plugins' );
 
 		// Prevent the notice from being displayed.
 		define( 'AP_REMOVE_UI', true );

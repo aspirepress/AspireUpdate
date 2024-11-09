@@ -24,7 +24,8 @@ class Branding {
 	public function __construct() {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
-			add_action( 'admin_notices', [ $this, 'output_admin_notice' ] );
+			$admin_notices_hook = is_multisite() ? 'network_admin_notices' : 'admin_notices';
+			add_action( $admin_notices_hook, [ $this, 'output_admin_notice' ] );
 			add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 		}
 	}
@@ -53,14 +54,15 @@ class Branding {
 		}
 
 		$allowed_screens = [
-			'update-core.php',
-			'plugins.php',
-			'plugin-install.php',
-			'themes.php',
-			'theme-install.php',
+			'update-core',
+			'plugins',
+			'plugin-install',
+			'themes',
+			'theme-install',
 		];
 
-		if ( in_array( $hook, $allowed_screens, true ) ) {
+		$screen = \WP_Screen::get( $hook );
+		if ( in_array( $screen->id, $allowed_screens, true ) ) {
 			wp_enqueue_style( 'aspire_update_settings_css', plugin_dir_url( __DIR__ ) . 'assets/css/aspire-update.css', [], AP_VERSION );
 		}
 	}
@@ -81,9 +83,15 @@ class Branding {
 		}
 
 		$message = '';
-		switch ( $current_screen->base ) {
+		switch ( $current_screen->id ) {
 			case 'plugins':
 			case 'plugin-install':
+				if ( is_multisite() ) {
+					break;
+				}
+				// Fall-through.
+			case 'plugins-network':
+			case 'plugin-install-network':
 				$message = sprintf(
 					/* translators: 1: The name of the plugin, 2: The documentation URL. */
 					__( 'Your plugin updates are now powered by <strong>%1$s</strong>. <a href="%2$s">Learn more</a>', 'AspireUpdate' ),
@@ -93,6 +101,12 @@ class Branding {
 				break;
 			case 'themes':
 			case 'theme-install':
+				if ( is_multisite() ) {
+					break;
+				}
+				// Fall-through.
+			case 'themes-network':
+			case 'theme-install-network':
 				$message = sprintf(
 					/* translators: 1: The name of the plugin, 2: The documentation URL. */
 					__( 'Your theme updates are now powered by <strong>%1$s</strong>. <a href="%2$s">Learn more</a>', 'AspireUpdate' ),
@@ -101,6 +115,11 @@ class Branding {
 				);
 				break;
 			case 'update-core':
+				if ( is_multisite() ) {
+					break;
+				}
+				// Fall-through.
+			case 'update-core-network':
 				$message = sprintf(
 					/* translators: 1: The name of the plugin, 2: The documentation URL. */
 					__( 'Your WordPress, plugin, theme and translation updates are now powered by <strong>%1$s</strong>. <a href="%2$s">Learn more</a>', 'AspireUpdate' ),

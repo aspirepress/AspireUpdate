@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: AspireUpdate\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-04 00:29+0000\n"
-"PO-Revision-Date: 2024-11-04 00:29+0000\n"
+"PO-Revision-Date: 2024-11-07 18:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de_DE\n"
@@ -108,3 +108,35 @@ msgstr "Aktualisiert Plugins und Themes für WordPress."
 #: includes/class-admin-settings.php:345
 msgid "Your new API Host."
 msgstr "Ihr neuer API-Host"
+
+#: includes/class-admin-settings.php:133
+msgid "Settings have been reset to default."
+msgstr "Einstellungen wurden auf die Standardwerte zurückgesetzt."
+
+#: includes/class-admin-settings.php:298
+msgid "Unexpected Error:"
+msgstr "Unerwarteter Fehler:"
+
+#: includes/class-admin-settings.php:329
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: includes/class-admin-settings.php:470
+msgid "Other"
+msgstr "Andere"
+
+#: includes/class-admin-settings.php:609
+msgid "Generate API Key"
+msgstr "API-Schlüssel generieren"
+
+#: includes/class-branding.php:89
+msgid "Your plugin updates are now powered by <strong>%1$s</strong>. <a href=\"%2$s\">Learn more</a>"
+msgstr "Ihre Plugin-Updates werden jetzt von <strong>%1$s</strong> bereitgestellt. <a href=\"%2$s\">Mehr erfahren</a>"
+
+#: includes/class-branding.php:98
+msgid "Your theme updates are now powered by <strong>%1$s</strong>. <a href=\"%2$s\">Learn more</a>"
+msgstr "Ihre Theme-Updates werden jetzt von <strong>%1$s</strong> bereitgestellt. <a href=\"%2$s\">Mehr erfahren</a>"
+
+#: includes/class-branding.php:106
+msgid "Your WordPress, plugin, theme and translation updates are now powered by <strong>%1$s</strong>. <a href=\"%2$s\">Learn more</a>"
+msgstr "Ihre WordPress, Plugin, Theme und Übersetzungs updates werden jetzt von <strong>%1$s</strong> bereitgestellt. <a href=\"%2$s\">Mehr erfahren</a>"

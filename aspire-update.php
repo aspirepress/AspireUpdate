@@ -20,7 +20,8 @@
  * License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  * Text Domain:       AspireUpdate
  * Domain Path:       /languages
- * Network:           true
+ * GitHub Plugin URI: https://github.com/aspirepress/AspireUpdate
+ * Primary Branch:    main
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

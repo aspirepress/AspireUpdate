@@ -11,11 +11,12 @@ on:
 
 jobs:
   phpunit:
-    name: Run tests
+    name: Run tests (PHP ${{ matrix.php-version }}, ${{ matrix.multisite && 'Multisite' || 'Single Site' }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-version: ['7.4', '8.3']
+        multisite: [ true, false ]
     services:
       database:
         image: mysql:latest
@@ -38,4 +39,4 @@ jobs:
         run: bash bin/install-wp-tests.sh wordpress_tests root root 127.0.0.1 latest true
 
       - name: Run tests
-        run: phpunit
+        run: XDEBUG_MODE=off phpunit${{ matrix.multisite && ' -c tests/multisite.xml' || '' }}
