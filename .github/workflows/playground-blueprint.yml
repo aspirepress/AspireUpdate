@@ -1,4 +1,4 @@
-name: Update Blueprint Blueprint with Repository and Branch
+name: Update Playground Blueprint with Repository and Branch
 
 on:
   push:
@@ -11,6 +11,8 @@ on:
 jobs:
   update-blueprint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
