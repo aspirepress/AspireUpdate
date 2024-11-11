@@ -17,7 +17,7 @@
 		"blogname": "AspireUpdate Demo Site"
 	},
 	"plugins": [
-		"https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=main",
+		"https://github-proxy.com/proxy/?repo=aspirepress/AspireUpdate&branch=playground-ready",
 		"error-log-viewer",
 		"plugin-check"
 	],
@@ -55,7 +55,7 @@
 		},
 		{
 			"step": "rm",
-		    "path": "/wordpress/wp-content/plugins/hello.php"
+			"path": "/wordpress/wp-content/plugins/hello.php"
 		}
 	]
 }
