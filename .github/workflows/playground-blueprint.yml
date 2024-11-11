@@ -9,6 +9,7 @@ on:
 
 jobs:
   update-blueprint:
+    if: github.repository == 'aspirepress/AspireUpdate'
     runs-on: ubuntu-latest
 
     steps:
