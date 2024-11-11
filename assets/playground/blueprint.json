@@ -17,7 +17,7 @@
 		"blogname": "AspireUpdate Demo Site"
 	},
 	"plugins": [
-		"https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=playground-ready",
+		"https://github-proxy.com/proxy/?repo=AspirePress/AspireUpdate&branch=main",
 		"error-log-viewer",
 		"plugin-check"
 	],
@@ -54,8 +54,8 @@
 			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Welcome to AspireUpdate Demo. Visit <a href=\"https://docs.aspirepress.org\">AspirePress documentation</a> for more details.</p></div>'; });"
 		},
 		{
-		        "step": "rm",
-		        "path": "/wordpress/wp-content/plugins/hello.php"
+			"step": "rm",
+		    "path": "/wordpress/wp-content/plugins/hello.php"
 		}
 	]
 }
