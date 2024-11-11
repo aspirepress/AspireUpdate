@@ -3,7 +3,6 @@ name: Update Blueprint Blueprint with Repository and Branch
 on:
   push:
     branches:
-      - main
       - playground-ready
     tags:
       - "**"
