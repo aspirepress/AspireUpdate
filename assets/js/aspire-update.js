@@ -150,7 +150,7 @@ class ApiRewrites {
 					if ((response.status === 400) || (response.status === 401)) {
 						ApiRewrites.api_key.show_error(response.responseJSON?.error);
 					} else {
-						ApiRewrites.api_key.show_error('Unexpected Error: ' + response.status);
+						ApiRewrites.api_key.show_error(aspireupdate.string_unexpected_error + ' ' + response.status);
 					}
 				});
 		},
