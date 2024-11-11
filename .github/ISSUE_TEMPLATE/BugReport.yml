@@ -1,0 +1,148 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! You can use the Site Health option in your website to collect a lot of the data requested below.
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you are seeing or experiencing.
+      value: "A bug was witnessed!"
+
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of AspireUpdate are you running?
+      options:
+        - 0.5 (Default)
+        - 1.0
+        - Nightly
+      default: 0
+    validations:
+      required: true
+ 
+  - type: dropdown
+    id: os
+    attributes:
+      label: 'OS'
+      description: 'The operating system you are running on (Linux, Windows, Mac, etc).'
+      options:
+        - Windows
+        - MacOS
+        - iOS
+        - Android
+        - Linux
+        - Other
+ 
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+        - Opera
+        - Other
+
+  - type: input
+    id: wordpress
+    attributes:
+      label: 'WordPress'
+      description: 'The version of WordPress that your site uses.'
+ 
+  - type: input
+    id: php
+    attributes:
+      label: 'PHP'
+      description: 'The version of PHP your site runs on.'
+  
+  - type: input
+    id: server
+    attributes:
+      label: 'Server'
+      description: 'The server your site runs on (apache, nginx, etc).'
+  
+  - type: input
+    id: database
+    attributes:
+      label: 'Database'
+      description: 'The database engine used by your site.'
+
+  - type: input
+    id: theme
+    attributes:
+      label: 'Theme'
+      description: 'The currently active theme.'
+  
+  - type: input
+    id: must_use_plugins
+    attributes:
+      label: 'Must-Use Plugins'
+      description: 'A list of Must-Use Plugins.'
+  
+  - type: input
+    id: plugins
+    attributes:
+      label: 'Plugins'
+      description: 'A list of active plugins.'
+    
+
+
+  - type: textarea
+    id: sitehealth
+    attributes:
+      label: WordPress Site Health Output (optional)
+      description: Please copy and paste a SiteHealth report with details of your WordPress configuration. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant debug log output
+      description: Please copy and paste any relevant debug log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: textarea
+    attributes:
+      label: Screenshots/Live demo link
+      description: Add some screenshots to help explain the problem.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: 'Additional Notes'
+      description: 'Any additional details worth mentioning.'
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow the AspirePress [Code of Conduct](https://github.com/aspirepress/AspireUpdate?tab=coc-ov-file). 
+
+      options:
+      - label: I agree to follow the Code of Conduct.
+        required: true
+

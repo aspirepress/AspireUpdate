@@ -34,15 +34,15 @@ The plugin menu appears under the Dashboard main menu item. Don't look for it in
 
 The plugin can use the following configuration options in wp-config.php:
 
-| Configuration Parameter |                                                                                 Description |                        Default, if any |
-| :---------------------- | ------------------------------------------------------------------------------------------: | -------------------------------------: |
-| AP_ENABLE               |                                                                          Enable API rewrite |                                  false |
-| AP_API_KEY              |                                        The API Key for AspireCloud (not currently enforced) |                                        |
-| AP_HOST                 |                                                                             API domain name |                    api.aspirecloud.org |
-| AP_DEBUG                |                                                                           Enable Debug Mode |                                  false |
-| AP_DEBUG_TYPES          |                                                                     an array of debug modes | array('string', 'request', 'response') |
-| AP_DISABLE_SSL          |                                                 Disabled SSL verification for local testing |                                   true |
-| AP_REMOVE_UI            | Disables plugin settings user interface, defaults to config parameters set in wp-config.php |                                  false |
+| Configuration Parameter |                                                                                              Description |                        Default, if any |
+| :---------------------- | -------------------------------------------------------------------------------------------------------: | -------------------------------------: |
+| AP_ENABLE               |                                                                                       Enable API rewrite |                                  false |
+| AP_API_KEY              |                                                     The API Key for AspireCloud (not currently enforced) |                                        |
+| AP_HOST                 |                                                                                          API domain name |                    api.aspirecloud.org |
+| AP_DEBUG                |                                                                                        Enable Debug Mode |                                  false |
+| AP_DEBUG_TYPES          |                                                                                  an array of debug modes | array('string', 'request', 'response') |
+| AP_DISABLE_SSL          |                                                              Disabled SSL verification for local testing |                                   true |
+| AP_REMOVE_UI            | Disables plugin settings user interface and branding, defaults to config parameters set in wp-config.php |                                  false |
 
 To set AP_DEBUG_TYPES use an array to define the constant:
 
@@ -53,13 +53,15 @@ define('AP_DEBUG_TYPES', array(
 ));
 ```
 
-NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. 
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface.
 
-NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
+NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed.
 
 ## WP Playgrounds Support
 
-The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds environment](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aspirepress/AspireUpdate/refs/heads/playground-ready/assets/playground/blueprint.json).
+The AspireUpdate current build ('main' branch) can be [experimented with in the WP Playground environment](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aspirepress/AspireUpdate/refs/heads/main/assets/playground/blueprint.json).
+
+The AspireUpdate stable build ('playground-ready' branch) can be [tested with in the WP Playground environment](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aspirepress/AspireUpdate/refs/heads/playground-ready/assets/playground/blueprint.json).
 
 ## Debug Logging
 
