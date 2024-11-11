@@ -53,13 +53,13 @@ define('AP_DEBUG_TYPES', array(
 ));
 ```
 
-NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface. 
+NOTE: Any AspirePress configuration parameters set in wp-config.php _will_ override any plugin options set in the plugin user interface.
 
-NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed. 
+NOTE 2: Setting AP_REMOVE_UI to `true` removes the plugin user interface. This is intended to be used in situations where AspireUpdate is deployed in a pre-configured mode and end-user configuration is not expected nor allowed.
 
 ## WP Playgrounds Support
 
-The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds environment](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aspirepress/AspireUpdate/refs/heads/playground-ready/assets/playground/blueprint.json).
+The AspireUpdate plugin can be quickly [experimented with in the WP Playgrounds environment](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aspirepress/AspireUpdate/refs/heads/main/assets/playground/blueprint.json).
 
 ## Debug Logging
 
