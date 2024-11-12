@@ -317,7 +317,7 @@ class Admin_Settings {
 		Utilities::include_file(
 			'page-admin-settings.php',
 			[
-				'reset_url' => $reset_url,
+				'reset_url'    => $reset_url,
 				'option_group' => $this->option_group,
 			]
 		);
