@@ -20,7 +20,6 @@ class Controller {
 		Themes_Screens::get_instance();
 		Branding::get_instance();
 		$this->api_rewrite();
-
 		add_action( 'init', [ $this, 'load_textdomain' ] );
 	}
 

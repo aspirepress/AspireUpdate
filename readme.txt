@@ -38,4 +38,3 @@ Answer to foo bar dilemma.
 * first stable version, connects to api.wordpress.org or an alternative AspireCloud repository
 
 == Upgrade Notice ==
-
