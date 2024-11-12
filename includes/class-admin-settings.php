@@ -49,6 +49,7 @@ class Admin_Settings {
 		add_action( 'admin_init', [ $this, 'reset_settings' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
 		add_action( 'admin_notices', [ $this, 'reset_admin_notice' ] );
+		add_action( 'admin_notices', [ $this, 'settings_saved_admin_notice' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
@@ -130,8 +131,34 @@ class Admin_Settings {
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ) . '.</p></div>';
+			add_settings_error(
+				'aspireupdate_settings_reset',
+				'aspireupdate_settings_reset',
+				esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ),
+				'success'
+			);
+			settings_errors( 'aspireupdate_settings_reset' );
 			delete_site_option( 'aspireupdate-reset' );
+		}
+	}
+
+	/**
+	 * The Admin Notice to convey settings have been successsfully saved.
+	 *
+	 * @return void
+	 */
+	public function settings_saved_admin_notice() {
+		if (
+			isset( $_GET['settings-updated-wpnonce'] ) &&
+			wp_verify_nonce( sanitize_key( wp_unslash( $_GET['settings-updated-wpnonce'] ) ), 'aspireupdate-settings-updated-nonce' )
+		) {
+			add_settings_error(
+				'aspireupdate_settings_saved',
+				'aspireupdate_settings_saved',
+				esc_html__( 'Settings Saved', 'AspireUpdate' ),
+				'success'
+			);
+			settings_errors( 'aspireupdate_settings_saved' );
 		}
 	}
 
@@ -247,7 +274,12 @@ class Admin_Settings {
 			);
 
 			wp_safe_redirect(
-				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
+				add_query_arg(
+					[
+						'settings-updated-wpnonce' => wp_create_nonce( 'aspireupdate-settings-updated-nonce' ),
+					],
+					network_admin_url( 'index.php?page=aspireupdate-settings' )
+				)
 			);
 			exit;
 		}
