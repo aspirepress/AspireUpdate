@@ -20,7 +20,6 @@ class Controller {
 		Themes_Screens::get_instance();
 		Branding::get_instance();
 		$this->api_rewrite();
-
 		add_action( 'init', [ $this, 'load_textdomain' ] );
 		add_action( 'wp_ajax_aspireupdate_clear_log', [ $this, 'clear_log' ] );
 		add_action( 'wp_ajax_aspireupdate_read_log', [ $this, 'read_log' ] );

@@ -3,13 +3,13 @@ name: Update Playground Blueprint with Repository and Branch
 on:
   push:
     branches:
-      - main
       - playground-ready
     tags:
       - "**"
 
 jobs:
   update-blueprint:
+    if: github.repository == 'aspirepress/AspireUpdate'
     runs-on: ubuntu-latest
     permissions:
       contents: write
