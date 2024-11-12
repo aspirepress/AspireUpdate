@@ -76,38 +76,34 @@ class Debug {
 	 *
 	 * @param integer $limit Max no of lines to return. Defaults to a 1000 lines.
 	 *
-	 * @return string The File content truncate upto the number of lines set in the limit parameter.
+	 * @return string|WP_Error The File content truncate upto the number of lines set in the limit parameter.
 	 */
 	public static function read( $limit = 1000 ) {
 		$wp_filesystem = self::init_filesystem();
-		if ( ! self::verify_filesystem( $wp_filesystem ) ) {
-			return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
+		$file_path     = self::get_file_path();
+		if ( ! self::verify_filesystem( $wp_filesystem ) || ! $wp_filesystem->exists( $file_path ) || ! $wp_filesystem->is_readable( $file_path ) ) {
+			return new \WP_Error( 'not_readable', __( 'Error: Unable to read the log file.', 'AspireUpdate' ) );
 		}
 
-		$file_path = self::get_file_path();
-
-		if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_readable( $file_path ) ) {
-			$file_content = $wp_filesystem->get_contents_array( $file_path );
-			$content      = '';
-			$index        = 0;
-			foreach ( $file_content as $file_content_lines ) {
-				if ( ( $index < $limit ) ) {
-					$content .= $file_content_lines . PHP_EOL;
-					++$index;
-				}
+		$file_content = $wp_filesystem->get_contents_array( $file_path );
+		$content      = '';
+		$index        = 0;
+		foreach ( $file_content as $file_content_lines ) {
+			if ( ( $index < $limit ) ) {
+				$content .= $file_content_lines . PHP_EOL;
+				++$index;
 			}
-			if ( '' === trim( $content ) ) {
-				$content = esc_html__( '*****Log file is empty.*****', 'AspireUpdate' );
-			} elseif ( $limit < count( $file_content ) ) {
-					$content .= PHP_EOL . sprintf(
-						/* translators: 1: The number of lines at which the content was truncated. */
-						esc_html__( '*****Log truncated at %s lines.*****', 'AspireUpdate' ),
-						$limit
-					);
-			}
-			return $content;
 		}
-		return esc_html__( 'Error: Unable to read the log file.', 'AspireUpdate' );
+		if ( '' === trim( $content ) ) {
+			$content = esc_html__( '*****Log file is empty.*****', 'AspireUpdate' );
+		} elseif ( $limit < count( $file_content ) ) {
+			$content .= PHP_EOL . sprintf(
+				/* translators: 1: The number of lines at which the content was truncated. */
+				esc_html__( '*****Log truncated at %s lines.*****', 'AspireUpdate' ),
+				$limit
+			);
+		}
+		return $content;
 	}
 
 	/**
@@ -187,6 +183,8 @@ class Debug {
 	 * Log an info message.
 	 *
 	 * @param mixed $message The message to log.
+	 *
+	 * @return void
 	 */
 	public static function log_string( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
@@ -201,6 +199,8 @@ class Debug {
 	 * Log a warning message.
 	 *
 	 * @param mixed $message The message to log.
+	 *
+	 * @return void
 	 */
 	public static function log_request( $message ) {
 		$admin_settings = Admin_Settings::get_instance();
@@ -215,6 +215,8 @@ class Debug {
 	 * Log an error message.
 	 *
 	 * @param mixed $message The message to log.
+	 *
+	 * @return void
 	 */
 	public static function log_response( $message ) {
 		$admin_settings = Admin_Settings::get_instance();

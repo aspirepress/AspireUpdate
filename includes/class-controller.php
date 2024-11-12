@@ -75,6 +75,10 @@ class Controller {
 	 */
 	public function read_log() {
 		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			$content = Debug::read( 1000 );
+			if ( is_wp_error( $content ) ) {
+				$content = $content->get_error_message();
+			}
 			wp_send_json_success(
 				[
 					'content' => Debug::read( 1000 ),
