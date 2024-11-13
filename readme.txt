@@ -35,7 +35,6 @@ Answer to foo bar dilemma.
 
 = 0.6 =
 * Admin Settings: Added notices for when settings are saved or reset
-* Site Health: Added Site Health option
 * Branding: Added branded notices to inform users when AspireUpdate is in operation on a screen
 * Debug: Added Clear Logs and View Logs functionality
 * I18N: Added Catalan translation
