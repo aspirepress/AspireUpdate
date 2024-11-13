@@ -39,4 +39,4 @@ jobs:
         run: bash bin/install-wp-tests.sh wordpress_tests root root 127.0.0.1 latest true
 
       - name: Run tests
-        run: XDEBUG_MODE=off phpunit${{ matrix.multisite && ' -c tests/multisite.xml' || '' }}
+        run: XDEBUG_MODE=off phpunit${{ matrix.multisite && ' -c tests/phpunit/multisite.xml' || '' }}
