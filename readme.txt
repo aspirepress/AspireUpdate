@@ -34,13 +34,22 @@ Answer to foo bar dilemma.
 == Changelog ==
 
 = 0.6 =
-* WPCS and editorconfig.
-* Added provision to View and Clear Logs from within the plugin.
-* Added ability to use Playground from any branch.
-* Branding on screens where the plugin is actively altering Wordpress behaviour.
-* Multisite Support.
-* Notices for Save and Reset settings.
-* Voltron Branding.
+* Admin Settings: Added notices for when settings are saved or reset
+* Site Health: Added Site Health option
+* Branding: Added branded notices to inform users when AspireUpdate is in operation on a screen
+* Debug: Added Clear Logs and View Logs functionality
+* I18N: Added Catalan translation
+* I18N: Added Dutch translation
+* I18N: Added Spanish translation
+* I18N: Added Swedish translation
+* I18N: Updated Dutch translation
+* I18N: Updated French translation
+* I18N: Updated German translation
+* Testing: Added Git Updater integration
+* Testing: Added support both main and playground-ready links in the README
+* Testing: Made Playground default to the `main` branch
+* Testing: Removed Hello Dolly from the Playground blueprint
+* Security: Fixed Plugin Check security warnings
 
 = 0.5 =
 * first stable version, connects to api.wordpress.org or an alternative AspireCloud repository
