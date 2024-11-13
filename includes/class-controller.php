@@ -21,6 +21,8 @@ class Controller {
 		Branding::get_instance();
 		$this->api_rewrite();
 		add_action( 'init', [ $this, 'load_textdomain' ] );
+		add_action( 'wp_ajax_aspireupdate_clear_log', [ $this, 'clear_log' ] );
+		add_action( 'wp_ajax_aspireupdate_read_log', [ $this, 'read_log' ] );
 	}
 
 	/**
@@ -49,7 +51,68 @@ class Controller {
 	}
 
 	/**
+	 * Ajax action to clear the Log file.
+	 *
+	 * @return void
+	 */
+	public function clear_log() {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			wp_send_json_error(
+				[
+					'message' => __( 'Error: You are not authorized to access this resource.', 'AspireUpdate' ),
+				]
+			);
+		}
+
+		$status = Debug::clear();
+		if ( is_wp_error( $status ) ) {
+			wp_send_json_error(
+				[
+					'message' => $status->get_error_message(),
+				]
+			);
+		}
+
+		wp_send_json_success(
+			[
+				'message' => __( 'Log file cleared successfully.', 'AspireUpdate' ),
+			]
+		);
+	}
+
+	/**
+	 * Ajax action to read the Log file.
+	 *
+	 * @return void
+	 */
+	public function read_log() {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			wp_send_json_error(
+				[
+					'message' => __( 'Error: You are not authorized to access this resource.', 'AspireUpdate' ),
+				]
+			);
+		}
+
+		$content = Debug::read( 1000 );
+		if ( is_wp_error( $content ) ) {
+			wp_send_json_error(
+				[
+					'message' => $content->get_error_message(),
+				]
+			);
+		}
+
+		wp_send_json_success(
+			[
+				'content' => $content,
+			]
+		);
+	}
+
+	/**
 	 * Load translations.
+	 *
 	 * @return void
 	 */
 	public function load_textdomain() {
