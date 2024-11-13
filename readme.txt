@@ -1,7 +1,6 @@
 === AspireUpdate ===
 Contributors: sarah-savage, namithj, asirota
 Donate link: https://github.com/sponsors/aspirepress
-Tags:
 Requires at least: 5.3
 Tested up to: 6.7
 Stable tag: 0.6
