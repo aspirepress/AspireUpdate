@@ -15,16 +15,7 @@ $option_group = $args['option_group'] ?? '';
 			<?php wp_nonce_field( 'aspireupdate-settings' ); ?>
 			<?php submit_button( '', 'primary', 'submit', false ); ?>
 			<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary" ><?php esc_html_e( 'Reset', 'AspireUpdate' ); ?></a>
-			<a href="javascript:;" id="aspireupdate-button-clearlog" class="button button-secondary button-clearlog" ><?php esc_html_e( 'Clear Log', 'AspireUpdate' ); ?></a>
-			<a href="javascript:;" id="aspireupdate-button-viewlog" class="button button-secondary button-viewlog" ><?php esc_html_e( 'View Log', 'AspireUpdate' ); ?></a>
 		</p>
 	</form>
-	<div id="aspireupdate-log-viewer">
-		<div class="outer">
-			<span class="close"></span>
-			<div class="inner">
-			</div>
-		</div>
-	</div>
 	<?php Utilities::include_file( 'voltron.txt' ); ?>
 </div>
