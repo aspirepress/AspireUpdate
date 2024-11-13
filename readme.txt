@@ -1,10 +1,10 @@
 === AspireUpdate ===
 Contributors: sarah-savage, namithj, asirota
 Donate link: https://github.com/sponsors/aspirepress
-Tags: 
+Tags:
 Requires at least: 5.3
 Tested up to: 6.7
-Stable tag: 0.5
+Stable tag: 0.6
 Requires PHP: 7.4
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -33,6 +33,15 @@ Answer to foo bar dilemma.
 2. This is the second screen shot
 
 == Changelog ==
+
+= 0.6 =
+* WPCS and editorconfig.
+* Added provision to View and Clear Logs from within the plugin.
+* Added ability to use Playground from any branch.
+* Branding on screens where the plugin is actively altering Wordpress behaviour.
+* Multisite Support.
+* Notices for Save and Reset settings.
+* Voltron Branding.
 
 = 0.5 =
 * first stable version, connects to api.wordpress.org or an alternative AspireCloud repository
