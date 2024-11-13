@@ -48,8 +48,7 @@ class Admin_Settings {
 		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', [ $this, 'register_admin_menu' ] );
 		add_action( 'admin_init', [ $this, 'reset_settings' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
-		add_action( 'admin_notices', [ $this, 'reset_admin_notice' ] );
-		add_action( 'admin_notices', [ $this, 'settings_saved_admin_notice' ] );
+		add_action( is_multisite() ? 'network_admin_notices' : 'admin_notices', [ $this, 'admin_notices' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
@@ -119,11 +118,14 @@ class Admin_Settings {
 	}
 
 	/**
-	 * The Admin Notice to convey a Reset Operation has happened.
+	 * Show Admin notices.
 	 *
 	 * @return void
 	 */
-	public function reset_admin_notice() {
+	public function admin_notices() {
+		/**
+		 * The Admin Notice to convey a Reset Operation has happened.
+		 */
 		if (
 			( 'true' === get_site_option( 'aspireupdate-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
@@ -132,33 +134,29 @@ class Admin_Settings {
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
 			add_settings_error(
-				'aspireupdate_settings_reset',
+				$this->option_name,
 				'aspireupdate_settings_reset',
 				esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ),
 				'success'
 			);
-			settings_errors( 'aspireupdate_settings_reset' );
+			settings_errors( $this->option_name );
 			delete_site_option( 'aspireupdate-reset' );
 		}
-	}
 
-	/**
-	 * The Admin Notice to convey settings have been successsfully saved.
-	 *
-	 * @return void
-	 */
-	public function settings_saved_admin_notice() {
+		/**
+		 * The Admin Notice to convey settings have been successsfully saved.
+		 */
 		if (
 			isset( $_GET['settings-updated-wpnonce'] ) &&
 			wp_verify_nonce( sanitize_key( wp_unslash( $_GET['settings-updated-wpnonce'] ) ), 'aspireupdate-settings-updated-nonce' )
 		) {
 			add_settings_error(
-				'aspireupdate_settings_saved',
+				$this->option_name,
 				'aspireupdate_settings_saved',
 				esc_html__( 'Settings Saved', 'AspireUpdate' ),
 				'success'
 			);
-			settings_errors( 'aspireupdate_settings_saved' );
+			settings_errors( $this->option_name );
 		}
 	}
 
