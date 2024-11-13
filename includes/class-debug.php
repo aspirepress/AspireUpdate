@@ -118,14 +118,12 @@ class Debug {
 			return new \WP_Error( 'not_accessible', __( 'Error: Unable to access the log file.', 'AspireUpdate' ) );
 		}
 
-		if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_writable( $file_path ) ) {
-			$wp_filesystem->put_contents(
-				$file_path,
-				'',
-				FS_CHMOD_FILE
-			);
-			return true;
-		}
+		$wp_filesystem->put_contents(
+			$file_path,
+			'',
+			FS_CHMOD_FILE
+		);
+		return true;
 	}
 
 	/**
