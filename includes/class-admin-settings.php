@@ -48,7 +48,7 @@ class Admin_Settings {
 		add_action( is_multisite() ? 'network_admin_menu' : 'admin_menu', [ $this, 'register_admin_menu' ] );
 		add_action( 'admin_init', [ $this, 'reset_settings' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
-		add_action( 'admin_notices', [ $this, 'reset_admin_notice' ] );
+		add_action( is_multisite() ? 'network_admin_notices' : 'admin_notices', [ $this, 'admin_notices' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 
 		add_action( 'admin_init', [ $this, 'update_settings' ] );
@@ -118,11 +118,14 @@ class Admin_Settings {
 	}
 
 	/**
-	 * The Admin Notice to convey a Reset Operation has happened.
+	 * Show Admin notices.
 	 *
 	 * @return void
 	 */
-	public function reset_admin_notice() {
+	public function admin_notices() {
+		/**
+		 * The Admin Notice to convey a Reset Operation has happened.
+		 */
 		if (
 			( 'true' === get_site_option( 'aspireupdate-reset' ) ) &&
 			isset( $_GET['reset-success'] ) &&
@@ -130,8 +133,30 @@ class Admin_Settings {
 			isset( $_GET['reset-success-nonce'] ) &&
 			wp_verify_nonce( sanitize_key( $_GET['reset-success-nonce'] ), 'aspireupdate-reset-success-nonce' )
 		) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ) . '.</p></div>';
+			add_settings_error(
+				$this->option_name,
+				'aspireupdate_settings_reset',
+				esc_html__( 'Settings have been reset to default.', 'AspireUpdate' ),
+				'success'
+			);
+			settings_errors( $this->option_name );
 			delete_site_option( 'aspireupdate-reset' );
+		}
+
+		/**
+		 * The Admin Notice to convey settings have been successsfully saved.
+		 */
+		if (
+			isset( $_GET['settings-updated-wpnonce'] ) &&
+			wp_verify_nonce( sanitize_key( wp_unslash( $_GET['settings-updated-wpnonce'] ) ), 'aspireupdate-settings-updated-nonce' )
+		) {
+			add_settings_error(
+				$this->option_name,
+				'aspireupdate_settings_saved',
+				esc_html__( 'Settings Saved', 'AspireUpdate' ),
+				'success'
+			);
+			settings_errors( $this->option_name );
 		}
 	}
 
@@ -247,7 +272,12 @@ class Admin_Settings {
 			);
 
 			wp_safe_redirect(
-				add_query_arg( [ network_admin_url( 'index.php?page=aspireupdate-settings' ) ] )
+				add_query_arg(
+					[
+						'settings-updated-wpnonce' => wp_create_nonce( 'aspireupdate-settings-updated-nonce' ),
+					],
+					network_admin_url( 'index.php?page=aspireupdate-settings' )
+				)
 			);
 			exit;
 		}
@@ -295,7 +325,8 @@ class Admin_Settings {
 				'ajax_url'                => network_admin_url( 'admin-ajax.php' ),
 				'nonce'                   => wp_create_nonce( 'aspireupdate-ajax' ),
 				'domain'                  => Utilities::get_top_level_domain(),
-				'string_unexpected_error' => esc_html__( 'Unexpected Error:', 'AspireUpdate' ),
+				'line_ending'             => PHP_EOL,
+				'unexpected_error' => esc_html__( 'Unexpected Error', 'AspireUpdate' ),
 			]
 		);
 	}

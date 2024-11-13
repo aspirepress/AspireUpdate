@@ -2,7 +2,127 @@
 jQuery(document).ready(function () {
 	new ApiRewrites();
 	new ApiDebug();
+
+	new ClearLog();
+	new ViewLog();
 });
+
+class ClearLog {
+	constructor() {
+		ClearLog.clearlog_button.init();
+	}
+
+	static clearlog_button = {
+		field: jQuery('#aspireupdate-button-clearlog'),
+		init() {
+			ClearLog.clearlog_button.field.click(function () {
+				ClearLog.clearlog_button.clear();
+			});
+		},
+		show() {
+			ClearLog.clearlog_button.field.show();
+		},
+		hide() {
+			ClearLog.clearlog_button.field.hide();
+		},
+		clear() {
+			let parameters = {
+				"url": aspireupdate.ajax_url,
+				"type": "POST",
+				"data": {
+					"nonce": aspireupdate.nonce,
+					"action": "aspireupdate_clear_log"
+				}
+			};
+			jQuery.ajax(parameters)
+				.done(function (response) {
+					if ('' != response.data.message) {
+						alert(response.data.message);
+					} else {
+						alert(aspireupdate.unexpected_error);
+					}
+				})
+				.fail(function (response) {
+					alert(aspireupdate.unexpected_error);
+				});
+		},
+	}
+}
+
+class ViewLog {
+	constructor() {
+		ViewLog.viewlog_button.init();
+		ViewLog.viewlog_popup.init();
+	}
+
+	static viewlog_button = {
+		field: jQuery('#aspireupdate-button-viewlog'),
+		init() {
+			ViewLog.viewlog_button.field.click(function () {
+				ViewLog.viewlog_popup.show();
+			});
+		},
+		show() {
+			ViewLog.viewlog_button.field.show();
+		},
+		hide() {
+			ViewLog.viewlog_button.field.hide();
+		}
+	}
+
+	static viewlog_popup = {
+		field: jQuery('#aspireupdate-log-viewer'),
+		popup_inner: jQuery('#aspireupdate-log-viewer .inner'),
+		close_button: jQuery('#aspireupdate-log-viewer span.close'),
+		init() {
+			ViewLog.viewlog_popup.close_button.click(function () {
+				ViewLog.viewlog_popup.close();
+			});
+
+			jQuery(document).keydown(function (event) {
+				if ((event.keyCode === 27) && ViewLog.viewlog_popup.field.is(':visible')) {
+					ViewLog.viewlog_popup.close();
+				}
+			});
+		},
+		show() {
+			let parameters = {
+				"url": aspireupdate.ajax_url,
+				"type": "POST",
+				"data": {
+					"nonce": aspireupdate.nonce,
+					"action": "aspireupdate_read_log"
+				}
+			};
+			jQuery.ajax(parameters)
+				.done(function (response) {
+					if ((true == response.success) && ('' != response.data.content)) {
+						let lines = response.data.content.split(aspireupdate.line_ending);
+						jQuery.each(lines, function (index, line) {
+							jQuery('<div>')
+								.append(
+									jQuery('<span>').addClass('number'),
+									jQuery('<span>').addClass('content').text(line)
+								)
+								.appendTo(ViewLog.viewlog_popup.popup_inner);
+						});
+						ViewLog.viewlog_popup.field.show();
+					} else if ('' != response.data.message) {
+						alert(response.data.message);
+					} else {
+						alert(aspireupdate.unexpected_error);
+					}
+				})
+				.fail(function (response) {
+					alert(aspireupdate.unexpected_error);
+				});
+		},
+		close() {
+			ViewLog.viewlog_popup.field.hide();
+			ViewLog.viewlog_popup.popup_inner.html('');
+		}
+	}
+}
 
 class ApiRewrites {
 	constructor() {
@@ -150,7 +270,7 @@ class ApiRewrites {
 					if ((response.status === 400) || (response.status === 401)) {
 						ApiRewrites.api_key.show_error(response.responseJSON?.error);
 					} else {
-						ApiRewrites.api_key.show_error(aspireupdate.string_unexpected_error + ' ' + response.status);
+						ApiRewrites.api_key.show_error(aspireupdate.unexpected_error + ' : ' + response.status);
 					}
 				});
 		},
@@ -192,7 +312,7 @@ class ApiDebug {
 		init() {
 			ApiDebug.enabled_debug.sub_fields = [
 				ApiDebug.debug_type,
-				ApiDebug.disable_ssl_verification
+				ApiDebug.disable_ssl_verification,
 			];
 
 			ApiDebug.enabled_debug.field.change(function () {
@@ -205,9 +325,13 @@ class ApiDebug {
 		},
 		show_options() {
 			Fields.show(ApiDebug.enabled_debug.sub_fields);
+			ViewLog.viewlog_button.show();
+			ClearLog.clearlog_button.show();
 		},
 		hide_options() {
 			Fields.hide(ApiDebug.enabled_debug.sub_fields);
+			ViewLog.viewlog_button.hide();
+			ClearLog.clearlog_button.hide();
 		}
 	}
 
