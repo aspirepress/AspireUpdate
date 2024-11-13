@@ -36,6 +36,7 @@ Answer to foo bar dilemma.
 = 0.6 =
 * Admin Settings: Added notices for when settings are saved or reset
 * Branding: Added branded notices to inform users when AspireUpdate is in operation on a screen
+* Multisite: Added multisite support
 * Debug: Added Clear Logs and View Logs functionality
 * I18N: Added Catalan translation
 * I18N: Added Dutch translation
