@@ -1,7 +1,7 @@
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.2/phpunit.xsd"
-	bootstrap="tests/bootstrap.php"
+	bootstrap="tests/phpunit/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
@@ -11,7 +11,7 @@
 	>
 	<testsuites>
 		<testsuite name="default">
-			<directory suffix="Test.php">./tests/</directory>
+			<directory suffix="Test.php">./tests/phpunit/tests/</directory>
 		</testsuite>
 	</testsuites>
 	<groups>
@@ -19,7 +19,7 @@
 			<group>ms-required</group>
 		</exclude>
 	</groups>
-	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="true" cacheDirectory="./tests/cache">
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="true" cacheDirectory="./tests/phpunit/cache">
 		<include>
 			<file>./aspire-update.php</file>
 			<directory suffix=".php">./includes</directory>
@@ -29,7 +29,7 @@
 		</exclude>
 		<report>
 			<text outputFile="php://stdout" showOnlySummary="true"/>
-			<html outputDirectory="./tests/coverage"/>
+			<html outputDirectory="./tests/phpunit/coverage"/>
 		</report>
 	</coverage>
 </phpunit>
