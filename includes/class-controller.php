@@ -56,15 +56,28 @@ class Controller {
 	 * @return void
 	 */
 	public function clear_log() {
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
-			$status = Debug::clear();
-			wp_send_json_success(
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			wp_send_json_error(
 				[
-					'cleared' => $status,
+					'message' => __( 'Error: You are not authorized to access this resource.', 'AspireUpdate' ),
 				]
 			);
 		}
-		wp_send_json_error();
+
+		$status = Debug::clear();
+		if ( is_wp_error( $status ) ) {
+			wp_send_json_error(
+				[
+					'message' => $status->get_error_message(),
+				]
+			);
+		}
+
+		wp_send_json_success(
+			[
+				'message' => __( 'Log file cleared successfully.', 'AspireUpdate' ),
+			]
+		);
 	}
 
 	/**
@@ -73,18 +86,28 @@ class Controller {
 	 * @return void
 	 */
 	public function read_log() {
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
-			$content = Debug::read( 1000 );
-			if ( is_wp_error( $content ) ) {
-				$content = $content->get_error_message();
-			}
-			wp_send_json_success(
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'aspireupdate-ajax' ) ) {
+			wp_send_json_error(
 				[
-					'content' => Debug::read( 1000 ),
+					'message' => __( 'Error: You are not authorized to access this resource.', 'AspireUpdate' ),
 				]
 			);
 		}
-		wp_send_json_error();
+
+		$content = Debug::read( 1000 );
+		if ( is_wp_error( $content ) ) {
+			wp_send_json_error(
+				[
+					'message' => $content->get_error_message(),
+				]
+			);
+		}
+
+		wp_send_json_success(
+			[
+				'content' => $content,
+			]
+		);
 	}
 
 	/**

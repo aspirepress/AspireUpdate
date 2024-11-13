@@ -36,14 +36,14 @@ class ClearLog {
 			};
 			jQuery.ajax(parameters)
 				.done(function (response) {
-					if (true == response.data.cleared) {
-						alert(aspireupdate.clear_log_success_message);
+					if ('' != response.data.message) {
+						alert(response.data.message);
 					} else {
-						alert(aspireupdate.clear_log_failed_message);
+						alert(aspireupdate.unexpected_error);
 					}
 				})
 				.fail(function (response) {
-					alert(aspireupdate.clear_log_failed_message);
+					alert(aspireupdate.unexpected_error);
 				});
 		},
 	}
@@ -96,7 +96,7 @@ class ViewLog {
 			};
 			jQuery.ajax(parameters)
 				.done(function (response) {
-					if ('' != response.data.content) {
+					if ((true == response.success) && ('' != response.data.content)) {
 						let lines = response.data.content.split(aspireupdate.line_ending);
 						jQuery.each(lines, function (index, line) {
 							jQuery('<div>')
@@ -107,12 +107,14 @@ class ViewLog {
 								.appendTo(ViewLog.viewlog_popup.popup_inner);
 						});
 						ViewLog.viewlog_popup.field.show();
+					} else if ('' != response.data.message) {
+						alert(response.data.message);
 					} else {
-						alert(aspireupdate.read_log_failed_message);
+						alert(aspireupdate.unexpected_error);
 					}
 				})
 				.fail(function (response) {
-					alert(aspireupdate.read_log_failed_message);
+					alert(aspireupdate.unexpected_error);
 				});
 		},
 		close() {
@@ -268,7 +270,7 @@ class ApiRewrites {
 					if ((response.status === 400) || (response.status === 401)) {
 						ApiRewrites.api_key.show_error(response.responseJSON?.error);
 					} else {
-						ApiRewrites.api_key.show_error(aspireupdate.string_unexpected_error + ' ' + response.status);
+						ApiRewrites.api_key.show_error(aspireupdate.unexpected_error + ' : ' + response.status);
 					}
 				});
 		},

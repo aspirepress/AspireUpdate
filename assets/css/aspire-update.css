@@ -150,12 +150,10 @@
 
 #aspireupdate-log-viewer .inner>div:nth-child(odd) {
 	background-color: #e9e9e9;
-	/* Light shade */
 }
 
 #aspireupdate-log-viewer .inner>div:nth-child(even) {
 	background-color: #e0e0e0;
-	/* Darker shade */
 }
 
 #aspireupdate-log-viewer .inner .number {

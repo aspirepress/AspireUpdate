@@ -109,14 +109,15 @@ class Debug {
 	/**
 	 * Clear content of the log file.
 	 *
-	 * @return boolean true on success and false on failure.
+	 * @return boolean|WP_Error true on success and false on failure.
 	 */
 	public static function clear() {
 		$wp_filesystem = self::init_filesystem();
-		if ( ! self::verify_filesystem( $wp_filesystem ) ) {
-			return false;
+		$file_path     = self::get_file_path();
+		if ( ! self::verify_filesystem( $wp_filesystem ) || ! $wp_filesystem->exists( $file_path ) || ! $wp_filesystem->is_writable( $file_path ) ) {
+			return new \WP_Error( 'not_accessible', __( 'Error: Unable to access the log file.', 'AspireUpdate' ) );
 		}
-		$file_path = self::get_file_path();
+
 		if ( $wp_filesystem->exists( $file_path ) && $wp_filesystem->is_writable( $file_path ) ) {
 			$wp_filesystem->put_contents(
 				$file_path,
@@ -125,7 +126,6 @@ class Debug {
 			);
 			return true;
 		}
-		return false;
 	}
 
 	/**
