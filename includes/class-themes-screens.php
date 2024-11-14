@@ -105,7 +105,7 @@ class Themes_Screens {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
 			wp_safe_redirect( admin_url( 'theme-install.php' ) );
-			exit;
+			! defined( 'AP_RUN_TESTS' ) && exit;
 		}
 	}
 }
