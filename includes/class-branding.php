@@ -123,7 +123,7 @@ class Branding {
 				$message = sprintf(
 					/* translators: 1: The name of the plugin, 2: The documentation URL. */
 					__( 'Your WordPress, plugin, theme and translation updates are now powered by <strong>%1$s</strong>. <a href="%2$s">Learn more</a>', 'aspireupdate' ),
-					'aspireupdate',
+					'AspireUpdate',
 					__( 'https://docs.aspirepress.org/aspireupdate/', 'aspireupdate' )
 				);
 				break;
