@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AspireUpdate 0.6\n"
-"Report-Msgid-Bugs-To: https://github.com/aspirepress/AspireUpdate/issues\n"
+"Report-Msgid-Bugs-To: https://github.com/aspirepress/aspireupdate/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
