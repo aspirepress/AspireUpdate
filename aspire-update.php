@@ -63,7 +63,8 @@ function aspire_update_uninstall_hook() {
 add_action( 'init', 'aspireupdate_init_translations' );
 function aspireupdate_init_translations() {
 	require_once __DIR__ . '/vendor/afragen/autoloader/Autoloader.php';
-	new Fragen\Autoloader( [ 'Fragen\\Translations_Updater' => __DIR__ . '/vendor/afragen/translations-updater/src/Translations_Updater' ] );   $config = [
+	new Fragen\Autoloader( [ 'Fragen\\Translations_Updater' => __DIR__ . '/vendor/afragen/translations-updater/src/Translations_Updater' ] );
+	$config = [
 		'git'       => 'github',
 		'type'      => 'plugin',
 		'slug'      => 'aspireupdate',
