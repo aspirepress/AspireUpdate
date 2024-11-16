@@ -1,5 +1,8 @@
 #### [unreleased]
 
+####  1.1.0 / 2024-11-16
+* add API error caching/logging
+
 #### 1.0.1 / 2024-11-12
 * fixed a hard-coded 'master' branch in `Language_Pack_API::process_language_pack_package()`
 

@@ -38,6 +38,13 @@ trait API {
 	protected $response = [];
 
 	/**
+	 * Holds HTTP error code from API call.
+	 *
+	 * @var array ( $this->repo->slug => $code )
+	 */
+	protected static $error_code = [];
+
+	/**
 	 * Return repo data for API calls.
 	 *
 	 * @return array
@@ -82,10 +89,59 @@ trait API {
 	 * @return boolean|\stdClass
 	 */
 	final protected function api( $url ) {
-		$response = wp_remote_get( $this->get_api_url( $url ) );
+		$url  = $this->get_api_url( $url );
+		$args = [];
+
+		// Use cached API failure data to avoid hammering the API.
+		$response = $this->get_repo_cache( md5( $url ) );
+		$cached   = isset( $response['error_cache'] );
+		$response = $response ? $response['error_cache'] : $response;
+		$response = empty( $response )
+			? wp_remote_get( $url, $args )
+			: $response;
+
+		$code          = (int) wp_remote_retrieve_response_code( $response );
+		$allowed_codes = [ 200 ];
 
 		if ( is_wp_error( $response ) ) {
-			return false;
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions
+			error_log( var_export( $response, true ) );
+
+			return $response;
+		}
+
+		// Cache HTTP API error code for 60 minutes.
+		if ( ! in_array( $code, $allowed_codes, true ) && ! $cached ) {
+			$timeout = 60;
+
+			// Set timeout to GitHub rate limit reset.
+			$timeout             = $this->ratelimit_reset( $response, $this->repo->slug );
+			$response['timeout'] = $timeout;
+			$this->set_repo_cache( 'error_cache', $response, md5( $url ), "+{$timeout} minutes" );
+		}
+
+		static::$error_code[ $this->repo->slug ] = static::$error_code[ $this->repo->slug ] ?? [];
+		static::$error_code[ $this->repo->slug ] = array_merge(
+			static::$error_code[ $this->repo->slug ],
+			[
+				'repo' => $this->repo->slug,
+				'code' => $code,
+				'name' => $this->repo->name ?? $this->repo->slug,
+				'git'  => $this->repo->git,
+			]
+		);
+		if ( isset( $response['timeout'] ) ) {
+			static::$error_code[ $this->repo->slug ]['wait'] = $response['timeout'];
+		}
+		// Singleton::get_instance( 'Messages', $this )->create_error_message( $type['git'] );
+
+		if ( isset( $response['timeout'] ) && ! $cached && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$response_body = json_decode( wp_remote_retrieve_body( $response ) );
+			if ( null !== $response_body && property_exists( $response_body, 'message' ) ) {
+				$log_message = "Translations Updater Error: {$this->repo->name} ({$this->repo->slug}:{$this->repo->branch}) - {$response_body->message}";
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( $log_message );
+			}
 		}
 
 		return json_decode( wp_remote_retrieve_body( $response ) );
@@ -137,7 +193,7 @@ trait API {
 	 */
 	final protected function get_repo_cache( $repo = false ) {
 		if ( ! $repo ) {
-			$repo = isset( $this->type->slug ) ? $this->type->slug : 'tu';
+			$repo = isset( $this->repo->slug ) ? $this->repo->slug : 'tu';
 		}
 		$cache_key = 'tu-' . md5( $repo );
 		$cache     = get_site_option( $cache_key );
@@ -160,7 +216,7 @@ trait API {
 	 */
 	final protected function set_repo_cache( $id, $response, $repo = false ) {
 		if ( ! $repo ) {
-			$repo = isset( $this->type->slug ) ? $this->type->slug : 'tu';
+			$repo = isset( $this->repo->slug ) ? $this->repo->slug : 'tu';
 		}
 		$cache_key = 'tu-' . md5( $repo );
 		$timeout   = '+' . self::$hours . ' hours';
@@ -171,5 +227,28 @@ trait API {
 		update_site_option( $cache_key, $this->response );
 
 		return true;
+	}
+
+	/**
+	 * Calculate and store time until rate limit reset.
+	 *
+	 * @param array  $response HTTP headers.
+	 * @param string $repo     Repo name.
+	 *
+	 * @return void|int
+	 */
+	final public static function ratelimit_reset( $response, $repo ) {
+		$headers = wp_remote_retrieve_headers( $response );
+		$data    = $headers->getAll();
+		$wait    = 0;
+		if ( isset( $data['x-ratelimit-reset'] ) ) {
+			$reset = (int) $data['x-ratelimit-reset'];
+			//phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			$wait                        = date( 'i', $reset - time() );
+			static::$error_code[ $repo ] = static::$error_code[ $repo ] ?? [];
+			static::$error_code[ $repo ] = array_merge( static::$error_code[ $repo ], [ 'wait' => $wait ] );
+
+			return $wait;
+		}
 	}
 }
