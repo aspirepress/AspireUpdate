@@ -2,6 +2,9 @@ name: Generate POT
 
 on:
   push:
+    branches:
+      - main
+      - translations
     tags:
       - "**"
 
