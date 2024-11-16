@@ -33,7 +33,6 @@
         "test:multisite": [
             "Composer\\Config::disableProcessTimeout",
             "@php ./vendor/phpunit/phpunit/phpunit -c tests/multisite.xml"
-        ],
-        "make-pot": "wp i18n make-pot --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/aspirepress/aspireupdate/issues\"}' . languages/aspireupdate.pot"
+        ]
     }
 }
