@@ -47,7 +47,7 @@ class Language_Pack_API {
 	 *
 	 * @param array $headers Array of headers of Language Pack.
 	 *
-	 * @return bool When invalid response.
+	 * @return \stdClass
 	 */
 	public function get_language_pack( $headers ) {
 		$response = ! empty( $this->response['languages'] ) ? $this->response['languages'] : false;
@@ -64,11 +64,9 @@ class Language_Pack_API {
 					$response->{$locale->language}->version = $this->repo->version;
 				}
 				$this->set_repo_cache( 'languages', $response, $this->repo->slug );
-			} else {
-				return false;
 			}
 		}
-		$this->repo->language_packs = $response;
+		$this->repo->language_packs = $response ? $response : new \stdClass();
 
 		return $this->repo;
 	}
@@ -124,7 +122,7 @@ class Language_Pack_API {
 	 * @param \stdClass $locale  Site locale.
 	 * @param array     $headers Repository headers.
 	 *
-	 * @return array|null|string
+	 * @return string
 	 */
 	private function process_language_pack_package( $git, $locale, $headers ) {
 		$package = null;
