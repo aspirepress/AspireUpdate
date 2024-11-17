@@ -2,11 +2,15 @@ name: Generate POT
 
 on:
   push:
+    branches:
+      - main
+      - translations
     tags:
       - "**"
 
 jobs:
   WP_POT_Generator:
+    if: github.repository == 'aspirepress/aspireupdate'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
