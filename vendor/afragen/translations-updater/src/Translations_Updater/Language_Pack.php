@@ -58,8 +58,11 @@ class Language_Pack {
 	 * Do the Language Pack integration.
 	 */
 	public function run() {
-		$headers                     = $this->parse_header_uri( $this->repo->languages );
-		$repo                        = $this->repo_api->get_language_pack( $headers );
+		$headers = $this->parse_header_uri( $this->repo->languages );
+		$repo    = $this->repo_api->get_language_pack( $headers );
+		if ( is_wp_error( $repo ) ) {
+			return;
+		}
 		$this->config[ $repo->slug ] = $repo;
 
 		add_filter( 'site_transient_update_plugins', [ $this, 'update_site_transient' ] );

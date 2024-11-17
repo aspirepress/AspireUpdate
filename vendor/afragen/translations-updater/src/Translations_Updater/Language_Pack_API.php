@@ -47,7 +47,7 @@ class Language_Pack_API {
 	 *
 	 * @param array $headers Array of headers of Language Pack.
 	 *
-	 * @return \stdClass
+	 * @return \stdClass|\WP_Error
 	 */
 	public function get_language_pack( $headers ) {
 		$response = ! empty( $this->response['languages'] ) ? $this->response['languages'] : false;
@@ -65,7 +65,11 @@ class Language_Pack_API {
 				}
 				$this->set_repo_cache( 'languages', $response, $this->repo->slug );
 			} else {
-				return new \WP_Error('language_pack_validation_error', 'Language Pack validation error.' );
+				return new \WP_Error(
+					'language_pack_validation_error',
+					'API timeout error',
+					[ self::$error_code ]
+				);
 			}
 		}
 		$this->repo->language_packs = $response;
