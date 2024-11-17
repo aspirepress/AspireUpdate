@@ -64,9 +64,11 @@ class Language_Pack_API {
 					$response->{$locale->language}->version = $this->repo->version;
 				}
 				$this->set_repo_cache( 'languages', $response, $this->repo->slug );
+			} else {
+				return new \WP_Error('language_pack_validation_error', 'Language Pack validation error.' );
 			}
 		}
-		$this->repo->language_packs = $response ? $response : new \stdClass();
+		$this->repo->language_packs = $response;
 
 		return $this->repo;
 	}
