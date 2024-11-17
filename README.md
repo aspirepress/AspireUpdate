@@ -97,3 +97,26 @@ If you need help with this plugin, please file an issue explaining the following
 - Why you think this is wrong
 
 Issues that are not filed with this information will be closed. We will do our best to assist, but we cannot guarantee a response.
+
+## CHANGELOG
+
+0.6 - Nov 13 2024
+* Admin Settings: Added notices for when settings are saved or reset
+* Branding: Added branded notices to inform users when AspireUpdate is in operation on a screen
+* Multisite: Added multisite support
+* Debug: Added Clear Logs and View Logs functionality
+* I18N: Added Catalan translation
+* I18N: Added Dutch translation
+* I18N: Added Spanish translation
+* I18N: Added Swedish translation
+* I18N: Updated Dutch translation
+* I18N: Updated French translation
+* I18N: Updated German translation
+* Testing: Added Git Updater integration
+* Testing: Added support both main and playground-ready links in the README
+* Testing: Made Playground default to the `main` branch
+* Testing: Removed Hello Dolly from the Playground blueprint
+* Security: Fixed Plugin Check security warnings
+
+= 0.5 - Oct 2024
+* first stable version, connects to api.wordpress.org or an alternative AspireCloud repository
