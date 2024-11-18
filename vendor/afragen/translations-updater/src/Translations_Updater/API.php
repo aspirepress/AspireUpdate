@@ -214,12 +214,12 @@ trait API {
 	 *
 	 * @return bool
 	 */
-	final protected function set_repo_cache( $id, $response, $repo = false ) {
+	final protected function set_repo_cache( $id, $response, $repo = false, $timeout = false ) {
 		if ( ! $repo ) {
 			$repo = isset( $this->repo->slug ) ? $this->repo->slug : 'tu';
 		}
 		$cache_key = 'tu-' . md5( $repo );
-		$timeout   = '+' . self::$hours . ' hours';
+		$timeout   = $timeout ?  $timeout : '+' . static::$hours . ' hours';
 
 		$this->response['timeout'] = strtotime( $timeout );
 		$this->response[ $id ]     = $response;
