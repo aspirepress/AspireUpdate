@@ -131,13 +131,14 @@ trait API {
 			]
 		);
 		if ( isset( $response['timeout'] ) ) {
-			static::$error_code[ $this->repo->slug ]['wait'] = $response['timeout'];
+			static::$error_code[ $this->repo->slug ]['wait'] = $this->ratelimit_reset( $response, $this->repo->slug );
 		}
 
 		if ( isset( $response['timeout'] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			$response_body = json_decode( wp_remote_retrieve_body( $response ) );
 			if ( null !== $response_body && property_exists( $response_body, 'message' ) ) {
-				$log_message = "Translations Updater Error: {$this->repo->slug} - {$response_body->message}";
+				$log_message = "Translations Updater Error: {$this->repo->slug} - {$response_body->message}"
+				. "\nTime remaining for rate limiting:  {$this->ratelimit_reset($response, $this->repo->slug)} minutes";
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( $log_message );
 			}
@@ -218,7 +219,7 @@ trait API {
 			$repo = isset( $this->repo->slug ) ? $this->repo->slug : 'tu';
 		}
 		$cache_key = 'tu-' . md5( $repo );
-		$timeout   = $timeout ?  $timeout : '+' . static::$hours . ' hours';
+		$timeout   = $timeout ? $timeout : '+' . static::$hours . ' hours';
 
 		$this->response['timeout'] = strtotime( $timeout );
 		$this->response[ $id ]     = $response;
