@@ -115,7 +115,7 @@ trait API {
 			$timeout = 60;
 
 			// Set timeout to GitHub rate limit reset.
-			$timeout             = $this->ratelimit_reset( $response, $this->repo->slug );
+			$timeout             = static::ratelimit_reset( $response, $this->repo->slug );
 			$response['timeout'] = $timeout;
 			$this->set_repo_cache( 'error_cache', $response, md5( $url ), "+{$timeout} minutes" );
 		}
@@ -131,7 +131,7 @@ trait API {
 			]
 		);
 		if ( isset( $response['timeout'] ) ) {
-			static::$error_code[ $this->repo->slug ]['wait'] = $this->ratelimit_reset( $response, $this->repo->slug );
+			static::$error_code[ $this->repo->slug ]['wait'] = static::ratelimit_reset( $response, $this->repo->slug );
 		}
 
 		if ( isset( $response['timeout'] ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {

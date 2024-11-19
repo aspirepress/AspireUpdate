@@ -1,8 +1,9 @@
 #### [unreleased]
 
-#### 1.2.0 / 2024-11-17
+#### 1.2.0 / 2024-11-19
 * return `WP_Error` in `Language_Pack_API::get_language_pack()` with validation error
 * exit gracefully if `Language_Pack_API::get_language_pack()` returns `WP_Error`
+* updated error logging for GitHub API rate limits
 
 ####  1.1.0 / 2024-11-16
 * add API error caching/logging
