@@ -49,16 +49,16 @@
         },
         {
             "name": "afragen/translations-updater",
-            "version": "1.0.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/translations-updater.git",
-                "reference": "0bde072a1bf92ddc43837f6a27b9475b651350ea"
+                "reference": "c688e85eeef136f9cd7a4719db94ab0fc241601e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/translations-updater/zipball/0bde072a1bf92ddc43837f6a27b9475b651350ea",
-                "reference": "0bde072a1bf92ddc43837f6a27b9475b651350ea",
+                "url": "https://api.github.com/repos/afragen/translations-updater/zipball/c688e85eeef136f9cd7a4719db94ab0fc241601e",
+                "reference": "c688e85eeef136f9cd7a4719db94ab0fc241601e",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "issues": "https://github.com/afragen/translations-updater/issues",
                 "source": "https://github.com/afragen/translations-updater"
             },
-            "time": "2024-11-13T00:36:43+00:00"
+            "time": "2024-11-19T17:24:59+00:00"
         }
     ],
     "packages-dev": [
