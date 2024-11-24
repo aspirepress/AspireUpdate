@@ -10,6 +10,8 @@ jobs:
   WP_POT_Generator:
     if: github.repository == 'aspirepress/aspireupdate'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@master
       - name: WordPress POT Generator
