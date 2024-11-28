@@ -10,7 +10,7 @@
  *
  * @covers \AspireUpdate\Admin_Settings::get_setting
  */
-class AdminSettings_GetSettingTest extends WP_UnitTestCase {
+class AdminSettings_GetSettingTest extends AdminSettings_UnitTestCase {
 	/**
 	 * Test that the default 'api_host' value is retrieved.
 	 *
