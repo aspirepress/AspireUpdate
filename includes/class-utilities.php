@@ -17,7 +17,7 @@ class Utilities {
 	 * @return string the domain name.
 	 */
 	public static function get_site_domain() {
-		$site_url = get_site_url();
+		$site_url = network_site_url();
 		return wp_parse_url( $site_url, PHP_URL_HOST );
 	}
 
