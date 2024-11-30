@@ -54,6 +54,8 @@ class Controller {
 	/**
 	 * Ajax action to clear the Log file.
 	 *
+	 * @codeCoverageIgnore Cannot be tested. Results in script termination.
+	 *
 	 * @return void
 	 */
 	public function clear_log() {
@@ -83,6 +85,8 @@ class Controller {
 
 	/**
 	 * Ajax action to read the Log file.
+	 *
+	 * @codeCoverageIgnore Cannot be tested. Results in script termination.
 	 *
 	 * @return void
 	 */
