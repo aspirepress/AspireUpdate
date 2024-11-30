@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/autoloader.git",
-                "reference": "ec56498d42f0694d3ad1207a496bf69cbb0ebc2f"
+                "reference": "ab30ab542c48fe3ecd26c3bda28fef544f04b401"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/autoloader/zipball/ec56498d42f0694d3ad1207a496bf69cbb0ebc2f",
-                "reference": "ec56498d42f0694d3ad1207a496bf69cbb0ebc2f",
+                "url": "https://api.github.com/repos/afragen/autoloader/zipball/ab30ab542c48fe3ecd26c3bda28fef544f04b401",
+                "reference": "ab30ab542c48fe3ecd26c3bda28fef544f04b401",
                 "shasum": ""
             },
             "require": {
@@ -43,9 +43,9 @@
             ],
             "support": {
                 "issues": "https://github.com/afragen/autoloader/issues",
-                "source": "https://github.com/afragen/autoloader/tree/master"
+                "source": "https://github.com/afragen/autoloader/tree/3.0.0"
             },
-            "time": "2024-11-10T22:55:51+00:00"
+            "time": "2024-11-27T02:42:42+00:00"
         },
         {
             "name": "afragen/translations-updater",
