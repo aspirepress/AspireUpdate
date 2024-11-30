@@ -14,7 +14,7 @@ class Utilities {
 	/**
 	 * Get the domain name from the site URL.
 	 *
-	 * @return string the domain name.
+	 * @return string The domain name.
 	 */
 	public static function get_site_domain() {
 		$site_url = network_site_url();
