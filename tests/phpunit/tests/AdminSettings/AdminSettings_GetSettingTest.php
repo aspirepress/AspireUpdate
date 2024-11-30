@@ -8,6 +8,12 @@
 /**
  * Tests for Admin_Settings::get_setting()
  *
+ * These tests cause constants to be defined.
+ * They must run in separate processes and must not preserve global state.
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ *
  * @covers \AspireUpdate\Admin_Settings::get_setting
  */
 class AdminSettings_GetSettingTest extends WP_UnitTestCase {
