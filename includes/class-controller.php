@@ -27,6 +27,8 @@ class Controller {
 	/**
 	 * Enable API Rewrites based on the Users settings.
 	 *
+	 * @codeCoverageIgnore Side-effects are from other methods already covered by tests.
+	 *
 	 * @return void
 	 */
 	private function api_rewrite() {
