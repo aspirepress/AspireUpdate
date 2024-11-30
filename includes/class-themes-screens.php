@@ -92,7 +92,7 @@ class Themes_Screens {
 	public function redirect_to_theme_install() {
 
 		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : false;
-		if ( $nonce && ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
 			return;
 		}
 
