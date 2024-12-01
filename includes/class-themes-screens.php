@@ -92,7 +92,7 @@ class Themes_Screens {
 	public function redirect_to_theme_install() {
 
 		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : false;
-		if ( $nonce && ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'query-themes' ) ) {
 			return;
 		}
 
@@ -105,7 +105,7 @@ class Themes_Screens {
 		$admin_settings = Admin_Settings::get_instance();
 		if ( $admin_settings->get_setting( 'enable', false ) ) {
 			wp_safe_redirect( admin_url( 'theme-install.php' ) );
-			exit;
+			! defined( 'AP_RUN_TESTS' ) && exit;
 		}
 	}
 }
