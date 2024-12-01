@@ -27,6 +27,8 @@ class Controller {
 	/**
 	 * Enable API Rewrites based on the Users settings.
 	 *
+	 * @codeCoverageIgnore Side-effects are from other methods already covered by tests.
+	 *
 	 * @return void
 	 */
 	private function api_rewrite() {
@@ -51,6 +53,8 @@ class Controller {
 
 	/**
 	 * Ajax action to clear the Log file.
+	 *
+	 * @codeCoverageIgnore Cannot be tested. Results in script termination.
 	 *
 	 * @return void
 	 */
@@ -81,6 +85,8 @@ class Controller {
 
 	/**
 	 * Ajax action to read the Log file.
+	 *
+	 * @codeCoverageIgnore Cannot be tested. Results in script termination.
 	 *
 	 * @return void
 	 */
