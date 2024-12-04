@@ -71,11 +71,11 @@ class Filesystem_Direct extends \WP_Filesystem_Direct {
 	/**
 	 * Write contents to a file with additional modes.
 	 *
-	 * @param string $file The path to the file.
-	 * @param string $contents The content to write.
+	 * @param string    $file The path to the file.
+	 * @param string    $contents The content to write.
 	 * @param int|false $mode     Optional. The file permissions as octal number, usually 0644.
 	 *                            Default false.
-	 * @param string $write_mode The write mode:
+	 * @param string    $write_mode The write mode:
 	 *                     'w'  - Overwrite the file (default).
 	 *                     'a'  - Append to the file.
 	 *                     'x'  - Create a new file and write, fail if the file exists.
