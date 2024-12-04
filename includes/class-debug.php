@@ -82,25 +82,13 @@ class Debug {
 			return new \WP_Error( 'not_readable', __( 'Error: Unable to read the log file.', 'aspireupdate' ) );
 		}
 
-		$file_content = $wp_filesystem->get_contents_array( $file_path );
-		$content      = '';
-		$index        = 0;
-		foreach ( $file_content as $file_content_lines ) {
-			if ( ( $index < $limit ) ) {
-				$content .= $file_content_lines . PHP_EOL;
-				++$index;
-			}
+		$file_content = $wp_filesystem->get_contents_array( $file_path, $limit, true );
+
+		if ( ( false === $file_content ) || ( 0 === count( $file_content ) ) ) {
+			$file_content = [ esc_html__( '*****Log file is empty.*****', 'aspireupdate' ) ];
 		}
-		if ( '' === trim( $content ) ) {
-			$content = esc_html__( '*****Log file is empty.*****', 'aspireupdate' );
-		} elseif ( $limit < count( $file_content ) ) {
-			$content .= PHP_EOL . sprintf(
-				/* translators: 1: The number of lines at which the content was truncated. */
-				esc_html__( '*****Log truncated at %s lines.*****', 'aspireupdate' ),
-				$limit
-			);
-		}
-		return $content;
+
+		return $file_content;
 	}
 
 	/**
