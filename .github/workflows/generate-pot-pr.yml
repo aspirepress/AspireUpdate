@@ -47,7 +47,7 @@ jobs:
           git checkout generate-pot
           git pull --no-rebase
 
-      - name: Generate POT PR
+      - name: Generate POT
         run: |
           wp i18n make-pot . "./languages/${{ github.event.repository.name }}.pot" --headers='{"Report-Msgid-Bugs-To":"https://github.com/${{ github.event.repository.full_name }}/issues"}'
 
