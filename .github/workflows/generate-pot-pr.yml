@@ -63,8 +63,7 @@ jobs:
 
       - name: Create pull request
         if: |
-          env.CHANGES_DETECTED == 1 &&
-          env.REMOTE_BRANCH_EXISTS == 1
+          env.CHANGES_DETECTED == 1
         uses: repo-sync/pull-request@v2
         with:
           source_branch: generate-pot
