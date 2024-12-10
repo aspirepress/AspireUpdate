@@ -44,9 +44,9 @@ jobs:
           git checkout generate-pot
           git pull --no-rebase
 
-      - name: Generate POT
+      - name: Generate POT PR
         run: |
-          wp i18n make-pot . "./languages/${{ github.event.repository.name }}.pot" --headers="'{"Report-Msgid-Bugs-To":"https://github.com/${{ github.event.repository.full_name }}/issues"}'"
+          wp i18n make-pot . "./languages/${{ github.event.repository.name }}.pot" --headers='{"Report-Msgid-Bugs-To":"https://github.com/${{ github.event.repository.full_name }}/issues"}'
 
       - name: Check if there are changes
         run: echo "CHANGES_DETECTED=$([[ -z $(git status --porcelain) ]] && echo "0" || echo "1")" >> $GITHUB_ENV
