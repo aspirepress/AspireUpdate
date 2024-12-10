@@ -1,11 +1,10 @@
-name: generate POT branch-PR
+name: Generate POT PR
 
 on:
   workflow_dispatch:
   push:
 
 jobs:
-
   generate-pot: #----------------------------------------------------------
     name: Generate POT PR
     permissions:
@@ -19,7 +18,7 @@ jobs:
       - name: Set up PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: "7.4"
 
       - name: Setup WP-CLI
         uses: godaddy-wordpress/setup-wp-cli@1
@@ -61,7 +60,7 @@ jobs:
       - name: Create pull request
         if: |
           env.CHANGES_DETECTED == 1 &&
-          env.REMOTE_BRANCH_EXISTS == 0
+          env.REMOTE_BRANCH_EXISTS == 1
         uses: repo-sync/pull-request@v2
         with:
           source_branch: generate-pot
