@@ -61,8 +61,7 @@ jobs:
           git push origin generate-pot
 
       - name: Create pull request
-        if: |
-          env.CHANGES_DETECTED == 1
+        if: env.CHANGES_DETECTED == 1
         uses: repo-sync/pull-request@v2
         with:
           source_branch: generate-pot
