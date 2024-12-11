@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  generate-pot: #----------------------------------------------------------
+  generate-pot:
     name: Generate POT PR
     if: github.repository == 'aspirepress/aspireupdate'
     permissions:
